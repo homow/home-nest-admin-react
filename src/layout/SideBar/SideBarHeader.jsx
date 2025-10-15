@@ -1,3 +1,5 @@
+import {cn} from "@/lib/utils.js";
+
 export default function SideBarHeader({collapsed, setCollapsed}) {
 
     const toggleCollapse = () => {
@@ -23,7 +25,7 @@ export default function SideBarHeader({collapsed, setCollapsed}) {
 
             <span
                 onClick={toggleCollapse}
-                className={`hidden md:inline absolute -left-5.5 cursor-pointer -rotate-180 transition-all duration-500 ${collapsed && "rotate-180"}`}
+                className={cn(`hidden md:inline absolute -left-5.5 cursor-pointer -rotate-180 transition-all duration-500 ${collapsed && "rotate-0"}`)}
             >
                 <svg className={"size-5"}>
                     <use href="#chevronDoubleRight-icon"></use>
