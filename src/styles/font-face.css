@@ -1,35 +1,35 @@
 @font-face {
-    font-family: 'Inter';
+    font-family: 'dana';
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: local('Inter Thin'), local('Inter-Thin'),
+    src: local('dana Thin'), local('dana-Thin'),
     url('/src/assets/fonts/dana-light.woff') format('woff2');
 }
 
 @font-face {
-    font-family: 'Inter';
+    font-family: 'dana';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: local('Inter Regular'), local('Inter-Regular'),
+    src: local('dana Regular'), local('dana-Regular'),
     url('/src/assets/fonts/dana-regular.woff') format('woff2');
 }
 
 @font-face {
-    font-family: 'Inter';
+    font-family: 'dana';
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: local('Inter Medium'), local('Inter-Medium'),
+    src: local('dana Medium'), local('dana-Medium'),
     url('/src/assets/fonts/dana-medium.woff') format('woff2');
 }
 
 @font-face {
-    font-family: 'Inter';
+    font-family: 'dana';
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: local('Inter Bold'), local('Inter-Bold'),
+    src: local('dana Bold'), local('dana-Bold'),
     url('/src/assets/fonts/dana-bold.woff') format('woff2');
 }

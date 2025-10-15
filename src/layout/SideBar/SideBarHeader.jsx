@@ -20,7 +20,7 @@ export default function SideBarHeader({collapsed, setCollapsed}) {
                         <use href="#logo-icon"></use>
                     </svg>
                 </span>
-                <span className={`font-bold ${collapsed && "hidden"}`}>آشیانه</span>
+                <span className={`font-medium ${collapsed && "hidden"}`}>آشیانه</span>
             </a>
 
             <span
