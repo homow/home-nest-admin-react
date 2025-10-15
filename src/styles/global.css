@@ -16,7 +16,7 @@
     --breakpoint-3xl: 105rem;
 
     /* fonts */
-    --font-Inter: "dana", "Helvetica Neue", Helvetica, Arial, sans-serif, monospace;
+    --font-dana: "dana", "Helvetica Neue", Helvetica, Arial, sans-serif, monospace;
 
     /* colors */
     --color-primary-bg: var(--color-gray-100);
@@ -51,7 +51,7 @@
     }
 
     body {
-        @apply font-Inter font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider;
+        @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider;
     }
 
     h1, h2, h3 {

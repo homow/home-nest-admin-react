@@ -18,12 +18,12 @@ export default function SideBarHeader({collapsed, setCollapsed}) {
                         <use href="#logo-icon"></use>
                     </svg>
                 </span>
-                <span className={`font-bold ${collapsed && "hidden"}`}>MATERIAL</span>
+                <span className={`font-bold ${collapsed && "hidden"}`}>آشیانه</span>
             </a>
 
             <span
                 onClick={toggleCollapse}
-                className={`hidden md:inline absolute -right-5.5 cursor-pointer transition-all duration-500 ${collapsed && "-rotate-180"}`}
+                className={`hidden md:inline absolute -left-5.5 cursor-pointer -rotate-180 transition-all duration-500 ${collapsed && "rotate-180"}`}
             >
                 <svg className={"size-5"}>
                     <use href="#chevronDoubleRight-icon"></use>
