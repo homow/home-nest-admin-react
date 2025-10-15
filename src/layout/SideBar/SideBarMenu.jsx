@@ -41,13 +41,13 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
 export default function SideBarMenu({setMobileNavOpen, collapsed}) {
     const dataLinks = [
         {
-            title: "Dashboard", dataLinks: [
+            title: "داشبورد", dataLinks: [
                 {text: "داشبورد", url: "/", icon: "home"},
                 {text: "آنالیز", url: "/analytics", icon: "analyze"}
             ]
         },
         {
-            title: "APP & PAGES", dataLinks: [
+            title: "پنل و صفحات", dataLinks: [
                 {text: "کاربران", url: "/user", icon: "user"},
                 {text: "نقش ها", url: "/rules", icon: "lock"},
             ]
