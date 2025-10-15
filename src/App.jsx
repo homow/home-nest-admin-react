@@ -21,7 +21,7 @@ export default function App() {
             {/* side bar menu and links */}
             <SideBar mobileNavOpen={mobileNavOpen} setMobileNavOpen={setMobileNavOpen}/>
 
-            <section className={"transition-all ml-custom flex-1 px-3 sm:px-6 flex flex-col"}>
+            <section className={"transition-all mr-custom flex-1 px-3 sm:px-6 flex flex-col"}>
 
                 {/* top bar | header */}
                 <TopBar mobileNavOpen={mobileNavOpen} setMobileNavOpen={setMobileNavOpen}/>

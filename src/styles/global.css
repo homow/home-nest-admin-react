@@ -15,11 +15,8 @@
     --breakpoint-2xl: 91rem;
     --breakpoint-3xl: 105rem;
 
-    /* container break-points */
-    --container-8xl: 85rem;
-
     /* fonts */
-    --font-Inter: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif, monospace;
+    --font-Inter: "dana", "Helvetica Neue", Helvetica, Arial, sans-serif, monospace;
 
     /* colors */
     --color-primary-bg: var(--color-gray-100);
