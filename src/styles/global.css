@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@import "./font-face.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    /* custom size */
+    --spacing-custom: 0;
+
+    /* break-points */
+    --breakpoint-xx: 21rem;
+    --breakpoint-xs: 24.375rem;
+    --breakpoint-sm: 36rem;
+    --breakpoint-md: 56rem;
+    --breakpoint-2xl: 91rem;
+    --breakpoint-3xl: 105rem;
+
+    /* container break-points */
+    --container-8xl: 85rem;
+
+    /* fonts */
+    --font-Inter: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif, monospace;
+
+    /* colors */
+    --color-primary-bg: var(--color-gray-100);
+    --color-main-bg: var(--color-white);
+    --color-primary-txt: var(--color-zinc-800);
+    --color-secondary-txt: var(--color-zinc-500);
+    --color-disable-txt: var(--color-zinc-400);
+    --color-active: var(--color-zinc-400);
+    --color-hover: #3A35410A;
+    --color-shadow: #3A35411A;
+
+    --shadow-custom: 0px 2px 10px 0px var(--color-shadow);
+}
+
+@utility mobile-nav {
+    @apply z-30 w-57 bg-primary-bg bottom-0 overflow-auto;
+}
+
+.dark {
+    --color-primary-bg: var(--color-gray-900);
+    --color-main-bg: var(--color-gray-800);
+    --color-primary-txt: var(--color-slate-100);
+    --color-secondary-txt: #E7E3FCAD;
+    --color-disable-txt: #E7E3FC61;
+    --color-grey-10: #1A1A1A;
+    --color-shadow: #1311201A;
+}
+
+@layer base {
+    html {
+        @apply transition-all scroll-smooth;
+    }
+
+    body {
+        @apply font-Inter font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider;
+    }
+
+    h1, h2, h3 {
+        @apply font-bold;
+    }
+
+    h4, h5, h6 {
+        @apply font-medium;
+    }
+
+    h1 {
+        @apply text-3xl md:text-5xl xl:text-6xl leading-[140%];
+    }
+
+    h2 {
+        @apply text-2xl md:text-4xl lg:text-5xl;
+    }
+
+    h3 {
+        @apply text-xl md:text-2xl lg:text-3xl;
+    }
+
+    a {
+        @apply hover:opacity-70 active:opacity-70 transition-all;
+    }
+
+    /* <=== media screens ===> */
+    @media (min-width: 896px) {
+        :root {
+            --spacing-custom: 260px;
+        }
+    }
+}
+
+@layer components {
+    .grad-links {
+        @apply shadow-md bg-gradient-to-r from-sky-500/45 to-sky-500 text-white;
+    }
+    .main-components {
+        @apply bg-main-bg rounded-md shadow-custom p-5;
+    }
+}
