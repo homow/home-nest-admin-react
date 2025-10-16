@@ -1,5 +1,6 @@
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils.js";
+import {Link} from "react-router-dom";
 
 export default function SideBarHeader({collapsed, setCollapsed}) {
 
@@ -15,10 +16,10 @@ export default function SideBarHeader({collapsed, setCollapsed}) {
         <div className={"relative flex items-center justify-between h-16"}>
 
             {/* brand and logo */}
-            <a target="_blank" href="https://homow.ir" className={"pr-4 flex flex-row items-center gap-4 hover:opacity-100"}>
+            <Link to="/" className={"pr-4 flex flex-row items-center gap-4 hover:opacity-100"}>
                 <img className={"size-8"} src={`${logo}`} alt="ashianeh logo"/>
                 <span className={`font-medium ${collapsed && "hidden"}`}>پنل مدیریت</span>
-            </a>
+            </Link>
 
             <span
                 onClick={toggleCollapse}

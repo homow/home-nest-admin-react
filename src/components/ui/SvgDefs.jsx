@@ -1,8 +1,6 @@
-export default function SvgDefs() {
+const TopBarIcons = () => {
     return (
-        <svg className={"hidden"}>
-            {/* <===== TopBar =====> */}
-
+        <>
             {/* sun */}
             <symbol id={"sun-icon"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
@@ -19,9 +17,13 @@ export default function SvgDefs() {
             <symbol id="notification-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
             </symbol>
+        </>
+    )
+}
 
-            {/* <===== SideBarHeader =====> */}
-
+const SideBarIcons = () => {
+    return (
+        <>
             {/* bars */}
             <symbol id="bars-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
@@ -45,9 +47,14 @@ export default function SvgDefs() {
             </symbol>
 
             {/* <===== SideBarMenu-links =====> */}
+
             {/* home */}
             <symbol id="home-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </symbol>
+            {/* house */}
+            <symbol id="house-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
             </symbol>
             {/* email */}
             <symbol id="email-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -66,9 +73,13 @@ export default function SvgDefs() {
             <symbol id="lock-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
             </symbol>
+        </>
+    )
+}
 
-            {/* <=== Home Page ===> */}
-
+const HomePageIcons = () => {
+    return (
+        <>
             {/* more */}
             <symbol id="more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16" fill="none">
                 <path d="M2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2C0 3.1 0.9 4 2 4ZM2 6C0.9 6 0 6.9 0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6ZM2 12C0.9 12 0 12.9 0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12Z" fill="var(--color-secondary-txt)" fillOpacity="0.54"/>
@@ -85,19 +96,21 @@ export default function SvgDefs() {
             <symbol id="pcAndPhone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 16" fill="none">
                 <path d="M4.5 2H22.5V0H4.5C3.4 0 2.5 0.9 2.5 2V13H0.5V16H14.5V13H4.5V2ZM23.5 4H17.5C16.95 4 16.5 4.45 16.5 5V15C16.5 15.55 16.95 16 17.5 16H23.5C24.05 16 24.5 15.55 24.5 15V5C24.5 4.45 24.05 4 23.5 4ZM22.5 13H18.5V6H22.5V13Z" fill="white"/>
             </symbol>
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
-            {/* email */}
+        </>
+    )
+}
+
+export default function SvgDefs() {
+    return (
+        <svg className={"hidden"}>
+            {/* <===== TopBar icon =====> */}
+            <TopBarIcons/>
+
+            {/* <===== SideBar icons =====> */}
+            <SideBarIcons/>
+
+            {/* <=== Home Page ===> */}
+            <HomePageIcons/>
         </svg>
     )
 }
