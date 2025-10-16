@@ -8,8 +8,14 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
         <div>
             {/* title links */}
             <div className={`h-4.5 flex items-center gap-4 ${collapsed && "px-2"}`}>
+
+                {/* border */}
                 <div className={`w-10 h-px bg-disable-txt ${collapsed && "hidden"}`}></div>
+
+                {/* title */}
                 <p className={`text-sm text-disable-txt ${collapsed && "hidden"}`}>{title}</p>
+
+                {/* border */}
                 <div className="flex-1 h-px bg-disable-txt"></div>
             </div>
 
