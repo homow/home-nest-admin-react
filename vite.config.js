@@ -12,6 +12,16 @@ export default defineConfig(({mode}) => {
 
     return {
         base: env.VITE_BASE_PATH || "/",
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks: {
+                        vendor: ["react", "react-dom"],
+                        
+                    }
+                }
+            }
+        },
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src'),

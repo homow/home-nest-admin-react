@@ -23,7 +23,7 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
             <ul className={"mt-3 space-y-1.5"}>
                 {dataLinks && dataLinks.map(link => (
                     <li key={link.text}>
-                        <NavLink onClick={() => setMobileNavOpen && setMobileNavOpen(false)} to={link.url} className={({isActive}) => cn(`h-10.5 flex items-center pr-5.5 py-2 flex-row gap-3 w-full rounded-l-full ${isActive && "grad-links"}`)}>
+                        <NavLink onClick={() => setMobileNavOpen && setMobileNavOpen(false)} to={link.url} className={({isActive}) => cn(`h-10.5 flex items-center pr-5.5 py-2 flex-row gap-3 w-full rounded-l-full`, isActive && "grad-links")}>
 
                             {/* icon */}
                             <span>
