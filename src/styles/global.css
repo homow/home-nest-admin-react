@@ -36,8 +36,8 @@
 }
 
 .dark {
-    --color-primary-bg: var(--color-gray-900);
-    --color-main-bg: var(--color-gray-800);
+    --color-primary-bg: var(--color-zinc-900);
+    --color-main-bg: var(--color-zinc-800);
     --color-primary-txt: var(--color-slate-100);
     --color-secondary-txt: #E7E3FCAD;
     --color-disable-txt: #E7E3FC61;
