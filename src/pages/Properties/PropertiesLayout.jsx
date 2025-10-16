@@ -26,7 +26,7 @@ const PropertiesLinks = () => {
                 <NavLink
                     className={({isActive}) => isActiveLinks(isActive)}
                     to={"/properties/create"}>
-                    اضافه کردن ملک
+                    افزودن ملک جدید
                 </NavLink>
             </li>
         </ul>
