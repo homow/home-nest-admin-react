@@ -1,11 +1,10 @@
 import {useEffect} from "react";
+import AnalyticsLayout from "./AnalyticsLayout.jsx"
 
 export default function Analytics() {
     useEffect(() => {
-        document.title = 'Analytics | Dashboard';
+        document.title = 'آنالیز | پنل مدیریت آشیانه';
     }, [])
 
-    return (
-        <h1>Analytics</h1>
-    )
+    return <AnalyticsLayout/>
 }
