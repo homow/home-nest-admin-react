@@ -1,3 +1,4 @@
+import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils.js";
 
 export default function SideBarHeader({collapsed, setCollapsed}) {
@@ -14,13 +15,9 @@ export default function SideBarHeader({collapsed, setCollapsed}) {
         <div className={"relative flex items-center justify-between h-16"}>
 
             {/* brand and logo */}
-            <a target="_blank" href="https://homow.ir" className={"pl-4 flex flex-row items-center gap-2 hover:opacity-100"}>
-                <span>
-                    <svg className={"w-7.5 h-[23px]"}>
-                        <use href="#logo-icon"></use>
-                    </svg>
-                </span>
-                <span className={`font-medium ${collapsed && "hidden"}`}>آشیانه</span>
+            <a target="_blank" href="https://homow.ir" className={"pr-4 flex flex-row items-center gap-4 hover:opacity-100"}>
+                <img className={"size-8"} src={`${logo}`} alt="ashianeh logo"/>
+                <span className={`font-medium ${collapsed && "hidden"}`}>پنل مدیریت</span>
             </a>
 
             <span
