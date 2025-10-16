@@ -1,6 +1,6 @@
 import {lazy} from "react";
 import {useRoutes} from "react-router-dom";
-import SuspenseBoundary from "@components/ui/SuspenseBoundary.jsx";
+import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 
 const Home = lazy(() => import("@pages/Home"));
 const Analytics = lazy(() => import("@pages/Analytics"));
