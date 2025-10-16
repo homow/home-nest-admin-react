@@ -13,6 +13,9 @@
       ],
       "@img/*": [
         "src/assets/images/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
       ]
     }
   },

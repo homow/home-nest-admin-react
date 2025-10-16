@@ -29,6 +29,7 @@ export default defineConfig(({mode}) => {
                 '@components': path.resolve(__dirname, 'src/components'),
                 '@pages': path.resolve(__dirname, 'src/pages'),
                 '@img': path.resolve(__dirname, 'src/assets/images'),
+                '@hooks': path.resolve(__dirname, 'src/hooks'),
             }
         },
         plugins: [
