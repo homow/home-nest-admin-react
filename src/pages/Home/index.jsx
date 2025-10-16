@@ -3,7 +3,7 @@ import HomePageLayout from "./HomePageLayout.jsx";
 
 export default function Home() {
     useEffect(() => {
-        document.title = 'Home | Dashboard';
+        document.title = 'پنل مدیریت | آشیانه';
     }, [])
 
     return <HomePageLayout/>

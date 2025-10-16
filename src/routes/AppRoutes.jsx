@@ -3,8 +3,9 @@ import {useRoutes} from "react-router-dom";
 import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 
 const Home = lazy(() => import("@pages/Home"));
-const Analytics = lazy(() => import("@pages/Analytics"));
-const Properties = lazy(() => import("@pages/Analytics/Properties/Properties.jsx"));
+const Properties = lazy(() => import("@pages/Properties"));
+const CreateProperties = lazy(() => import("@pages/Properties/routes/CreateProperties"))
+const EditProperties = lazy(() => import("@pages/Properties/routes/EditProperties"))
 const Email = lazy(() => import("@pages/Email"));
 const User = lazy(() => import("@pages/User"));
 const Rules = lazy(() => import("@pages/Rules"));
@@ -14,11 +15,16 @@ export default function AppRoutes() {
         <SuspenseBoundary>
             {useRoutes([
                 {path: "/", element: <Home/>},
-                {path: "analytics", element: <Analytics/>},
-                {path: "/analytics/properties", element: <Properties/>},
-                {path: "email", element: <Email/>},
-                {path: "user", element: <User/>},
-                {path: "rules", element: <Rules/>},
+                {
+                    path: "/properties", element: <Properties/>,
+                    children: [
+                        {path: "create", element: <CreateProperties/>},
+                        {path: "edit", element: <EditProperties/>},
+                    ]
+                },
+                {path: "/email", element: <Email/>},
+                {path: "/user", element: <User/>},
+                {path: "/rules", element: <Rules/>},
             ])}
         </SuspenseBoundary>
     )

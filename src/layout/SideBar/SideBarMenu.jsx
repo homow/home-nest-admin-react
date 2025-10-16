@@ -27,7 +27,7 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
 
                             {/* icon */}
                             <span>
-                                <svg className={"size-5"}>
+                                <svg className={"size-6"}>
                                     <use href={`#${link.icon}-icon`}></use>
                                 </svg>
                             </span>
@@ -48,8 +48,8 @@ export default function SideBarMenu({setMobileNavOpen, collapsed}) {
     const dataLinks = [
         {
             title: "داشبورد", dataLinks: [
-                {text: "داشبورد", url: "/", icon: "home"},
-                {text: "آنالیز", url: "/analytics", icon: "analyze"}
+                {text: "داشبورد", url: "/", icon: "dashboard"},
+                {text: "ملک‌ها", url: "/properties", icon: "house"}
             ]
         },
         {
