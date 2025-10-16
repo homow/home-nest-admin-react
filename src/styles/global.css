@@ -85,7 +85,7 @@
 
 @layer components {
     .grad-links {
-        @apply shadow-md bg-gradient-to-r from-sky-500/45 to-sky-500 text-white;
+        @apply shadow-md bg-gradient-to-r from-violet-500/45 to-violet-500 text-white;
     }
     .main-components {
         @apply bg-main-bg rounded-md shadow-custom p-5;
