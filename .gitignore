@@ -31,3 +31,4 @@ dist-ssr
 
 # Analyze File
 analyze.html
+.vercel
