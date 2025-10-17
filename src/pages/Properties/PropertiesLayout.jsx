@@ -1,5 +1,5 @@
 import {NavLink, Outlet} from "react-router-dom";
-import useIsExactRoute from "@hooks/useIsExactRout.jsx";
+import useIsExactRoute from "@hooks/useIsExactRoute.jsx";
 import {cn} from "@/lib/utils";
 
 const PropertiesLinks = () => {
@@ -34,7 +34,7 @@ const PropertiesLinks = () => {
 }
 
 export default function PropertiesLayout() {
-    const isRoot = useIsExactRoute("/properties");
+    const isRoute = useIsExactRoute("/properties");
 
     return (
         <>
@@ -44,7 +44,7 @@ export default function PropertiesLayout() {
             </section>
 
             <section className={"main-section"}>
-                {!isRoot ? <Outlet/> : <p>ملک ها</p>}
+                {isRoute ? <p>ملک ها</p> : <Outlet/>}
             </section>
         </>
     );
