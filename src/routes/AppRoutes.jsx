@@ -2,6 +2,7 @@ import {lazy} from "react";
 import {useRoutes} from "react-router-dom";
 import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 
+const Auth = lazy(() => import("@pages/Auth"));
 const Home = lazy(() => import("@pages/Home"));
 const Properties = lazy(() => import("@pages/Properties"));
 const CreateProperties = lazy(() => import("@pages/Properties/routes/CreateProperties"))
@@ -14,6 +15,7 @@ export default function AppRoutes() {
     return (
         <SuspenseBoundary>
             {useRoutes([
+                {path: "/auth", element: <Auth/>},
                 {path: "/", element: <Home/>},
                 {
                     path: "/properties", element: <Properties/>,
@@ -24,7 +26,7 @@ export default function AppRoutes() {
                 },
                 {path: "/email", element: <Email/>},
                 {path: "/user", element: <User/>},
-                {path: "/rules", element: <Rules/>},
+                {path: "/rules", element: <Rules/>}
             ])}
         </SuspenseBoundary>
     )
