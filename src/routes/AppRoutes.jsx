@@ -7,7 +7,6 @@ import MainLayout from "@/layout/MainLayout/index.jsx";
 
 const Login = lazy(() => import("@pages/Login/"))
 const Home = lazy(() => import("@pages/Home"));
-
 const Properties = lazy(() => import("@pages/Properties"));
 const CreateProperties = lazy(() => import("@pages/Properties/routes/CreateProperties"))
 const EditProperties = lazy(() => import("@pages/Properties/routes/EditProperties"))
