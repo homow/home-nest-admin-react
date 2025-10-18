@@ -50,7 +50,6 @@ export default function SideBarMenu({setMobileNavOpen, collapsed}) {
             title: "داشبورد", dataLinks: [
                 {text: "داشبورد", url: "/", icon: "dashboard"},
                 {text: "ملک‌ها", url: "/properties", icon: "house"},
-                {text: "ورود", url: "/auth", icon: "user"},
             ]
         },
         {

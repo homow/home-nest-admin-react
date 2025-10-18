@@ -1,5 +1,5 @@
 import {lazy} from "react";
-import {Navigate, useRoutes} from "react-router-dom";
+import {useRoutes} from "react-router-dom";
 import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 import PrivateRoutes from "@/routes/PrivateRoutes.jsx";
 import PublicRoutes from "@/routes/PublicRoutes.jsx";
@@ -20,6 +20,7 @@ export default function AppRoutes() {
     return (
         <SuspenseBoundary>
             {useRoutes([
+                // when admin not login
                 {
                     path: "/login",
                     element: <PublicRoutes/>,
@@ -27,6 +28,7 @@ export default function AppRoutes() {
                         {index: true, element: <Login/>}
                     ]
                 },
+                // when admin login
                 {
                     element: <PrivateRoutes/>,
                     children: [
