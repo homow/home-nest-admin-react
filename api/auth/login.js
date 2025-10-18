@@ -84,7 +84,7 @@ export default async function handler(req, res) {
             access_token
         });
 
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     } catch (e) {
         // Do not expose internal error details
         return res.status(500).json({error: 'INTERNAL_ERROR'});

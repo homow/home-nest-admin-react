@@ -8,7 +8,7 @@ export default function Auth() {
     const [remember, setRemember] = useState(false);
 
     useEffect(() => {
-        document.title = "Sign In";
+        document.title = "ورود به اکانت ادمین | آشیانه";
     }, [])
 
     const loginHandler = async event => {
