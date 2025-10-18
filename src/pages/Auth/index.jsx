@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react"
+import axios from "axios";
 
 export default function Auth() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [remember, setRemember] = useState(false);
 
     useEffect(() => {
         document.title = "Sign In";
@@ -14,10 +16,16 @@ export default function Auth() {
 
         const userInfo = {
             email: email.trim().toLowerCase(),
-            password: password.trim().toLowerCase()
+            password: password.trim().toLowerCase(),
+            remember
         }
 
-        console.log(userInfo)
+        try {
+            const res = await axios.post("/api/auth/login", userInfo)
+            console.log(res)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -68,7 +76,10 @@ export default function Auth() {
 
                     <div className="flex items-center justify-between text-sm text-gray-400">
                         <label className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" className="w-4 h-4 rounded border-2 border-gray-400 appearance-none checked:bg-violet-500 checked:border-violet-600 cursor-pointer"/>
+                            <input
+                                onChange={event => setRemember(event.target.checked)}
+                                type="checkbox"
+                                className="w-4 h-4 rounded border-2 border-gray-400 appearance-none checked:bg-violet-500 checked:border-violet-600 cursor-pointer"/>
                             <span>منو یادت باشه</span>
                         </label>
                     </div>
