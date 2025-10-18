@@ -21,14 +21,14 @@ export default function Auth() {
     }
 
     return (
-        <div className="flex items-center justify-center">
+        <section className="flex items-center justify-center pt-20">
             <div className="w-full max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
                 <h2 className="text-2xl font-bold text-center">خوش آومدی</h2>
                 <p className="text-sm text-center text-secondary-txt">
                     لطفا به اکانت خودت وارد شو.
                 </p>
 
-                <form className="space-y-4" onSubmit={loginHandler}>
+                <form className="space-y-6" onSubmit={loginHandler}>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>
                         <input
@@ -67,9 +67,9 @@ export default function Auth() {
                     </div>
 
                     <div className="flex items-center justify-between text-sm text-gray-400">
-                        <label className="flex items-center gap-2">
-                            <input type="checkbox" className="rounded border-gray-300" />
-                            منو یادت باشه
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" className="w-4 h-4 rounded border-2 border-gray-400 appearance-none checked:bg-violet-500 checked:border-violet-600 cursor-pointer"/>
+                            <span>منو یادت باشه</span>
                         </label>
                     </div>
 
@@ -81,6 +81,6 @@ export default function Auth() {
                     </button>
                 </form>
             </div>
-        </div>
+        </section>
     )
 }
