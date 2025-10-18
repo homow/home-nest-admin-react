@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react"
-import axios from "axios";
 
-export default function Auth() {
+export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,20 +19,19 @@ export default function Auth() {
             remember
         }
 
-        try {
-            const res = await axios.post("/api/auth/login", userInfo)
-            console.log(res)
-        } catch (e) {
-            console.log(e)
-        }
+        // try {
+        //
+        // } catch (e) {
+        //     console.log(e)
+        // }
     }
 
     return (
-        <section className="flex items-center justify-center pt-20">
+        <section className="flex items-center justify-center min-h-screen">
             <div className="w-full max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
                 <h2 className="text-2xl font-bold text-center">خوش آومدی</h2>
                 <p className="text-sm text-center text-secondary-txt">
-                    لطفا به اکانت خودت وارد شو.
+                    لطفا به اکانت ادمین وارد شو.
                 </p>
 
                 <form className="space-y-6" onSubmit={loginHandler}>

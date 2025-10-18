@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
 
     try {
-        // خواندن cookies از header
+        // read token in header
         const cookies = cookie.parse(req.headers.cookie || '');
         const refresh_token = cookies['sb_refresh_token'];
 
