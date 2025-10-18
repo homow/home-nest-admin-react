@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react"
-import {Link} from "react-router-dom";
 
 export default function Auth() {
     const [showPassword, setShowPassword] = useState(false);
@@ -22,15 +21,18 @@ export default function Auth() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center">
             <div className="w-full max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
-                <h2 className="text-2xl font-bold text-center text-gray-200">Welcome Back</h2>
-                <p className="text-sm text-center text-gray-300">Please login to your account</p>
+                <h2 className="text-2xl font-bold text-center">خوش آومدی</h2>
+                <p className="text-sm text-center text-secondary-txt">
+                    لطفا به اکانت خودت وارد شو.
+                </p>
 
                 <form className="space-y-4" onSubmit={loginHandler}>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>
                         <input
+                            dir={"ltr"}
                             value={email}
                             onChange={event => setEmail(event.target.value)}
                             name="email"
@@ -42,23 +44,24 @@ export default function Auth() {
                     </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium">پسورد</label>
                         <div className="relative">
                             <input
+                                dir={"ltr"}
                                 value={password}
                                 onChange={event => setPassword(event.target.value)}
                                 name="password"
                                 type={showPassword ? "text" : "password"}
                                 id="password"
-                                placeholder="your password"
+                                placeholder="*******"
                                 className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-2 top-2 text-sm text-gray-500 hover:text-violet-500"
+                                className="absolute right-2 top-2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
                             >
-                                {showPassword ? "Hide" : "Show"}
+                                {showPassword ? "مخفی" : "نمایش"}
                             </button>
                         </div>
                     </div>
@@ -66,23 +69,17 @@ export default function Auth() {
                     <div className="flex items-center justify-between text-sm text-gray-400">
                         <label className="flex items-center gap-2">
                             <input type="checkbox" className="rounded border-gray-300" />
-                            Remember me
+                            منو یادت باشه
                         </label>
-                        <a href="#" className="text-violet-500 hover:underline">Forgot password?</a>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full bg-violet-500 text-white font-semibold rounded-lg py-2 hover:bg-violet-600 transition"
+                        className="w-full cursor-pointer bg-violet-500 text-white font-semibold rounded-lg py-2 hover:bg-violet-600 transition"
                     >
                         Login
                     </button>
                 </form>
-
-                <p className="text-sm text-center text-gray-400">
-                    Don’t have an account?{" "}
-                    <Link to="/auth/signup" className="text-violet-500 hover:underline">Sign up</Link>
-                </p>
             </div>
         </div>
     )
