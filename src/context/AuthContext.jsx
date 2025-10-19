@@ -9,7 +9,7 @@ const AuthContext = createContext(null);
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const tryRefresh = useCallback(async () => {
         try {
