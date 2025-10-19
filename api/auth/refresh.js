@@ -30,7 +30,7 @@ export default async function handler(req, res) {
                 path: '/',
                 maxAge: 0
             }));
-            return res.status(401).json({error: 'REFRESH_FAILED'});
+            return res.status(401).json({ok: false, error: 'REFRESH_FAILED'});
         }
 
         const newAccessToken = refreshData.session.access_token;
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
         // بازگرداندن فقط access token و اطلاعات حداقلی
         return res.status(200).json({
             ok: true,
-            access_token: newAccessToken
+            accessToken: newAccessToken
         });
 
         // eslint-disable-next-line

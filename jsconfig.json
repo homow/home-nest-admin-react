@@ -16,6 +16,9 @@
       ],
       "@hooks/*": [
         "src/hooks/*"
+      ],
+      "@api/*": [
+        "src/callApi/*"
       ]
     }
   },

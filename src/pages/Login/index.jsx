@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react"
+import {login} from "@api/callApi.js";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -19,11 +20,12 @@ export default function Login() {
             remember
         }
 
-        // try {
-        //
-        // } catch (e) {
-        //     console.log(e)
-        // }
+        try {
+            const res = await login(userInfo)
+            
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
