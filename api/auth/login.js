@@ -1,8 +1,12 @@
 import supabaseAnon from '../supabaseClient.js';
+import supabaseServer from '../supabaseServer.js';
 import cookie from 'cookie';
 
 // ایجاد client ANON (بدون persistSession)
-const supabase = supabaseAnon({auth: {persistSession: false}});
+const supabase = supabaseAnon({ auth: { persistSession: false } });
+
+// سرور client با SERVICE_ROLE_KEY (برای چک نقش‌ها)
+const supabaseAdmin = supabaseServer; // فرض: ../supabaseServer.js از قبل createClient را با SERVICE_ROLE_KEY ساخته و صادر می‌کند
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -10,50 +14,50 @@ export default async function handler(req, res) {
     }
 
     try {
-        const {email, password, remember} = req.body || {};
+        const { email, password, remember } = req.body || {};
 
         if (!email || !password) {
-            return res.status(400).json({error: 'MISSING_CREDENTIALS'});
+            return res.status(400).json({ error: 'MISSING_CREDENTIALS' });
         }
 
-        // 1) Sign in with email & password
-        const {data: signInData, error: signInError} = await supabase.auth.signInWithPassword({
+        // 1) Sign in with email & password (client ANON)
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
             email: String(email),
-            password: String(password)
+            password: String(password),
         });
 
         if (signInError || !signInData?.session?.access_token) {
-            // Don't leak details; return a generic auth error
-            return res.status(401).json({error: 'INVALID_CREDENTIALS'});
+            return res.status(401).json({ error: 'INVALID_CREDENTIALS' });
         }
 
         const access_token = signInData.session.access_token;
         const refresh_token = signInData.session.refresh_token;
 
-        // 2) Get user info using the access token
-        const {data: userData, error: userError} = await supabase.auth.getUser(access_token);
-        if (userError || !userData?.user) {
-            return res.status(401).json({error: 'INVALID_SESSION'});
+        if (!refresh_token) {
+            // اگر refresh_token گرفته نشد، از ورود جلوگیری کن
+            return res.status(401).json({ error: 'INVALID_SESSION' });
         }
 
-        const uid = userData.user.id;
+        // 2) Get user info from session (signInData.session.user) — بدون تماس اضافی
+        const uid = signInData.session.user?.id;
+        if (!uid) {
+            return res.status(401).json({ error: 'INVALID_SESSION' });
+        }
 
-        // 3) Fetch profile from public.user_profiles filtered by id
-        // Use the same client but set the auth token for this request to ensure RLS uses the user context.
-        supabase.auth?.setAuth(access_token);
-
-        const {data: profile, error: profileErr} = await supabase
+        // 3) Fetch profile from public.user_profiles using server client (service role)
+        // استفاده از service role تا نیازی به setAuth نداشته باشیم
+        const { data: profile, error: profileErr } = await supabaseAdmin
             .from('user_profiles')
             .select('id, role, display_name, email')
             .eq('id', uid)
             .single();
 
         if (profileErr || !profile) {
-            return res.status(500).json({error: 'PROFILE_FETCH_FAILED'});
+            return res.status(500).json({ error: 'PROFILE_FETCH_FAILED' });
         }
 
-        if (profile?.role !== 'admin') {
-            return res.status(403).json({error: 'ACCESS_DENIED'});
+        if (profile.role !== 'admin') {
+            return res.status(403).json({ error: 'ACCESS_DENIED' });
         }
 
         // 4) Set secure HttpOnly cookie for refresh token
@@ -67,29 +71,20 @@ export default async function handler(req, res) {
 
         res.setHeader('Set-Cookie', cookie.serialize('sb_refresh_token', refresh_token, cookieOptions));
 
-        // Clear auth on server client after use
-        supabase.auth?.setAuth(null);
-
         // 5) Return minimal user info and access token to front-end
-        // Access token is returned so front can call Supabase directly for authorized requests.
         return res.status(200).json({
             ok: true,
             user: {
                 id: uid,
                 email: profile?.email || null,
                 display_name: profile?.display_name || null,
-                role: profile?.role || null
+                role: profile?.role || null,
             },
             accessToken: access_token,
         });
-
         // eslint-disable-next-line
     } catch (e) {
-        return res.status(500).json({
-            error: 'INTERNAL_ERROR',
-            message: e.message,   // پیام خطا
-            stack: e.stack,       // stack trace
-            details: e?.response?.data || null // اگر خطای axios بود
-        });
+        // هیچ اطلاعات حساسی را برنگردان؛ فقط پیام عمومی
+        return res.status(500).json({ error: 'INTERNAL_ERROR' });
     }
 }

@@ -28,8 +28,13 @@ export default function Login() {
             setAlertModal({isOpen: false, type: "error", message: ""});
 
             const res = await login(userInfo);
+
             console.log(res);
-            // setUserIsLogin(true)
+
+            if (res.ok && res.user.role === "admin") {
+
+            }
+
         } catch (e) {
             console.log(e)
             const { payload, response } = e || {};
