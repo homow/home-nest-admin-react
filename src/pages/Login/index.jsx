@@ -8,7 +8,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
-    const [alertModal, setAlertModal] = useState({isOpen: true, type: "error", message: ""});
+    const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
     // const {setUserIsLogin} = useIsLogin();
 
     useEffect(() => {
@@ -25,12 +25,24 @@ export default function Login() {
         }
 
         try {
-            const res = await login(userInfo)
+            setAlertModal({isOpen: false, type: "error", message: ""});
+
+            const res = await login(userInfo);
+            console.log(res);
             // setUserIsLogin(true)
-            console.log(res)
         } catch (e) {
-            console.log(typeof e);
             console.log(e)
+            const { payload, response } = e || {};
+            const message =
+                payload?.message === "INVALID_CREDENTIALS" || response?.data?.error === "INVALID_CREDENTIALS"
+                    ? "رمز یا ایمیلت اشتباهه"
+                    : payload?.message || response?.data?.error || "خطای شبکه یا ناشناخته رخ داد";
+
+            setAlertModal({
+                isOpen: true,
+                type: "error",
+                message
+            });
         }
     }
 

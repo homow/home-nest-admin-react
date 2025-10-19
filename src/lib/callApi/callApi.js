@@ -4,41 +4,18 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-// axios.interceptors.request.use(config => {
-//     config.headers.Authorization = `Bearer ${""}`;
-//     return config;
-// });
-//
-// axios.interceptors.response.use(
-//     res => res.data,
-//
-//     async (error) => {
-//         if (error.response?.status === 401 && !error.config._retry) {
-//             error.config._retry = true;
-//
-//             const {ok, accessToken} = await refresh()
-//
-//             if (ok) {
-//                 axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-//                 return axios(error.config);
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// )
-
 const login = async (userInfo) => {
-    try {
-        const res = await axios.post("/api/auth/login", {...userInfo});
+    const res = await axios.post("/api/auth/login", {...userInfo});
+    const { ok, user, accessToken } = res.data;
 
-        const {accessToken, user} = res.data;
-
-        return {ok: true, user, accessToken};
-    } catch (e) {
-        const msg = e?.response?.data?.error || "NETWORK_ERROR"
-        return {ok: false, message: msg, error: e};
+    if (!ok) {
+        const err = new Error("LOGIN_FAILED");
+        err.payload = res.data; // همه اطلاعات خطا اینجا
+        throw err;
     }
-}
+
+    return { ok: true, user, accessToken };
+};
 
 const refresh = async () => {
     try {

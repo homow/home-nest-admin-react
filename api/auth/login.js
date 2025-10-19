@@ -85,7 +85,11 @@ export default async function handler(req, res) {
 
         // eslint-disable-next-line
     } catch (e) {
-        // Do not expose internal error details
-        return res.status(500).json({error: 'INTERNAL_ERROR'});
+        return res.status(500).json({
+            error: 'INTERNAL_ERROR',
+            message: e.message,   // پیام خطا
+            stack: e.stack,       // stack trace
+            details: e?.response?.data || null // اگر خطای axios بود
+        });
     }
 }
