@@ -1,31 +1,28 @@
-"use client";
-
-import {createContext, useContext, useState, useEffect, useCallback} from "react";
-import {login as apiLogin, refresh as apiRefresh} from "@api/callApi.js";
-import axios from "axios";
+import {createContext, useContext, useState} from "react";
 
 const AuthContext = createContext(null);
 
-function AuthProvider({children}) {
+export function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    const tryRefresh = useCallback(async () => {
-        try {
-            const res = apiRefresh();
-        } catch (e) {
+    const login = ({userData, token}) => {
+        setUser(userData);
+        setAccessToken(token);
+    };
 
-        }
-    });
+    const value = {
+        user,
+        accessToken,
+        login,
+    };
 
-    return (
-        <AuthContext.Provider value={{user, accessToken, loading}}>
-            {children}
-        </AuthContext.Provider>
-    )
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-const useAuth = () => useContext(AuthContext);
-
-export default useAuth;
+// 6️⃣ Hook راحت برای استفاده
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) throw new Error("useAuth must be used within an AuthProvider");
+    return context;
+};
