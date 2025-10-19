@@ -15,4 +15,17 @@ const login = async (userInfo) => {
     }
 }
 
+const refresh = async () => {
+    try {
+        const res = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
+
+        if (res.data.ok) {
+            const access_token = res.data.access_token;
+            // set in memory/context
+        }
+    } catch (e) {
+        return {ok: false, error: e};
+    }
+}
+
 export {login};
