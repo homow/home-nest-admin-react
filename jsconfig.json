@@ -18,7 +18,7 @@
         "src/hooks/*"
       ],
       "@api/*": [
-        "src/callApi/*"
+        "src/lib/callApi/*"
       ]
     }
   },

@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import {cn} from "@/lib/utils.js";
+import {cn} from "@/lib/utils/utils.js";
 
 function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
     const {title, dataLinks} = props.data;

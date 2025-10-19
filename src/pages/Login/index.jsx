@@ -1,11 +1,13 @@
 import {useEffect, useState} from "react"
 import {login} from "@api/callApi.js";
+import useIsLogin from "@hooks/useIsLogin.jsx"
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
+    const {setUserIsLogin} = useIsLogin();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
@@ -22,7 +24,8 @@ export default function Login() {
 
         try {
             const res = await login(userInfo)
-            
+            setUserIsLogin(true)
+            console.log(res)
         } catch (e) {
             console.log(e)
         }

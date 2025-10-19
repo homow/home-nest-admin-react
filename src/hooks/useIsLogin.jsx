@@ -1,3 +1,7 @@
+import {useState} from "react";
+
 export default function useIsLogin() {
-    return false;
+    const [userIsLogin, setUserIsLogin] = useState(false);
+
+    return {userIsLogin, setUserIsLogin};
 }

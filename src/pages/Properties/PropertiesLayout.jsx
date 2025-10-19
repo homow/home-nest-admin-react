@@ -1,6 +1,6 @@
 import {NavLink, Outlet} from "react-router-dom";
 import useIsExactRoute from "@hooks/useIsExactRoute.jsx";
-import {cn} from "@/lib/utils";
+import {cn} from "@/lib/utils/utils.js";
 
 const PropertiesLinks = () => {
     const isActiveLinks = isActive => cn(isActive && "text-violet-500")

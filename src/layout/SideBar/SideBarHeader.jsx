@@ -1,5 +1,5 @@
 import logo from "@img/logo.webp"
-import {cn} from "@/lib/utils.js";
+import {cn} from "@/lib/utils/utils.js";
 import {Link} from "react-router-dom";
 
 export default function SideBarHeader({collapsed, setCollapsed}) {
