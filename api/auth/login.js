@@ -26,8 +26,22 @@ export default async function handler(req, res) {
             password: String(password),
         });
 
-        if (signInError || !signInData?.session?.access_token) {
+        if (signInError) {
+            // ✅ تشخیص نوع خطا: اگر پیامش network یا fetch بود یعنی مشکل از اینترنت است نه credential
+            if (
+                signInError.message?.includes("fetch") ||
+                signInError.message?.includes("network") ||
+                signInError.message?.includes("Failed to fetch") ||
+                signInError.status === 0
+            ) {
+                return res.status(503).json({ error: 'NETWORK_ERROR' });
+            }
+
             return res.status(401).json({ error: 'INVALID_CREDENTIALS' });
+        }
+
+        if (!signInData?.session?.access_token) {
+            return res.status(401).json({ error: 'INVALID_SESSION' });
         }
 
         const access_token = signInData.session.access_token;

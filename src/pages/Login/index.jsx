@@ -47,27 +47,19 @@ export default function Login() {
         } catch (err) {
             console.log(err);
 
-            let message = "خطای شبکه یا ناشناخته رخ داد";
+            const data = err.response?.data || {};
+            const status = err.response?.status;
 
-            if (err.isAxiosError) {
-                if (err.response) {
-                    const code = err.response.status;
-                    const data = err.response.data || {};
+            let message = "خطای ناشناخته یا شبکه رخ داد";
 
-                    if (data.error === "INVALID_CREDENTIALS" || code === 401) {
-                        message = "رمز یا ایمیلت اشتباهه";
-                    } else if (data.error === "ACCESS_DENIED" || code === 403) {
-                        message = "شما اجازه ورود ندارید";
-                    } else {
-                        message = data.error || message;
-                    }
-                } else if (err.request) {
-                    message = "مشکل در اتصال به سرور، لطفا اینترنت را بررسی کن";
-                } else {
-                    message = err.message || message;
-                }
-            } else if (err.payload?.message) {
-                message = err.payload.message;
+            if (status === 503 || data.error === "NETWORK_ERROR") {
+                message = "ارتباط با سرور برقرار نشد، اینترنت یا سرور را بررسی کن";
+            } else if (status === 401 || data.error === "INVALID_CREDENTIALS") {
+                message = "رمز یا ایمیلت اشتباهه";
+            } else if (status === 403 || data.error === "ACCESS_DENIED") {
+                message = "شما اجازه ورود ندارید";
+            } else if (status >= 500) {
+                message = "خطا از سمت سرور، بعداً تلاش کن";
             }
 
             setAlertModal({

@@ -12,8 +12,8 @@ export default function AlertModal({message, isOpen, type = "error"}) {
     }, [isOpen]);
 
     return (
-        <div className={`w-70 fixed top-6 right-4 flex items-center justify-center shadow-custom z-30 ${open ? "block" : "hidden"}`}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-2">
+        <div className={`fixed top-6 right-0 left-0 flex items-center justify-center shadow-custom z-30 ${open ? "block" : "hidden"}`}>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
                     {title}
                 </h3>
