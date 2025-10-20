@@ -1,4 +1,5 @@
 import supabaseAnon from '../supabaseClient.js';
+import supabaseServer from '../supabaseServer.js';
 import cookie from 'cookie';
 
 const supabase = supabaseAnon({auth: {persistSession: false}});
@@ -42,12 +43,18 @@ export default async function handler(req, res) {
 
         res.setHeader('Set-Cookie', cookie.serialize('sb_refresh_token', newRefreshToken, cookieOptions));
 
-        const user = refreshData.session.user;
+        const userId = refreshData.session.user.id;
+
+        const {data: profile} = await supabaseServer
+            .from("user_profiles")
+            .select('id, email, display_name, role')
+            .eq("id", userId)
+            .single()
 
         return res.status(200).json({
             ok: true,
             accessToken: newAccessToken,
-            user
+            user: profile
         });
         // eslint-disable-next-line
     } catch (e) {

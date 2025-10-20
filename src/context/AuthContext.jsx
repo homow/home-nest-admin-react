@@ -7,6 +7,7 @@ const AuthContext = createContext(null);
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         (async () => {
@@ -14,10 +15,11 @@ function AuthProvider({children}) {
                 const res = await refresh();
 
                 if (res.ok) {
-                    console.log(res);
-                    setAuthInfo({userData: res.user})
+                    setAuthInfo({userData: res.user, token: res.accessToken});
+                    setLoading(false);
                 }
             } catch (e) {
+                setLoading(false);
                 console.log(e)
             }
         })();

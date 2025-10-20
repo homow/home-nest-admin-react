@@ -4,11 +4,9 @@ import cookie from 'cookie';
 
 const supabase = supabaseAnon({auth: {persistSession: false}});
 
-const supabaseAdmin = supabaseServer; // فرض:
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).end(); // Method Not Allowed
+        return res.status(405).end();
     }
 
     try {
@@ -52,7 +50,7 @@ export default async function handler(req, res) {
             return res.status(401).json({error: 'INVALID_SESSION'});
         }
 
-        const {data: profile, error: profileErr} = await supabaseAdmin
+        const {data: profile, error: profileErr} = await supabaseServer
             .from('user_profiles')
             .select('id, role, display_name, email')
             .eq('id', uid)
