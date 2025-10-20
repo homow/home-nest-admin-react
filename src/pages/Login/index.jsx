@@ -37,11 +37,8 @@ export default function Login() {
 
             const res = await login(userInfo);
 
-            console.log(res);
-
             if (res.ok && res.user.role === "admin") {
-                console.log("admin: ", res)
-                // setAuthInfo(res.user, res.access_token);
+                setAuthInfo({userData: res.user, token: res.accessToken});
             }
 
         } catch (err) {

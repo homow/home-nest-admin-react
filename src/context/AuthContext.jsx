@@ -2,22 +2,13 @@ import {createContext, useContext, useState} from "react";
 
 const AuthContext = createContext(null);
 
-const successLoginExampleResponse = {
-    ok: true,
-    user: {
-        "id": "UUid",
-        "email": "john@gmail.com",
-        "display_name": "name",
-        "role": "admin"
-    },
-    accessToken: "accessToken",
-}
-
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
 
     const setAuthInfo = ({userData, token}) => {
+        console.log("AuthContext: ", accessToken);
+        console.log("AuthContext: ", userData);
         setUser(userData);
         setAccessToken(token);
     };
@@ -41,4 +32,5 @@ const useAuth = () => {
     return context;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export {AuthProvider, useAuth};
