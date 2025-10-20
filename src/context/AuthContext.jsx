@@ -7,8 +7,6 @@ function AuthProvider({children}) {
     const [accessToken, setAccessToken] = useState(null);
 
     const setAuthInfo = ({userData, token}) => {
-        console.log("AuthContext: ", accessToken);
-        console.log("AuthContext: ", userData);
         setUser(userData);
         setAccessToken(token);
     };
