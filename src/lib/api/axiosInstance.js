@@ -21,9 +21,8 @@ axiosInstance.interceptors.response.use(
         const originalRequest = error.config;
         if (!originalRequest._retry && error.response?.status === 401) {
             originalRequest._retry = true;
-            const newToken = await refresh();
 
-            console.log(newToken);
+            const newToken = await refresh();
 
             if (newToken) {
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;

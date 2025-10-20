@@ -38,6 +38,7 @@ function AuthProvider({children}) {
         user,
         accessToken,
         setAuthInfo,
+        loading
     };
 
     return (
