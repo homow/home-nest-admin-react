@@ -12,8 +12,8 @@ export default function AlertModal({message, isOpen, type = "error"}) {
     }, [isOpen]);
 
     return (
-        <div className={`fixed top-10 left-0 right-0 flex items-center justify-center z-30 ${open ? "block" : "hidden"}`}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
+        <div className={`w-70 fixed top-6 right-4 flex items-center justify-center shadow-custom z-30 ${open ? "block" : "hidden"}`}>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-2">
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
                     {title}
                 </h3>
@@ -21,7 +21,7 @@ export default function AlertModal({message, isOpen, type = "error"}) {
                 <div className="flex justify-end">
                     <button
                         onClick={() => setOpen(false)}
-                        className={`cursor-pointer px-4 py-2 rounded-lg text-white ${btnBg} transition`}
+                        className={`cursor-pointer px-3 py-1 rounded-lg text-white ${btnBg} transition`}
                     >
                         بستن
                     </button>

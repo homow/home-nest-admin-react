@@ -9,18 +9,26 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
     const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
-    const {user, accessToken, setAuthInfo} = useAuth();
+    const {setAuthInfo} = useAuth();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
     }, [])
+
+    useEffect(() => {
+        if (alertModal.isOpen) {
+            setTimeout(() => {
+                setAlertModal({...alertModal, isOpen: false})
+            }, 5000)
+        }
+    }, [alertModal])
 
     const loginHandler = async event => {
         event.preventDefault()
 
         const userInfo = {
             email: email.trim().toLowerCase(),
-            password: password.trim().toLowerCase(),
+            password: password.trim(),
             remember
         }
 
@@ -32,16 +40,35 @@ export default function Login() {
             console.log(res);
 
             if (res.ok && res.user.role === "admin") {
-                setAuthInfo(res.user, res.access_token);
+                console.log("admin: ", res)
+                // setAuthInfo(res.user, res.access_token);
             }
 
-        } catch (e) {
-            console.log(e)
-            const { payload, response } = e || {};
-            const message =
-                payload?.message === "INVALID_CREDENTIALS" || response?.data?.error === "INVALID_CREDENTIALS"
-                    ? "رمز یا ایمیلت اشتباهه"
-                    : payload?.message || response?.data?.error || "خطای شبکه یا ناشناخته رخ داد";
+        } catch (err) {
+            console.log(err);
+
+            let message = "خطای شبکه یا ناشناخته رخ داد";
+
+            if (err.isAxiosError) {
+                if (err.response) {
+                    const code = err.response.status;
+                    const data = err.response.data || {};
+
+                    if (data.error === "INVALID_CREDENTIALS" || code === 401) {
+                        message = "رمز یا ایمیلت اشتباهه";
+                    } else if (data.error === "ACCESS_DENIED" || code === 403) {
+                        message = "شما اجازه ورود ندارید";
+                    } else {
+                        message = data.error || message;
+                    }
+                } else if (err.request) {
+                    message = "مشکل در اتصال به سرور، لطفا اینترنت را بررسی کن";
+                } else {
+                    message = err.message || message;
+                }
+            } else if (err.payload?.message) {
+                message = err.payload.message;
+            }
 
             setAlertModal({
                 isOpen: true,
@@ -55,7 +82,7 @@ export default function Login() {
         <>
             <AlertModal {...alertModal}/>
             <section className="flex items-center justify-center min-h-screen">
-                <div className="w-full max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
+                <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
                     <h2 className="text-2xl font-bold text-center">خوش آومدی</h2>
                     <p className="text-sm text-center text-secondary-txt">
                         لطفا به اکانت ادمین وارد شو.

@@ -6,15 +6,15 @@ axios.defaults.withCredentials = true;
 
 const login = async (userInfo) => {
     const res = await axios.post("/api/auth/login", {...userInfo});
-    const { ok, user, accessToken } = res.data;
+    const {ok, user, accessToken} = res.data;
 
     if (!ok) {
         const err = new Error("LOGIN_FAILED");
-        err.payload = res.data; // همه اطلاعات خطا اینجا
+        err.payload = res.data;
         throw err;
     }
 
-    return { ok: true, user, accessToken };
+    return {ok: true, user, accessToken};
 };
 
 const refresh = async () => {
@@ -22,8 +22,7 @@ const refresh = async () => {
         const res = await axios.post('/api/auth/refresh', {}, {withCredentials: true});
 
         if (res.data.ok) {
-            const accessToken = res.data.access_token;
-            return accessToken;
+            return res.data.access_token;
         }
     } catch (e) {
         return {ok: false, error: e};

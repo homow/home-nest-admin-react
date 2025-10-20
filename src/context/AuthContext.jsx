@@ -2,6 +2,17 @@ import {createContext, useContext, useState} from "react";
 
 const AuthContext = createContext(null);
 
+const successLoginExampleResponse = {
+    ok: true,
+    user: {
+        "id": "UUid",
+        "email": "john@gmail.com",
+        "display_name": "name",
+        "role": "admin"
+    },
+    accessToken: "accessToken",
+}
+
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
