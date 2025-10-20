@@ -4,6 +4,28 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
+axios.interceptors.response.use(
+    response => response,
+
+    async error => {
+        const originalRequest  = error.config;
+
+        if (!originalRequest._retry && error.response?.status === 401) {
+            originalRequest._retry = true;
+
+            const newAccessToken = await refresh();
+
+            if (newAccessToken && typeof newAccessToken !== "string") {
+                // setNewAccess
+                originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                return axios(originalRequest);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+)
+
 const login = async (userInfo) => {
     const res = await axios.post("/api/auth/login", {...userInfo});
     const {ok, user, accessToken} = res.data;

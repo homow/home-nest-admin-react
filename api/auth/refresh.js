@@ -46,6 +46,7 @@ export default async function handler(req, res) {
             ok: true,
             accessToken: newAccessToken
         });
+        // eslint-disable-next-line
     } catch (e) {
         return res.status(500).json({ error: 'INTERNAL_ERROR' });
     }
