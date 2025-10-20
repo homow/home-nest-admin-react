@@ -1,8 +1,7 @@
 import {Navigate, Outlet} from "react-router-dom";
-import useIsLogin from "@hooks/useIsLogin.jsx"
+import {useAuth} from "@/context/AuthContext.jsx";
 
 export default function PublicRoutes() {
-    const {userIsLogin} = useIsLogin();
-
-    return userIsLogin ? <Navigate to="/"/> : <Outlet/>
+    const {accessToken} = useAuth();
+    return accessToken ? <Navigate to="/"/> : <Outlet/>
 }

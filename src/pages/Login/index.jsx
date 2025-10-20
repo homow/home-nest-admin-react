@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
 import {login} from "@api/callApi.js";
-import useIsLogin from "@hooks/useIsLogin.jsx"
 import AlertModal from "@components/ui/AlertModal.jsx";
+import {useAuth} from "@/context/AuthContext.jsx";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -9,7 +9,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
     const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
-    // const {setUserIsLogin} = useIsLogin();
+    const {user, accessToken, setAuthInfo} = useAuth();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
@@ -32,7 +32,7 @@ export default function Login() {
             console.log(res);
 
             if (res.ok && res.user.role === "admin") {
-
+                setAuthInfo(res.user, res.access_token);
             }
 
         } catch (e) {

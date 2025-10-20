@@ -2,11 +2,11 @@ import {createContext, useContext, useState} from "react";
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({children}) {
+function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
 
-    const login = ({userData, token}) => {
+    const setAuthInfo = ({userData, token}) => {
         setUser(userData);
         setAccessToken(token);
     };
@@ -14,14 +14,20 @@ export function AuthProvider({children}) {
     const value = {
         user,
         accessToken,
-        login,
+        setAuthInfo,
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
-export const useAuth = () => {
+const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");
     return context;
 };
+
+export {AuthProvider, useAuth};
