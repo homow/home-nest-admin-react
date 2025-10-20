@@ -1,7 +1,7 @@
 import supabaseAnon from '../supabaseClient.js';
 import cookie from 'cookie';
 
-const supabase = supabaseAnon({ auth: { persistSession: false } });
+const supabase = supabaseAnon({auth: {persistSession: false}});
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
@@ -11,10 +11,10 @@ export default async function handler(req, res) {
         const refresh_token = cookies['sb_refresh_token'];
 
         if (!refresh_token) {
-            return res.status(401).json({ error: 'NO_REFRESH_TOKEN' });
+            return res.status(401).json({error: 'NO_REFRESH_TOKEN'});
         }
 
-        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession({
+        const {data: refreshData, error: refreshError} = await supabase.auth.refreshSession({
             refresh_token: String(refresh_token)
         });
 
@@ -27,10 +27,10 @@ export default async function handler(req, res) {
                 maxAge: 0
             });
             res.setHeader('Set-Cookie', clearCookie);
-            return res.status(401).json({ ok: false, error: 'REFRESH_FAILED' });
+            return res.status(401).json({ok: false, error: 'REFRESH_FAILED'});
         }
 
-        const { access_token: newAccessToken, refresh_token: newRefreshToken } = refreshData.session;
+        const {access_token: newAccessToken, refresh_token: newRefreshToken} = refreshData.session;
 
         const cookieOptions = {
             httpOnly: true,
@@ -42,12 +42,15 @@ export default async function handler(req, res) {
 
         res.setHeader('Set-Cookie', cookie.serialize('sb_refresh_token', newRefreshToken, cookieOptions));
 
+        const user = refreshData.session.user;
+
         return res.status(200).json({
             ok: true,
-            accessToken: newAccessToken
+            accessToken: newAccessToken,
+            user
         });
         // eslint-disable-next-line
     } catch (e) {
-        return res.status(500).json({ error: 'INTERNAL_ERROR' });
+        return res.status(500).json({error: 'INTERNAL_ERROR'});
     }
 }

@@ -1,10 +1,31 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
+import {setAccessTokenGetter} from "@api/axiosInstance.js";
+import {refresh} from "@api/callApi.js"
 
 const AuthContext = createContext(null);
 
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await refresh();
+
+                if (res.ok) {
+                    console.log(res);
+                    setAuthInfo({userData: res.user})
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        setAccessTokenGetter(accessToken);
+    }, [accessToken]);
 
     const setAuthInfo = ({userData, token}) => {
         setUser(userData);
