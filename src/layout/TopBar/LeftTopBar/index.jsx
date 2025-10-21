@@ -1,5 +1,5 @@
 import Notification from "./Notification.jsx";
-import Account from "./Account.jsx";
+import Account from "./Account/Account.jsx";
 import ThemeSection from "./ThemeSection.jsx";
 import SearchBar from "./SearchBar.jsx";
 

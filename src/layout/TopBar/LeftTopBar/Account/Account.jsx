@@ -18,7 +18,7 @@ export default function Account() {
     }, []);
 
     return (
-        <div className={"relative size-10 rounded-full"}>
+        <div className={"relative size-10 rounded-full cursor-pointer"}>
             <img className={"w-full"} src={`${avatar}`} alt="avatar profile"/>
             <span className={`absolute bottom-0 right-0 border-2 border-primary-bg rounded-full size-3 ${online ? "bg-green-500" : "bg-red-600"}`}></span>
         </div>

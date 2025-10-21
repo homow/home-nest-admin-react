@@ -27,4 +27,14 @@ const refresh = async () => {
     }
 }
 
-export {login, refresh};
+const logout = async () => {
+    try {
+        const res = await axios.post('/api/auth/logout', {}, {withCredentials: true});
+
+        return {ok: true, res}
+    } catch (e) {
+        return {ok: false, error: e};
+    }
+}
+
+export {login, refresh, logout};
