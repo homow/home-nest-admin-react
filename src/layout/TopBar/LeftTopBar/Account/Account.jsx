@@ -1,26 +1,19 @@
-import avatar from "@img/top-bar/Avatar.webp"
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import Overlay from "@components/ui/Overlay.jsx";
+import AccountAvatar from "@components/common/AccountAvatar.jsx";
+import DropDownAccount from "./DropDownAccount.jsx";
 
 export default function Account() {
-    const [online, setOnline] = useState(navigator.onLine);
-
-    useEffect(() => {
-        const handleOnline = () => setOnline(true);
-        const handleOffline = () => setOnline(false);
-
-        window.addEventListener("online", handleOnline);
-        window.addEventListener("offline", handleOffline);
-
-        return () => {
-            window.removeEventListener("online", handleOnline);
-            window.removeEventListener("offline", handleOffline);
-        };
-    }, []);
+    const [open, setOpen] = useState(false);
 
     return (
-        <div className={"relative size-10 rounded-full cursor-pointer"}>
-            <img className={"w-full"} src={`${avatar}`} alt="avatar profile"/>
-            <span className={`absolute bottom-0 right-0 border-2 border-primary-bg rounded-full size-3 ${online ? "bg-green-500" : "bg-red-600"}`}></span>
+        <div
+            className={"relative cursor-pointer"}
+            onClick={() => setOpen(prevState => !prevState)}
+        >
+            <AccountAvatar/>
+            <DropDownAccount open={open}/>
+            <Overlay flag={open} setFlag={setOpen}/>
         </div>
     )
 }

@@ -1,10 +1,10 @@
+import {useState} from "react";
 import {Outlet} from "react-router-dom";
-import TopBar from "@/layout/TopBar";
-import SideBar from "@/layout/SideBar";
-import Footer from "@/layout/Footer";
+import TopBar from "../TopBar";
+import SideBar from "../SideBar";
+import Footer from "../Footer";
 import SvgDefs from "@components/ui/SvgDefs.jsx";
 import Overlay from "@components/ui/Overlay.jsx";
-import {useState} from "react";
 
 export default function MainLayout() {
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -27,9 +27,7 @@ export default function MainLayout() {
                 <TopBar mobileNavOpen={mobileNavOpen} setMobileNavOpen={setMobileNavOpen}/>
 
                 {/* main content */}
-                <main
-                    id="main"
-                    className={"@container/main relative h-full pb-5 space-y-6"}>
+                <main id="main" className={"@container/main relative h-full pb-5 space-y-6"}>
 
                     {/* Routes */}
                     <Outlet/>
