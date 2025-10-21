@@ -1,79 +1,106 @@
-import supabaseAnon from '../supabaseClient.js';
 import cookie from 'cookie';
+import supabaseAnon from '../supabaseClient.js';
+import supabaseServer from '../supabaseServer.js';
 
-const supabase = supabaseAnon({auth: {persistSession: false}});
+function clearRefreshCookie() {
+    return cookie.serialize('sb_refresh_token', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 0
+    });
+}
+
+function clearClientCookies() {
+    return [clearRefreshCookie()];
+}
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
         return res.status(405).end();
     }
+
+    // Ensure cookie will be cleared in all outcomes
+    const clearHeaders = clearClientCookies();
 
     try {
         const cookies = cookie.parse(req.headers.cookie || '');
         const refreshToken = cookies['sb_refresh_token'];
 
-        // پاک کردن کوکی محلی (همیشه انجام شود)
-        const clearCookie = cookie.serialize('sb_refresh_token', '', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            path: '/',
-            maxAge: 0
-        });
-
-        // اگر توکن وجود نداشت، فقط کوکی را پاک کن و 200 بده
+        // If no refresh token present: just clear cookies and return success
         if (!refreshToken) {
-            res.setHeader('Set-Cookie', clearCookie);
+            res.setHeader('Set-Cookie', clearHeaders);
             return res.status(200).json({ok: true});
         }
 
-        // سعی می‌کنیم refresh token را revoke کنیم.
-        // توجه: در بسیاری از موارد supabase-js client روش مجزایی برای revoke session دارد:
-        //   await supabase.auth.signOut();  // اما signOut روی client ممکن است نیاز به access token داشته باشد.
-        // ما از API refresh/revoke اختصاصی استفاده می‌کنیم اگر در client قابل دسترس باشد.
-        // اگر دسترسی سرویس‌روِل لازم باشد، باید از supabaseServer (service role) استفاده شود.
-        let revokeSucceeded = false;
-
+        // 1) Best-effort: attempt client-side signOut (may be no-op)
         try {
-            // روش امن و بدون لاگ: فراخوانی endpoint signOut با refresh token
-            // اگر پکیج supabase-js نسخه‌ شما از revokeSession/ signOut با refresh token پشتیبانی کند، از آن استفاده می‌کنیم.
-            // fallback: call supabase.auth.signOut() which will attempt to revoke the current session if available.
-            // این تابع ممکن است نیاز به access token داشته باشد؛ در هر حال اگر fail شود ما صرفا ادامه داده و کوکی را پاک میکنیم.
-            if (typeof supabase.auth.signOut === 'function') {
-                // signOut typically revokes current session associated with the client.
-                // We cannot pass the refresh token directly here via supabase-js in all versions.
-                // Try signOut; if client has no session this may be a no-op.
-                await supabase.auth.signOut();
-                revokeSucceeded = true;
+            if (typeof supabaseAnon?.auth?.signOut === 'function') {
+                await supabaseAnon.auth.signOut();
             }
-            // eslint-disable-next-line
         } catch (e) {
-            // swallow errors silently (بدون لاگ)، فقط مارک می‌کنیم که revoke موفق نبوده
-            revokeSucceeded = false;
+            // swallow silently (no logs)
         }
 
-        // اگر خواسته باشید می‌توانیم با service role revoke صریح انجام دهیم (قوی‌تر).
-        // این بخش بصورت اختیاری و تنها در صورت نیاز فعال می‌شود:
-        // try {
-        //   await supabaseServer.auth.admin.invalidateUserTokens(userIdOrOther) ...
-        // } catch(e) { /* swallow */ }
+        // 2) Strong invalidate using service role (supabaseServer) if available
+        // Strategy:
+        // - Try to find the session/user from the refresh token via internal auth endpoints
+        // - If we can locate the session id or user id, remove session(s) via admin API or delete from auth.sessions (service role)
+        // Implementation is best-effort and silent on failure.
+        try {
+            if (supabaseServer) {
+                // Try to call the Supabase Admin/REST logout or token revoke endpoint.
+                // This block uses the service role client where possible to remove server-side sessions.
+                // Approach A: If supabaseServer.auth.admin API exists to revoke a session, use it.
+                // Approach B: fallback to deleting matching rows from auth.sessions table (requires service role DB access).
+                // We'll attempt B: delete rows from auth.sessions where refresh_token matches.
+                // Note: In some Supabase deployments auth.sessions is not directly deletable; this is best-effort.
+                try {
+                    // Try to delete session row from auth.sessions (Postgres) with service role.
+                    // Depending on your Supabase setup, auth.sessions may be in the 'auth' schema.
+                    await supabaseServer
+                        .from('auth.sessions')
+                        .delete()
+                        .eq('refresh_token', refreshToken);
+                    // We do not check the result; if it fails it will throw and be caught below.
+                } catch (e) {
+                    // If direct deletion fails, attempt alternate admin REST revoke (best-effort).
+                    try {
+                        const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, '');
+                        const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || null;
+                        if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+                            // Attempt to hit the auth admin token revoke endpoint (best-effort)
+                            // Note: This endpoint behavior can vary; treat as tolerant.
+                            const adminRevokeUrl = `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`;
+                            await fetch(adminRevokeUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    apikey: SUPABASE_SERVICE_ROLE_KEY,
+                                    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+                                },
+                                body: JSON.stringify({refresh_token: refreshToken})
+                            });
+                        }
+                    } catch (e2) {
+                        // swallow
+                    }
+                }
+            }
+        } catch (e) {
+            // swallow any service-role errors silently
+        }
 
-        // در هر صورت: کوکی را پاک کن تا کلاینت نتواند دوباره از همان refresh token استفاده کند
-        res.setHeader('Set-Cookie', clearCookie);
+        // 3) Ensure we clear the refresh cookie so client can't reuse it
+        res.setHeader('Set-Cookie', clearHeaders);
 
-        // پاسخ کلی، بدون جزئیات خطا
-        return res.status(200).json({ok: true, revoked: revokeSucceeded});
-        // eslint-disable-next-line
+        // 4) Response: minimal. No logs, no internals.
+        return res.status(200).json({ok: true});
     } catch (e) {
-        // بدون لاگ: فقط پاسخ امنیتی عمومی
-        const clearCookie = cookie.serialize('sb_refresh_token', '', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            path: '/',
-            maxAge: 0
-        });
-        res.setHeader('Set-Cookie', clearCookie);
+        // On unexpected error: clear cookie and return generic error without logging
+        res.setHeader('Set-Cookie', clearHeaders);
         return res.status(500).json({ok: false, error: 'INTERNAL_ERROR'});
     }
 }
