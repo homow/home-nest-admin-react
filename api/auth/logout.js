@@ -12,32 +12,31 @@ function clearRefreshCookie() {
     });
 }
 
-function clearClientCookies() {
-    return [clearRefreshCookie()];
-}
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
-        return res.status(405).end();
+        return res.status(405).json({ ok: false, error: 'METHOD_NOT_ALLOWED' });
     }
 
-    const clearHeaders = clearClientCookies();
+    const clearHeaders = [clearRefreshCookie()];
 
     try {
         const cookies = cookie.parse(req.headers.cookie || '');
         const refreshToken = cookies['sb_refresh_token'];
+
+        // No cookie: just clear and done
         if (!refreshToken) {
             res.setHeader('Set-Cookie', clearHeaders);
-            return res.status(200).json({ok: true});
+            return res.status(200).json({ ok: true });
         }
+
+        // Optional best-effort: logout from supabase client (no effect on server)
         try {
-            if (typeof supabaseAnon?.auth?.signOut === 'function') {
-                await supabaseAnon.auth.signOut();
-            }
+            await supabaseAnon.auth.signOut?.();
             // eslint-disable-next-line
-        } catch (e) {
-        }
+        } catch (_) {}
+
+        // Try to remove server session
         try {
             if (supabaseServer) {
                 try {
@@ -45,36 +44,33 @@ export default async function handler(req, res) {
                         .from('auth.sessions')
                         .delete()
                         .eq('refresh_token', refreshToken);
-                    // eslint-disable-next-line
-                } catch (e) {
-                    try {
-                        const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, '');
-                        const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || null;
-                        if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-                            const adminRevokeUrl = `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`;
-                            await fetch(adminRevokeUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    apikey: SUPABASE_SERVICE_ROLE_KEY,
-                                    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
-                                },
-                                body: JSON.stringify({refresh_token: refreshToken})
-                            });
-                        }
-                        // eslint-disable-next-line
-                    } catch (e2) {
+                } catch {
+                    const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, '');
+                    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+                    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+                        await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                apikey: SUPABASE_SERVICE_ROLE_KEY,
+                                Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+                            },
+                            body: JSON.stringify({ refresh_token: refreshToken })
+                        });
                     }
                 }
             }
             // eslint-disable-next-line
-        } catch (e) {
-        }
+        } catch (_) {}
+
+        // Clear cookie & disable cache
         res.setHeader('Set-Cookie', clearHeaders);
-        return res.status(200).json({ok: true});
-        // eslint-disable-next-line
-    } catch (e) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+
+        return res.status(200).json({ ok: true });
+
+    } catch {
         res.setHeader('Set-Cookie', clearHeaders);
-        return res.status(500).json({ok: false, error: 'INTERNAL_ERROR'});
+        return res.status(500).json({ ok: false, error: 'INTERNAL_ERROR' });
     }
 }
