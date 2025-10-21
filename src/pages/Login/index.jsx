@@ -39,6 +39,7 @@ export default function Login() {
 
             if (res.ok && res.user.role === "admin") {
                 setAuthInfo({userData: res.user, token: res.accessToken});
+                setAlertModal({isOpen: true, type: "success", message: "خب، بالاخره وارد شدی."});
             }
 
         } catch (err) {

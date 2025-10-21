@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         const refresh_token = cookies['sb_refresh_token'];
 
         if (!refresh_token) {
-            return res.status(401).json({error: 'NO_REFRESH_TOKEN'});
+            return res.status(401).json({error: 'NO_REFRESH_TOKEN', fuck: true});
         }
 
         const {data: refreshData, error: refreshError} = await supabase.auth.refreshSession({
@@ -34,7 +34,6 @@ export default async function handler(req, res) {
         const {access_token: newAccessToken, refresh_token: newRefreshToken} = refreshData.session;
         const userId = refreshData.session.user.id;
 
-        // گرفتن marker های سرور-ساید
         const { data: profile, error: profileErr } = await supabaseServer
             .from('user_profiles')
             .select('last_strict_login_at, session_remember, id, email, display_name, role')
@@ -57,7 +56,6 @@ export default async function handler(req, res) {
         const lastLogin = profile?.last_strict_login_at ? new Date(profile.last_strict_login_at) : null;
         const now = new Date();
 
-        // اگر کاربر remember نزده و last_strict_login_at بیش از 8 ساعت پیش است => انقضاء سشن
         if (!rememberFlag) {
             if (!lastLogin || (now - lastLogin) > (8 * 60 * 60 * 1000)) {
                 const clearCookie = cookie.serialize('sb_refresh_token', '', {
@@ -86,10 +84,10 @@ export default async function handler(req, res) {
             ok: true,
             accessToken: newAccessToken,
             user: {
-                id: profile.id,
-                email: profile.email || null,
-                display_name: profile.display_name || null,
-                role: profile.role || null,
+                id: profile?.id,
+                email: profile?.email || null,
+                display_name: profile?.display_name || null,
+                role: profile?.role || null,
             }
         });
         // eslint-disable-next-line

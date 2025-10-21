@@ -24,19 +24,16 @@ export default async function handler(req, res) {
         const cookies = cookie.parse(req.headers.cookie || '');
         const refreshToken = cookies['sb_refresh_token'];
 
-        // No cookie: just clear and done
         if (!refreshToken) {
             res.setHeader('Set-Cookie', clearHeaders);
             return res.status(200).json({ ok: true });
         }
 
-        // Optional best-effort: logout from supabase client (no effect on server)
         try {
             await supabaseAnon.auth.signOut?.();
             // eslint-disable-next-line
         } catch (_) {}
 
-        // Try to remove server session
         try {
             if (supabaseServer) {
                 try {

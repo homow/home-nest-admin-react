@@ -14,15 +14,15 @@ function AuthProvider({children}) {
             try {
                 const res = await refresh();
 
-                if (res.ok) {
+                if (res?.ok) {
                     setAuthInfo({userData: res.user, token: res.accessToken});
-                    setLoading(false);
                 } else {
-                    setLoading(false);
+                    setAuthInfo({userData: null, token: null});
                 }
-            } catch (e) {
                 setLoading(false);
+            } catch (e) {
                 console.log(e)
+                setLoading(false);
             }
         })();
     }, []);
