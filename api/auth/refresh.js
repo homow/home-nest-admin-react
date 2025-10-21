@@ -32,29 +32,65 @@ export default async function handler(req, res) {
         }
 
         const {access_token: newAccessToken, refresh_token: newRefreshToken} = refreshData.session;
+        const userId = refreshData.session.user.id;
+
+        // گرفتن marker های سرور-ساید
+        const { data: profile, error: profileErr } = await supabaseServer
+            .from('user_profiles')
+            .select('last_strict_login_at, session_remember, id, email, display_name, role')
+            .eq('id', userId)
+            .single();
+
+        if (profileErr || !profile) {
+            const clearCookie = cookie.serialize('sb_refresh_token', '', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/',
+                maxAge: 0
+            });
+            res.setHeader('Set-Cookie', clearCookie);
+            return res.status(500).json({error: 'PROFILE_FETCH_FAILED'});
+        }
+
+        const rememberFlag = !!profile?.session_remember;
+        const lastLogin = profile?.last_strict_login_at ? new Date(profile.last_strict_login_at) : null;
+        const now = new Date();
+
+        // اگر کاربر remember نزده و last_strict_login_at بیش از 8 ساعت پیش است => انقضاء سشن
+        if (!rememberFlag) {
+            if (!lastLogin || (now - lastLogin) > (8 * 60 * 60 * 1000)) {
+                const clearCookie = cookie.serialize('sb_refresh_token', '', {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'lax',
+                    path: '/',
+                    maxAge: 0
+                });
+                res.setHeader('Set-Cookie', clearCookie);
+                return res.status(401).json({ok: false, error: 'SESSION_EXPIRED'});
+            }
+        }
 
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/',
-            maxAge: 60 * 60 * 24 * 30, // 30 روز
+            maxAge: rememberFlag ? 60 * 60 * 24 * 30 : 60 * 60 * 8,
         };
 
         res.setHeader('Set-Cookie', cookie.serialize('sb_refresh_token', newRefreshToken, cookieOptions));
 
-        const userId = refreshData.session.user.id;
-
-        const {data: profile} = await supabaseServer
-            .from("user_profiles")
-            .select('id, email, display_name, role')
-            .eq("id", userId)
-            .single()
-
         return res.status(200).json({
             ok: true,
             accessToken: newAccessToken,
-            user: profile
+            user: {
+                id: profile.id,
+                email: profile.email || null,
+                display_name: profile.display_name || null,
+                role: profile.role || null,
+            }
         });
         // eslint-disable-next-line
     } catch (e) {

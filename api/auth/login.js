@@ -64,8 +64,6 @@ export default async function handler(req, res) {
             return res.status(403).json({error: 'ACCESS_DENIED'});
         }
 
-        // <-- اضافه: به‌روزرسانی last_strict_login_at و session_remember مطابق remember
-        // استفاده از supabaseServer (service role) برای نوشتن امن
         try {
             await supabaseServer
                 .from('user_profiles')
@@ -74,7 +72,6 @@ export default async function handler(req, res) {
                     session_remember: !!remember
                 })
                 .eq('id', uid);
-            // در صورت خطا آن را swallow نکنید، اما برای جلوگیری از شکست کلی لاگین، فقط لاگ می‌کنیم
         } catch (e) {
             console.error('Failed to update login markers:', e);
         }
