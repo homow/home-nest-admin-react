@@ -17,6 +17,8 @@ function AuthProvider({children}) {
                 if (res.ok) {
                     setAuthInfo({userData: res.user, token: res.accessToken});
                     setLoading(false);
+                } else {
+                    setLoading(false);
                 }
             } catch (e) {
                 setLoading(false);

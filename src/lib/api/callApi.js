@@ -21,8 +21,11 @@ const refresh = async () => {
 
         if (res.data.ok) {
             return res.data;
+        } else {
+
         }
     } catch (e) {
+        console.log(e)
         return {ok: false, error: e};
     }
 }

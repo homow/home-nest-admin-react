@@ -4,22 +4,22 @@ import AccountAvatar from "@components/common/AccountAvatar.jsx";
 import DropDownAccount from "./DropDownAccount.jsx";
 
 export default function Account() {
-    const [openDropDown, setOpenDropDown] = useState(false);
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             {/* overlay */}
-            <Overlay flag={openDropDown} setFlag={setOpenDropDown}/>
+            <Overlay flag={open} setFlag={setOpen}/>
 
             <div
                 className={"relative z-20"}
-                onClick={() => setOpenDropDown(prev => !prev)}
+                onClick={() => setOpen(prev => !prev)}
             >
                 {/* account avatar */}
                 <AccountAvatar className={"cursor-pointer"}/>
 
                 {/* drop down account settings and option */}
-                <DropDownAccount open={openDropDown}/>
+                <DropDownAccount open={open}/>
             </div>
         </>
     )
