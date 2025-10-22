@@ -41,7 +41,7 @@ function AccountInfo() {
     const {user} = useAuth();
 
     return (
-        <div dir={"ltr"} className={"flex flex-row items-center gap-4"}>
+        <div dir={"ltr"} className={"px-5 flex flex-row items-center gap-4"}>
             {/* account avatar */}
             <AccountAvatar/>
 
@@ -66,7 +66,7 @@ export default function DropDownAccount({open, className}) {
     ];
 
     return (
-        <div className={cn("w-58 mt-2 px-4 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
+        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
 
             {/* account info */}
             <AccountInfo/>

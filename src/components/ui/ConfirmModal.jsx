@@ -30,7 +30,6 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                     <button
                         onClick={() => {
                             setOpen(false);
-                            onCancel?.();
                         }}
                         className={`cursor-pointer px-3 py-1 rounded-lg text-white ${cancelBtnBg} transition`}
                     >
