@@ -14,11 +14,15 @@ const axiosInstance = axios.create({
     }
 });
 
-axiosInstance.interceptors.request.use(config => {
-    const token = accessTokenGetter?.();
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-});
+axiosInstance.interceptors.request.use(
+    config => {
+        const token = accessTokenGetter?.();
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+        return config;
+    },
+    err => {
+        console.log(err)
+    });
 
 axiosInstance.interceptors.response.use(
     res => res,
