@@ -1,6 +1,6 @@
 import {useState} from "react";
 import Overlay from "@components/ui/Overlay.jsx";
-import AccountAvatar from "@/layout/TopBar/common/AccountAvatar.jsx";
+import AccountAvatar from "../../../common";
 import DropDownAccount from "./DropDownAccount.jsx";
 
 export default function Account() {
