@@ -5,6 +5,7 @@ import ConfirmModal from "@components/ui/ConfirmModal"
 import AccountAvatar from "../../common/AccountAvatar";
 import {logout} from "@api/callApi.js";
 import {useState} from "react";
+import Overlay from "@components/ui/Overlay.jsx";
 
 function DropDownAccountOptions({data}) {
     const iconElem = icon => {
@@ -61,15 +62,22 @@ export default function DropDownAccount({open, className}) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
 
     // drop down options
-    const openLogoutHandler = () => {
+    const openLogoutModalHandler = () => {
         setOpenLogoutModal(true);
     }
 
-    const closeLogoutHandler = () => setOpenLogoutModal(false);
+    // close logout modal
+    const closeLogoutModalHandler = () => setOpenLogoutModal(false);
 
+    const logoutHandler = () => {
+        console.log("logout");
+        setOpenLogoutModal(false);
+    }
+
+    /// drop down option
     const dropDownAccountOptionsData = [
         {icon: "user", url: "/account", name: "اکانت"},
-        {icon: "logout", props: {onClick: openLogoutHandler}, name: "خروج"},
+        {icon: "logout", props: {onClick: openLogoutModalHandler}, name: "خروج"},
     ];
 
     return (
@@ -81,7 +89,9 @@ export default function DropDownAccount({open, className}) {
             {/* drop down options */}
             <DropDownAccountOptions data={dropDownAccountOptionsData}/>
 
-            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={""} onCancel={closeLogoutHandler} isOpen={openLogoutModal} dangerMode={true}/>
+            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} dangerMode={true}/>
+
+            <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal}/>
         </div>
     )
 };
