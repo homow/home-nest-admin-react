@@ -1,7 +1,7 @@
-import Notification from "./Notification.jsx";
-import Account from "./Account/Account.jsx";
-import ThemeSection from "./ThemeSection.jsx";
-import SearchBar from "./SearchBar.jsx";
+import Notification from "./Notification/Notification";
+import Account from "./AccountMenu/AccountMenu";
+import ThemeSection from "./ThemeSection/ThemeSection";
+import SearchBar from "./SearchBar/SearchBar";
 
 export default function LeftTopBar() {
     return (

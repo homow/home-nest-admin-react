@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
-import {cn} from "@/lib/utils/ui-utils.js";
-import AccountAvatar from "../../common/AccountAvatar.jsx";
+import {cn} from "@/lib/utils/ui-utils";
+import AccountAvatar from "../../common/AccountAvatar";
 
 function DropDownAccountOptions({data}) {
     return (
