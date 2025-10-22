@@ -1,5 +1,5 @@
-import LeftTopBar from './LeftTopBar'
-import RightTopBar from "./RightTopBar";
+import LeftTopBar from './layout/LeftTopBar';
+import RightTopBar from "./layout/RightTopBar";
 
 export default function TopBar({setMobileNavOpen}) {
     return (

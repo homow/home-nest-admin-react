@@ -14,7 +14,7 @@
 *.md       text eol=lf
 *.gitignore text eol=lf
 *.config   text eol=lf
-*.components text eol=lf
+*.common text eol=lf
 *.styles   text eol=lf
 
 # Treat assets as binary
