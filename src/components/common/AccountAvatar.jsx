@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {cn} from "@/lib/utils/utils.js";
+import {cn} from "@/lib/utils/ui-utils.js";
 import avatar from "@img/top-bar/Avatar.webp"
 
 export default function AccountAvatar({className = null}) {
