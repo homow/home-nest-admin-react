@@ -3,8 +3,8 @@ import {useRoutes} from "react-router-dom";
 import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 import PrivateRoutes from "@/routes/PrivateRoutes.jsx";
 import PublicRoutes from "@/routes/PublicRoutes.jsx";
-import MainLayout from "@/layout/MainLayout/index.jsx";
 
+const MainLayout = lazy(() => import("@/layout/MainLayout"));
 const Login = lazy(() => import("@pages/Login"))
 const Home = lazy(() => import("@pages/Home"));
 const Properties = lazy(() => import("@pages/Properties"));

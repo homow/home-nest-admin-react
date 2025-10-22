@@ -7,7 +7,12 @@ const setAccessTokenGetter = (getter) => {
     accessTokenGetter = getter;
 };
 
-const axiosInstance = axios.create({withCredentials: true});
+const axiosInstance = axios.create({
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json",
+    }
+});
 
 axiosInstance.interceptors.request.use(config => {
     const token = accessTokenGetter?.();
