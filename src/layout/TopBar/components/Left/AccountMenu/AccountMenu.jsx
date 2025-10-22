@@ -1,7 +1,7 @@
 import {useState} from "react";
-import Overlay from "@components/ui/Overlay.jsx";
-import AccountAvatar from "../../common/AccountAvatar.jsx";
-import DropDownAccount from "./DropDownAccount.jsx";
+import Overlay from "@components/ui/Overlay";
+import AccountAvatar from "../../common/AccountAvatar";
+import DropDownAccount from "./DropDownAccount";
 
 export default function Account() {
     const [open, setOpen] = useState(false);
@@ -13,7 +13,7 @@ export default function Account() {
 
             <div
                 className={"relative z-20"}
-                onClick={() => setOpen(prev => !prev)}
+                onClick={() => setOpen(true)}
             >
                 {/* account avatar */}
                 <AccountAvatar className={"cursor-pointer"}/>
