@@ -1,4 +1,4 @@
-export default function OpenMobileNavMenuBtn({setMobileNavOpen}) {
+function OpenMobileNavMenuBtn({setMobileNavOpen}) {
     return (
         <span
             onClick={
@@ -11,5 +11,13 @@ export default function OpenMobileNavMenuBtn({setMobileNavOpen}) {
                 <use href="#bars-icon"></use>
             </svg>
         </span>
+    )
+}
+
+export default function Index({setMobileNavOpen}) {
+    return (
+        <div className={"md:hidden"}>
+            <OpenMobileNavMenuBtn setMobileNavOpen={setMobileNavOpen}/>
+        </div>
     )
 }
