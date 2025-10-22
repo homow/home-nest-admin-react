@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, dangerMode = false}) {
+export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, dangerMode = false}) {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {

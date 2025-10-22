@@ -4,29 +4,32 @@ import {useAuth} from "@context/AuthContext"
 import ConfirmModal from "@components/ui/ConfirmModal"
 import AccountAvatar from "../../common/AccountAvatar";
 import {logout} from "@api/callApi.js";
+import {useState} from "react";
 
 function DropDownAccountOptions({data}) {
-    const iconElem = (
-        <span>
-            <svg className={"size-5"}>
-                <use href={`#${data.icon}-icon`}></use>
-            </svg>
-        </span>
-    )
+    const iconElem = icon => {
+        return (
+            <span>
+                <svg className={"size-5"}>
+                    <use href={`#${icon}-icon`}></use>
+                </svg>
+            </span>
+        )
+    }
 
     return (
         <ul>
             {data.map(link => {
                 return (
-                    <li className={"w-full"}>
+                    <li key={link.name} className={"w-full"}>
                         {link.url ? (
                             <Link to={`${data.url}`} className={"w-full flex flex-row items-center gap-4"}>
-                                {iconElem}
+                                {iconElem(link.icon)}
                                 {data.name}
                             </Link>
                         ) : (
-                            <p {...link.props}>
-                                {iconElem}
+                            <p {...link?.props}>
+                                {iconElem(link.icon)}
                                 {data.name}
                             </p>
                         )}
@@ -55,14 +58,16 @@ function AccountInfo() {
 }
 
 export default function DropDownAccount({open, className}) {
+    const [openLogoutModal, setOpenLogoutModal] = useState(false);
+
     // drop down options
     const logoutHandler = () => {
-
+        setOpenLogoutModal(true);
     }
 
     const dropDownAccountOptionsData = [
-        {icon: "user", url: "/account", name: ""},
-        {icon: "logout", props: {onClick: logoutHandler}},
+        {icon: "user", url: "/account", name: "اکانت"},
+        {icon: "logout", props: {onClick: logoutHandler}, name: "خروج"},
     ];
 
     return (
@@ -71,10 +76,12 @@ export default function DropDownAccount({open, className}) {
             {/* account info */}
             <AccountInfo/>
 
-            {/* logout in drop-down account menu */}
+            {/* drop down options */}
             <div>
-
+                <DropDownAccountOptions data={dropDownAccountOptionsData}/>
             </div>
+
+            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={""} isOpen={openLogoutModal} dangerMode={true}/>
         </div>
     )
 }
