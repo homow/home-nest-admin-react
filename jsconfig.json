@@ -19,6 +19,9 @@
       ],
       "@api/*": [
         "src/lib/api/*"
+      ],
+      "@context/*": [
+        "src/context/*"
       ]
     }
   },

@@ -73,9 +73,9 @@ export default function Login() {
             <AlertModal {...alertModal}/>
             <section className="flex items-center justify-center min-h-screen">
                 <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
-                    <h2 className="text-2xl font-bold text-center">خوش آومدی</h2>
+                    <h2 className="text-2xl font-bold text-center">خوش اومدی</h2>
                     <p className="text-sm text-center text-secondary-txt">
-                        لطفا به اکانت ادمین وارد شو.
+                        به اکانت ادمین وارد شو.
                     </p>
 
                     <form className="space-y-6" onSubmit={loginHandler}>

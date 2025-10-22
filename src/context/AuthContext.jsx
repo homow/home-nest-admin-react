@@ -56,5 +56,5 @@ const useAuth = () => {
     return context;
 };
 
-// eslint-disable-next-line react-refresh/only-export-common
+// eslint-disable-next-line react-refresh/only-export-components
 export {AuthProvider, useAuth};

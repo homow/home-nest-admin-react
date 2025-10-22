@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils/ui-utils";
 import AccountAvatar from "../../common/AccountAvatar";
+import {useAuth} from "@context/AuthContext"
 
 function DropDownAccountOptions({data}) {
     return (
@@ -21,12 +22,29 @@ function DropDownAccountOptions({data}) {
     )
 }
 
+function AccountInfo() {
+    const {user} = useAuth();
+
+    return (
+        <div dir={"ltr"} className={"flex flex-row items-center gap-4"}>
+            {/* account avatar */}
+            <AccountAvatar/>
+
+            {/* account details */}
+            <div>
+                <p>{user?.display_name}</p>
+                <p className={"text-secondary-txt text-sm"}>{user?.role}</p>
+            </div>
+        </div>
+    )
+}
+
 export default function DropDownAccount({open, className}) {
     return (
         <div className={cn("w-58 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
 
-            {/* account avatar */}
-            <AccountAvatar/>
+            {/* account info */}
+            <AccountInfo/>
         </div>
     )
 }
