@@ -1,11 +1,4 @@
-import {useEffect, useState} from "react";
-
-export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, dangerMode = false}) {
-    const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        setOpen(isOpen);
-    }, [isOpen]);
+export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, dangerMode = false, z = "z-30"}) {
 
     const confirmBtnBg = dangerMode
         ? "bg-red-500 hover:bg-red-600"
@@ -19,8 +12,8 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
 
     return (
         <div
-            className={`fixed top-6 right-0 left-0 flex items-center justify-center shadow-custom z-30 ${
-                open ? "block" : "hidden"
+            className={`fixed top-1/2 -translate-y-1/2 right-0 left-0 flex items-center justify-center shadow-custom ${z} ${
+                isOpen ? "block" : "hidden"
             }`}
         >
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
@@ -29,7 +22,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={() => {
-                            setOpen(false);
+                            onCancel();
                         }}
                         className={`cursor-pointer px-3 py-1 rounded-lg text-white ${cancelBtnBg} transition`}
                     >
@@ -37,7 +30,6 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                     </button>
                     <button
                         onClick={() => {
-                            setOpen(false);
                             onConfirm?.();
                         }}
                         className={`cursor-pointer px-3 py-1 rounded-lg text-white ${confirmBtnBg} transition`}

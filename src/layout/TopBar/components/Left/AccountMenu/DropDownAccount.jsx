@@ -18,19 +18,19 @@ function DropDownAccountOptions({data}) {
     }
 
     return (
-        <ul>
+        <ul className={"space-y-3 px-4 mt-4"}>
             {data.map(link => {
                 return (
                     <li key={link.name} className={"w-full"}>
                         {link.url ? (
-                            <Link to={`${data.url}`} className={"w-full flex flex-row items-center gap-4"}>
+                            <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}
-                                {data.name}
+                                {link.name}
                             </Link>
                         ) : (
-                            <p {...link?.props}>
+                            <p {...link?.props} className={"flex flex-row items-center gap-2 cursor-pointer"}>
                                 {iconElem(link.icon)}
-                                {data.name}
+                                {link.name}
                             </p>
                         )}
                     </li>
@@ -61,13 +61,15 @@ export default function DropDownAccount({open, className}) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
 
     // drop down options
-    const logoutHandler = () => {
+    const openLogoutHandler = () => {
         setOpenLogoutModal(true);
     }
 
+    const closeLogoutHandler = () => setOpenLogoutModal(false);
+
     const dropDownAccountOptionsData = [
         {icon: "user", url: "/account", name: "اکانت"},
-        {icon: "logout", props: {onClick: logoutHandler}, name: "خروج"},
+        {icon: "logout", props: {onClick: openLogoutHandler}, name: "خروج"},
     ];
 
     return (
@@ -77,11 +79,9 @@ export default function DropDownAccount({open, className}) {
             <AccountInfo/>
 
             {/* drop down options */}
-            <div>
-                <DropDownAccountOptions data={dropDownAccountOptionsData}/>
-            </div>
+            <DropDownAccountOptions data={dropDownAccountOptionsData}/>
 
-            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={""} isOpen={openLogoutModal} dangerMode={true}/>
+            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={""} onCancel={closeLogoutHandler} isOpen={openLogoutModal} dangerMode={true}/>
         </div>
     )
-}
+};
