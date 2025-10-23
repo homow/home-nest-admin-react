@@ -5,7 +5,7 @@ import {refresh} from "@api/callApi.js"
 const AuthContext = createContext(null);
 
 function AuthProvider({children}) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({display_name: "homow", role: "admin", id: "1", email: "homow@gmail.com"});
     const [accessToken, setAccessToken] = useState(true);
     const [loading, setLoading] = useState(false);
 
