@@ -8,7 +8,7 @@ import Overlay from "@components/ui/Overlay";
 import {logout} from "@api/callApi.js";
 import {useState} from "react";
 
-function DropDownAccountOptions({data}) {
+function DropDownAccountOptions({data, className}) {
     const iconElem = icon => {
         return (
             <span>
@@ -20,10 +20,10 @@ function DropDownAccountOptions({data}) {
     }
 
     return (
-        <ul className={"mt-4 divide-y divide-disable-txt/30"}>
+        <ul className={cn("divide-y divide-disable-txt/30", className)}>
             {data.map(link => {
                 return (
-                    <li key={link.name} className={"w-full px-4 *:py-2 *:hover:opacity-70 *:transition-all *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
+                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-70 *:transition-all *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
                         {link.url ? (
                             <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}
@@ -106,7 +106,7 @@ export default function DropDownAccount({open, className}) {
             <AccountInfo className={"pb-4 border-b border-disable-txt/50"}/>
 
             {/* drop down options */}
-            <DropDownAccountOptions data={dropDownAccountOptionsData}/>
+            <DropDownAccountOptions className={"pt-2"} data={dropDownAccountOptionsData}/>
 
             {/* confirm logout modal */}
             <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} dangerMode={true}/>
