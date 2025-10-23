@@ -19,7 +19,7 @@ function DropDownAccountOptions({data}) {
     }
 
     return (
-        <ul className={"space-y-3 px-4 mt-4"}>
+        <ul className={"space-y-4 px-4 mt-4"}>
             {data.map(link => {
                 return (
                     <li key={link.name} className={"w-full"}>
@@ -41,11 +41,11 @@ function DropDownAccountOptions({data}) {
     )
 }
 
-function AccountInfo() {
+function AccountInfo({className}) {
     const {user} = useAuth();
 
     return (
-        <div dir={"ltr"} className={"px-5 flex flex-row items-center gap-4"}>
+        <div dir={"ltr"} className={`px-5 flex flex-row items-start gap-4 ${className}`}>
             {/* account avatar */}
             <AccountAvatar/>
 
@@ -81,16 +81,18 @@ export default function DropDownAccount({open, className}) {
     ];
 
     return (
-        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl divide-y last:border-none divide-disable-txt *:pb-4", className, open ? "block" : "hidden")}>
+        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
 
             {/* account info */}
-            <AccountInfo/>
+            <AccountInfo className={"pb-4 border-b border-disable-txt/50"}/>
 
             {/* drop down options */}
             <DropDownAccountOptions data={dropDownAccountOptionsData}/>
 
+            {/* confirm logout modal */}
             <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} dangerMode={true}/>
 
+            {/* overlay */}
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal}/>
         </div>
     )
