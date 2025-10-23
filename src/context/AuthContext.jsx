@@ -5,27 +5,27 @@ import {refresh} from "@api/callApi.js"
 const AuthContext = createContext(null);
 
 function AuthProvider({children}) {
-    const [user, setUser] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState({});
+    const [accessToken, setAccessToken] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const res = await refresh();
-
-                if (res?.ok) {
-                    setAuthInfo({userData: res.user, token: res.accessToken});
-                } else {
-                    setAuthInfo({userData: null, token: null});
-                }
-                setLoading(false);
-            } catch (e) {
-                console.log(e)
-                setLoading(false);
-            }
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const res = await refresh();
+    //
+    //             if (res?.ok) {
+    //                 setAuthInfo({userData: res.user, token: res.accessToken});
+    //             } else {
+    //                 setAuthInfo({userData: null, token: null});
+    //             }
+    //             setLoading(false);
+    //         } catch (e) {
+    //             console.log(e)
+    //             setLoading(false);
+    //         }
+    //     })();
+    // }, []);
 
     useEffect(() => {
         setAccessTokenGetter(accessToken);

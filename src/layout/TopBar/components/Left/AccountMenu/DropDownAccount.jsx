@@ -81,7 +81,7 @@ export default function DropDownAccount({open, className}) {
     ];
 
     return (
-        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
+        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl divide-y last:border-none divide-disable-txt *:pb-4", className, open ? "block" : "hidden")}>
 
             {/* account info */}
             <AccountInfo/>
