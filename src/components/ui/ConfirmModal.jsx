@@ -1,18 +1,18 @@
 export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, dangerMode = false, z = "z-30"}) {
 
     const confirmBtnBg = dangerMode
-        ? "bg-red-500 hover:bg-red-600"
-        : "bg-green-500 hover:bg-green-600";
+        ? "bg-red-600 hover:bg-red-800"
+        : "bg-green-600 hover:bg-green-800";
 
     const cancelBtnBg = dangerMode
-        ? "bg-green-500 hover:bg-green-600"
-        : "bg-red-500 hover:bg-red-600";
+        ? "bg-green-600 hover:bg-green-800"
+        : "bg-red-600 hover:bg-red-800";
 
     const modalHeaderColor = dangerMode ? "text-red-500" : "text-green-500";
 
     return (
         <div
-            className={`fixed top-1/2 -translate-y-1/2 right-0 left-0 flex items-center justify-center shadow-custom ${z} ${
+            className={`text-sm sm:text-base px-4 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 max-w-md w-full flex items-center justify-center shadow-custom ${z} ${
                 isOpen ? "block" : "hidden"
             }`}
         >

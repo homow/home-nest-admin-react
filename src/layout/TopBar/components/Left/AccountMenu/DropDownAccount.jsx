@@ -69,9 +69,18 @@ export default function DropDownAccount({open, className}) {
     // close logout modal
     const closeLogoutModalHandler = () => setOpenLogoutModal(false);
 
-    const logoutHandler = () => {
-        console.log("logout");
-        setOpenLogoutModal(false);
+    const logoutHandler = async () => {
+        try {
+            const res = await logout();
+
+            if (res.ok) {
+                setOpenLogoutModal(false);
+            } else {
+                console.log("res error:", res)
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     /// drop down option
