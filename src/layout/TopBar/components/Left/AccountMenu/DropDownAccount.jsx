@@ -61,6 +61,7 @@ function AccountInfo({className}) {
 
 export default function DropDownAccount({open, className}) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
+    const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const {setAuthInfo} = useAuth();
 
     // drop down options
@@ -77,9 +78,11 @@ export default function DropDownAccount({open, className}) {
 
             if (res.ok) {
                 console.log(res)
+                setIsOpenAlertModal(true);
 
                 setTimeout(() => {
                     setOpenLogoutModal(false);
+                    setIsOpenAlertModal(false);
                     setAuthInfo({userData: {}, accessToken: null});
                 }, 4000);
             } else {
@@ -112,7 +115,7 @@ export default function DropDownAccount({open, className}) {
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal}/>
 
             {/* alert modal for success message after logout */}
-            <AlertModal/>
+            <AlertModal isOpen={isOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
         </div>
     )
 };
