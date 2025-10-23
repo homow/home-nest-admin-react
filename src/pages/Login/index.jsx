@@ -90,6 +90,7 @@ export default function Login() {
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
                                 name="email"
+                                autoComplete={"email"}
                                 type="email"
                                 id="email"
                                 placeholder="you@example.com"
@@ -124,6 +125,7 @@ export default function Login() {
                         <div className="flex items-center justify-between text-sm text-gray-400">
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input
+                                    name={"remember"}
                                     onChange={event => setRemember(event.target.checked)}
                                     type="checkbox"
                                     className="w-4 h-4 rounded border-2 border-gray-400 appearance-none checked:bg-violet-500 checked:border-violet-600 cursor-pointer"/>

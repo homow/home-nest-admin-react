@@ -20,10 +20,10 @@ function DropDownAccountOptions({data}) {
     }
 
     return (
-        <ul className={"px-4 mt-4"}>
+        <ul className={"mt-4 divide-y divide-disable-txt/30"}>
             {data.map(link => {
                 return (
-                    <li key={link.name} className={"w-full *:py-2 *:hover:opacity-70 *:transition-all *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
+                    <li key={link.name} className={"w-full px-4 *:py-2 *:hover:opacity-70 *:transition-all *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
                         {link.url ? (
                             <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}
