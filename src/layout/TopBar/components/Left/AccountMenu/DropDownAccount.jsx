@@ -1,11 +1,12 @@
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils/ui-utils";
-import {useAuth} from "@context/AuthContext"
-import ConfirmModal from "@components/ui/ConfirmModal"
+import {useAuth} from "@context/AuthContext";
+import ConfirmModal from "@components/ui/ConfirmModal";
+import AlertModal from "@components/ui/AlertModal";
 import AccountAvatar from "../../common/AccountAvatar";
+import Overlay from "@components/ui/Overlay";
 import {logout} from "@api/callApi.js";
 import {useState} from "react";
-import Overlay from "@components/ui/Overlay.jsx";
 
 function DropDownAccountOptions({data}) {
     const iconElem = icon => {
@@ -60,6 +61,7 @@ function AccountInfo({className}) {
 
 export default function DropDownAccount({open, className}) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
+    const {setAuthInfo} = useAuth();
 
     // drop down options
     const openLogoutModalHandler = () => {
@@ -74,7 +76,12 @@ export default function DropDownAccount({open, className}) {
             const res = await logout();
 
             if (res.ok) {
-                setOpenLogoutModal(false);
+                console.log(res)
+
+                setTimeout(() => {
+                    setOpenLogoutModal(false);
+                    setAuthInfo({userData: {}, accessToken: null});
+                }, 4000);
             } else {
                 console.log("res error:", res)
             }
@@ -103,6 +110,9 @@ export default function DropDownAccount({open, className}) {
 
             {/* overlay */}
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal}/>
+
+            {/* alert modal for success message after logout */}
+            <AlertModal/>
         </div>
     )
 };
