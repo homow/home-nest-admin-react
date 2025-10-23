@@ -23,7 +23,6 @@ const refresh = async () => {
             return res.data;
         }
     } catch (e) {
-        console.log(e)
         return {ok: false, error: e};
     }
 }
