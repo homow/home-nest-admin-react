@@ -38,8 +38,11 @@ export default function Login() {
             const res = await login(userInfo);
 
             if (res.ok && res.user.role === "admin") {
-                setAuthInfo({userData: res.user, token: res.accessToken});
                 setAlertModal({isOpen: true, type: "success", message: "خب، بالاخره وارد شدی."});
+
+                setTimeout(() => {
+                    setAuthInfo({userData: res.user, token: res.accessToken});
+                }, 3000)
             }
 
         } catch (err) {

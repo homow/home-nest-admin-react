@@ -18,7 +18,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                 isOpen ? "block" : "hidden"
             }`)}
         >
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full p-6 space-y-6">
                 <h3 className={cn(`text-lg font-semibold ${modalHeaderColor}`)}>{title}</h3>
                 <p className="text-gray-700 dark:text-gray-300">{message}</p>
                 <div className="flex justify-end gap-3">

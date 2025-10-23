@@ -13,8 +13,8 @@ export default function AlertModal({message, isOpen, type = "error"}) {
     }, [isOpen]);
 
     return (
-        <div className={cn(`fixed top-6 right-0 left-0 flex items-center justify-center shadow-custom z-30 ${open ? "block" : "hidden"}`)}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
+        <div className={cn(`fixed top-6 left-1/2 max-w-md w-full -translate-x-1/2 flex items-center justify-center shadow-custom z-30 ${open ? "block" : "hidden"}`)}>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full p-6 space-y-4">
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
                     {title}
                 </h3>

@@ -26,6 +26,7 @@ function AuthProvider({children}) {
                 if (res?.ok) {
                     setAuthInfo({userData: res.user, token: res.accessToken});
                 } else {
+                    console.log("res no ok:", res)
                     setAuthInfo({userData: null, token: null});
                 }
                 setLoading(false);
