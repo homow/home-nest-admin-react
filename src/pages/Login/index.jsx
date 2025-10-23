@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {login} from "@api/callApi.js";
+import {login} from "@api/requests/auth.js";
 import AlertModal from "@components/ui/AlertModal.jsx";
 import {useAuth} from "@/context/AuthContext.jsx";
 

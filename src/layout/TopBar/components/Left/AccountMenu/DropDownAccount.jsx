@@ -1,12 +1,12 @@
+import {useState} from "react";
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils/ui-utils";
-import {useAuth} from "@context/AuthContext";
-import ConfirmModal from "@components/ui/ConfirmModal";
-import AlertModal from "@components/ui/AlertModal";
-import AccountAvatar from "../../common/AccountAvatar";
 import Overlay from "@components/ui/Overlay";
-import {logout} from "@api/callApi.js";
-import {useState} from "react";
+import AlertModal from "@components/ui/AlertModal";
+import ConfirmModal from "@components/ui/ConfirmModal";
+import AccountAvatar from "../../common/AccountAvatar";
+import {useAuth} from "@context/AuthContext";
+import {logout} from "@api/requests/auth.js";
 
 function DropDownAccountOptions({data, className}) {
     const iconElem = icon => {

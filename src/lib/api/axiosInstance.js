@@ -1,5 +1,5 @@
 import axios from "axios";
-import {refresh} from "@api/callApi.js";
+import {refresh} from "@api/requests/auth.js";
 
 let accessTokenGetter = null;
 

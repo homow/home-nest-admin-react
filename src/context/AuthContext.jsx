@@ -1,17 +1,8 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {setAccessTokenGetter} from "@api/axiosInstance.js";
-import {refresh} from "@api/callApi.js"
+import {refresh} from "@api/requests/auth.js"
 
 const AuthContext = createContext(null);
-
-{
-    const exampleUser = {
-        id: "1",
-        role: "admin",
-        display_name: "homow",
-        email: "homow@gmail.com",
-    }
-}
 
 function AuthProvider({children}) {
     const [user, setUser] = useState({});
@@ -68,3 +59,12 @@ const useAuth = () => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export {AuthProvider, useAuth};
+
+// {
+//     const exampleUser = {
+//         id: "1",
+//         role: "admin",
+//         display_name: "homow",
+//         email: "homow@gmail.com",
+//     }
+// }
