@@ -1,16 +1,16 @@
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, dangerMode = false, z = "z-30"}) {
+export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, confirmText = "تأیید", cancelText = "لغو", dangerMode = false, z = "z-30"}) {
 
     const confirmBtnBg = dangerMode
-        ? "bg-red-600 hover:bg-red-800"
-        : "bg-green-600 hover:bg-green-800";
+        ? "bg-rose-600 hover:bg-rose-800"
+        : "bg-emerald-600 hover:bg-emerald-800";
 
     const cancelBtnBg = dangerMode
-        ? "bg-green-600 hover:bg-green-800"
-        : "bg-red-600 hover:bg-red-800";
+        ? "bg-emerald-600 hover:bg-emerald-800"
+        : "bg-rose-600 hover:bg-rose-800";
 
-    const modalHeaderColor = dangerMode ? "text-red-500" : "text-green-500";
+    const modalHeaderColor = dangerMode ? "text-rose-500" : "text-emerald-500";
 
     return (
         <div
@@ -19,7 +19,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
             }`)}
         >
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full p-6 space-y-6">
-                <h3 className={cn(`text-lg font-semibold ${modalHeaderColor}`)}>{title}</h3>
+                <h3 className={cn(`text-lg font-medium ${modalHeaderColor}`)}>{title}</h3>
                 <p className="text-gray-700 dark:text-gray-300">{message}</p>
                 <div className="flex justify-end gap-3">
                     <button
@@ -28,7 +28,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                         }}
                         className={cn(`cursor-pointer px-4 py-1.5 rounded-lg text-white ${cancelBtnBg} transition`)}
                     >
-                        لغو
+                        {cancelText}
                     </button>
                     <button
                         onClick={() => {
@@ -36,7 +36,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
                         }}
                         className={cn(`cursor-pointer px-4 py-1.5 rounded-lg text-white ${confirmBtnBg} transition`)}
                     >
-                        تأیید
+                        {confirmText}
                     </button>
                 </div>
             </div>

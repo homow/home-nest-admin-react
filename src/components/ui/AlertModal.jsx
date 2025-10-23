@@ -4,8 +4,8 @@ import {cn} from "@/lib/utils/ui-utils.js";
 export default function AlertModal({message, isOpen, type = "error"}) {
     const [open, setOpen] = useState(false);
 
-    const bgHeader = type === "error" ? "text-red-500" : "text-green-500";
-    const btnBg = type === "error" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600";
+    const bgHeader = type === "error" ? "text-rose-500" : "text-emerald-500";
+    const btnBg = type === "error" ? "bg-rose-500 hover:bg-rose-600" : "bg-emerald-500 hover:bg-emerald-600";
     const title = type === "error" ? "خطا" : "موفقیت";
 
     useEffect(() => {
