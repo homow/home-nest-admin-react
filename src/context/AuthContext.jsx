@@ -5,28 +5,33 @@ import {refresh} from "@api/requests/auth.js"
 const AuthContext = createContext(null);
 
 function AuthProvider({children}) {
-    const [user, setUser] = useState({});
-    const [accessToken, setAccessToken] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState({
+        id: "1",
+        role: "admin",
+        display_name: "homow",
+        email: "homow@gmail.com",
+    });
+    const [accessToken, setAccessToken] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const res = await refresh();
-
-                if (res?.ok) {
-                    setAuthInfo({userData: res.user, token: res.accessToken});
-                } else {
-                    console.log("res no ok:", res)
-                    setAuthInfo({userData: null, token: null});
-                }
-                setLoading(false);
-            } catch (e) {
-                console.log(e)
-                setLoading(false);
-            }
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const res = await refresh();
+    //
+    //             if (res?.ok) {
+    //                 setAuthInfo({userData: res.user, token: res.accessToken});
+    //             } else {
+    //                 console.log("res not ok:", res)
+    //                 setAuthInfo({userData: null, token: null});
+    //             }
+    //             setLoading(false);
+    //         } catch (e) {
+    //             console.log(e)
+    //             setLoading(false);
+    //         }
+    //     })();
+    // }, []);
 
     useEffect(() => {
         setAccessTokenGetter(accessToken);
