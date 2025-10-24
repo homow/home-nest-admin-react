@@ -5,8 +5,8 @@ import path from 'path';
 import {fileURLToPath} from "url";
 import {visualizer} from "rollup-plugin-visualizer";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig(({mode}) => {
     const env = loadEnv(mode, process.cwd(), '')
@@ -17,11 +17,20 @@ export default defineConfig(({mode}) => {
             rollupOptions: {
                 output: {
                     manualChunks(id) {
-                        if (id.includes('react') || id.includes("react-router-dom") || id.includes("react-dom")) return 'vendor';
+                        if (!id.includes('node_modules')) return;
+
+                        if (id.includes('react') || id.includes('react-dom')) return 'react-core';
+                        if (id.includes('react-router-dom')) return 'react-router-dom';
                         if (id.includes('@supabase/supabase-js')) return 'supabase';
+                        if (id.includes('axios')) return 'axios';
+                        if (id.includes('clsx') || id.includes('tailwind-merge')) return 'utils';
+
+                        return 'vendor';
                     }
                 }
-            }
+            },
+            chunkSizeWarningLimit: 500,
+            sourcemap: mode === 'development',
         },
         resolve: {
             alias: {
@@ -37,12 +46,13 @@ export default defineConfig(({mode}) => {
         plugins: [
             react(),
             tailwindcss(),
-            env.ANALYZE === "true" && visualizer({
+            env.ANALYZE === "true" &&
+            visualizer({
                 filename: "analyze.html",
                 open: true,
                 gzipSize: true,
                 brotliSize: true
             }),
-        ],
+        ].filter(Boolean),
     }
 });
