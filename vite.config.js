@@ -19,12 +19,23 @@ export default defineConfig(({mode}) => {
                     manualChunks(id) {
                         if (!id.includes('node_modules')) return;
 
-                        if (id.includes('react') || id.includes('react-dom')) return 'react-core';
-                        if (id.includes('react-router-dom')) return 'react-router-dom';
-                        if (id.includes('@supabase/supabase-js')) return 'supabase';
-                        if (id.includes('axios')) return 'axios';
-                        if (id.includes('clsx') || id.includes('tailwind-merge')) return 'utils';
+                        // React ecosystem
+                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom'))
+                            return 'react-core';
 
+                        // Supabase SDK
+                        if (id.includes('@supabase/supabase-js'))
+                            return 'supabase';
+
+                        // Axios (network layer)
+                        if (id.includes('axios'))
+                            return 'axios';
+
+                        // Small utils
+                        if (id.includes('clsx') || id.includes('tailwind-merge'))
+                            return 'utils';
+
+                        // Default vendor chunk
                         return 'vendor';
                     }
                 }
