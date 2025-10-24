@@ -44,7 +44,7 @@ export default function PropertiesLayout() {
                 <PropertiesRoutes/>
             </section>
 
-            <section className={"main-section"}>
+            <section className={"main-components"}>
                 {isRoute ? <AllProperties/> : <Outlet/>}
             </section>
         </>
