@@ -1,8 +1,9 @@
 import {NavLink, Outlet} from "react-router-dom";
-import useIsExactRoute from "@hooks/useIsExactRoute.jsx";
+import useIsExactRoute from "@hooks/useIsExactRoute";
 import {cn} from "@/lib/utils/ui-utils.js";
+import AllProperties from "./AllProperties.jsx"
 
-const PropertiesLinks = () => {
+const PropertiesRoutes = () => {
     const isActiveLinks = isActive => cn(isActive && "text-violet-500")
 
     return (
@@ -19,14 +20,14 @@ const PropertiesLinks = () => {
                 <NavLink
                     className={({isActive}) => isActiveLinks(isActive)}
                     to={"/properties/edit"}>
-                    تغییر جزئیات ملک‌ها
+                    تغییر ملک‌ها
                 </NavLink>
             </li>
             <li>
                 <NavLink
                     className={({isActive}) => isActiveLinks(isActive)}
                     to={"/properties/create"}>
-                    افزودن ملک جدید
+                    افزودن ملک
                 </NavLink>
             </li>
         </ul>
@@ -40,11 +41,11 @@ export default function PropertiesLayout() {
         <>
             <section className={"main-components space-y-8"}>
                 <h1 className={"text-center"}>مدیریت ملک‌ها</h1>
-                <PropertiesLinks/>
+                <PropertiesRoutes/>
             </section>
 
             <section className={"main-section"}>
-                {isRoute ? <p>ملک ها</p> : <Outlet/>}
+                {isRoute ? <AllProperties/> : <Outlet/>}
             </section>
         </>
     );

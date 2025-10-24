@@ -1,85 +1,201 @@
 import supabaseAnon from '../supabaseClient.js';
 import supabaseServer from '../supabaseServer.js';
-import cookie from 'cookie';
 
-const supabase = supabaseAnon({auth: {persistSession: false}});
-const supabaseSvr = supabaseServer(); // service role
+const supabaseAnonClient = supabaseAnon();
+const supabaseServerClient = supabaseServer();
+
+// helper: extract bearer token
+function getBearerToken(req) {
+    const auth = req.headers?.authorization || req.headers?.Authorization;
+    if (!auth) return null;
+    const m = auth.match(/^Bearer\s+(.+)$/i);
+    return m ? m[1] : null;
+}
+
+async function isAdmin(req) {
+    const token = getBearerToken(req);
+    if (!token) return false;
+    // verify session / get user
+    const {data: {user}, error} = await supabaseAnonClient.auth.getUser(token);
+    if (error || !user) return false;
+    // check role in user_profiles table
+    const {data: profile, error: profErr} = await supabaseServerClient
+        .from('user_profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+    if (profErr || !profile) return false;
+    return profile?.role === 'admin';
+}
 
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).json({error: 'METHOD_NOT_ALLOWED'});
+    // GET: public read
+    if (req.method === 'GET') {
+        try {
+            const id = (req.query && req.query.id) || (new URL(req.url, 'http://localhost')).searchParams.get('id');
+            const num = (req.query && req.query?.num) || (new URL(req.url, 'http://localhost')).searchParams.get('num');
+            const seq = (req.query && req.query?.seq) || (new URL(req.url, 'http://localhost')).searchParams.get('seq');
 
-    try {
-        const payload = req.body || {};
+            let qb = supabaseServerClient.from('properties').select('*');
 
-        // Required fields:
-        const required = ['title', 'category', 'price', 'description', 'province', 'city', 'features'];
-        for (const f of required) {
-            if (payload[f] === undefined || payload[f] === null) {
-                return res.status(400).json({error: 'MISSING_FIELD', field: f});
+            if (id) {
+                qb = qb.eq('id', id).single();
+            } else if (num) {
+                qb = qb.eq('property_number', num).single();
+            } else if (seq) {
+                qb = qb.eq('property_seq', Number(seq)).single();
+            } else {
+                // return list (pagination optional)
+                const page = Number((req.query && req.query.page) || 1);
+                const per = Math.min(Number((req.query && req.query?.per) || 20), 100);
+                const from = (page - 1) * per;
+                const to = from + per - 1;
+                qb = qb.order('created_at', {ascending: false}).range(from, to);
             }
+
+            const {data, error} = await qb;
+            if (error) return res.status(404).json({error: 'NOT_FOUND', detail: error.message});
+            return res.status(200).json({ok: true, data});
+            // eslint-disable-next-line
+        } catch (err) {
+            return res.status(500).json({error: 'INTERNAL_ERROR'});
         }
-
-        // features must be array with at least one item
-        if (!Array.isArray(payload.features) || payload.features.length < 1) {
-            return res.status(400).json({error: 'INVALID_FEATURES'});
-        }
-
-        // category validation
-        if (!['rent', 'sale'].includes(payload.category)) {
-            return res.status(400).json({error: 'INVALID_CATEGORY'});
-        }
-
-        // validate numeric fields
-        const price = Number(payload.price);
-        if (Number.isNaN(price) || price < 0) return res.status(400).json({error: 'INVALID_PRICE'});
-
-        let discount_until = null;
-        if (payload.discount_until) {
-            const d = new Date(payload.discount_until);
-            if (isNaN(d.getTime())) return res.status(400).json({error: 'INVALID_DISCOUNT_UNTIL'});
-            discount_until = d.toISOString();
-        }
-
-        let discount_percentage = null;
-        if (typeof payload.discount_percentage !== 'undefined' && payload.discount_percentage !== null) {
-            const dp = Number(payload.discount_percentage);
-            if (Number.isNaN(dp) || dp < 0 || dp > 100) return res.status(400).json({error: 'INVALID_DISCOUNT_PERCENTAGE'});
-            discount_percentage = dp;
-        }
-
-        // Prepare insert object (whitelist)
-        const insertObj = {
-            title: String(payload.title),
-            category: String(payload.category),
-            price: price,
-            description: String(payload.description),
-            province: String(payload.province),
-            city: String(payload.city),
-            features: payload.features,
-            main_image: payload.main_image || null,
-            images: Array.isArray(payload.images) ? payload.images : undefined,
-            tags: Array.isArray(payload.tags) ? payload.tags : undefined,
-            metadata: payload.metadata || undefined,
-            discount_until: discount_until,
-            discount_percentage: discount_percentage
-        };
-
-        // Remove undefined keys
-        Object.keys(insertObj).forEach(k => insertObj[k] === undefined && delete insertObj[k]);
-
-        // Insert via service role
-        const {data, error} = await supabaseSvr
-            .from('properties')
-            .insert([insertObj])
-            .select()
-            .single();
-
-        if (error || !data) {
-            return res.status(500).json({error: 'DB_INSERT_FAILED', detail: error?.message || null});
-        }
-
-        return res.status(200).json({ok: true, property: data});
-    } catch (e) {
-        return res.status(500).json({error: 'INTERNAL_ERROR'});
     }
+
+    // POST: create (admin only)
+    if (req.method === 'POST') {
+        if (!(await isAdmin(req))) return res.status(403).json({error: 'FORBIDDEN'});
+
+        try {
+            const payload = req.body || {};
+
+            const required = ['title', 'category', 'price', 'description', 'province', 'city', 'features'];
+            for (const f of required) {
+                if (payload[f] === undefined || payload[f] === null || (typeof payload[f] === 'string' && payload[f].trim() === '')) {
+                    return res.status(400).json({error: 'MISSING_FIELD', field: f});
+                }
+            }
+
+            if (!Array.isArray(payload.features) || payload.features.length < 1) {
+                return res.status(400).json({error: 'INVALID_FEATURES'});
+            }
+
+            if (!['rent', 'sale'].includes(payload.category)) {
+                return res.status(400).json({error: 'INVALID_CATEGORY'});
+            }
+
+            const price = Number(payload.price);
+            if (Number.isNaN(price) || price < 0) return res.status(400).json({error: 'INVALID_PRICE'});
+
+            let discount_until = null;
+            if (payload.discount_until) {
+                const d = new Date(payload.discount_until);
+                if (isNaN(d.getTime())) return res.status(400).json({error: 'INVALID_DISCOUNT_UNTIL'});
+                discount_until = d.toISOString();
+            }
+
+            let price_with_discount = undefined;
+            if (typeof payload.price_with_discount !== 'undefined' && payload.price_with_discount !== null) {
+                const pwd = Number(payload.price_with_discount);
+                if (Number.isNaN(pwd) || pwd < 0) return res.status(400).json({error: 'INVALID_PRICE_WITH_DISCOUNT'});
+                price_with_discount = pwd;
+            }
+
+            // property_number optional (admin provided short id)
+            const property_number = payload.property_number ? String(payload.property_number) : undefined;
+
+            const insertObj = {
+                title: String(payload.title),
+                category: String(payload.category),
+                price: price,
+                description: String(payload.description),
+                province: String(payload.province),
+                city: String(payload.city),
+                features: payload.features,
+                main_image: payload.main_image || null,
+                images: Array.isArray(payload.images) ? payload.images : undefined,
+                tags: Array.isArray(payload.tags) ? payload.tags : undefined,
+                metadata: payload.metadata || undefined,
+                discount_until: discount_until,
+                price_with_discount: price_with_discount,
+                property_number: property_number
+            };
+
+            Object.keys(insertObj).forEach(k => insertObj[k] === undefined && delete insertObj[k]);
+
+            const {data, error} = await supabaseServerClient
+                .from('properties')
+                .insert([insertObj])
+                .select()
+                .single();
+
+            if (error || !data) return res.status(500).json({error: 'DB_INSERT_FAILED', detail: error?.message || null});
+
+            return res.status(200).json({ok: true, property: data});
+            // eslint-disable-next-line
+        } catch (err) {
+            return res.status(500).json({error: 'INTERNAL_ERROR'});
+        }
+    }
+
+    // PUT: update by uuid or property_number (admin only)
+    if (req.method === 'PUT') {
+        if (!(await isAdmin(req))) return res.status(403).json({error: 'FORBIDDEN'});
+
+        try {
+            const payload = req.body || {};
+            const id = payload.id;
+            const num = payload.property_number;
+
+            if (!id && !num) return res.status(400).json({error: 'MISSING_IDENTIFIER', detail: 'id or property_number required'});
+
+            const updateObj = {...payload};
+            delete updateObj.id;
+
+            // sanitize: don't allow changing property_seq
+            delete updateObj?.property_seq;
+
+            const target = id ? {id} : {property_number: num};
+
+            const {data, error} = await supabaseServerClient
+                .from('properties')
+                .update(updateObj)
+                .match(target)
+                .select()
+                .single();
+
+            if (error || !data) return res.status(404).json({error: 'UPDATE_FAILED', detail: error?.message || null});
+
+            return res.status(200).json({ok: true, property: data});
+            // eslint-disable-next-line
+        } catch (err) {
+            return res.status(500).json({error: 'INTERNAL_ERROR'});
+        }
+    }
+
+    // DELETE: delete by id or property_number (admin only)
+    if (req.method === 'DELETE') {
+        if (!(await isAdmin(req))) return res.status(403).json({error: 'FORBIDDEN'});
+
+        try {
+            const id = (req.query && req.query.id) || (req.body && req.body.id);
+            const num = (req.query && req.query?.num) || (req.body && req.body.property_number);
+
+            if (!id && !num) return res.status(400).json({error: 'MISSING_IDENTIFIER', detail: 'id or property_number required'});
+
+            let qb = supabaseServerClient.from('properties');
+            if (id) qb = qb?.eq('id', id);
+            else qb = qb?.eq('property_number', num);
+
+            const {data, error} = await qb.delete().select().single();
+            if (error) return res.status(404).json({error: 'DELETE_FAILED', detail: error?.message || null});
+
+            return res.status(200).json({ok: true, property: data});
+            // eslint-disable-next-line
+        } catch (err) {
+            return res.status(500).json({error: 'INTERNAL_ERROR'});
+        }
+    }
+
+    return res.status(405).json({error: 'METHOD_NOT_ALLOWED'});
 }
