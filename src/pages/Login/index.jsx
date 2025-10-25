@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef, useLayoutEffect} from "react";
+import {useEffect, useState, useRef} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
 import {login} from "@api/requests/auth.js";
@@ -16,12 +16,8 @@ export default function Login() {
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
-    }, []);
-
-    useLayoutEffect(() => {
         inputRef?.current?.focus();
-        console.log(inputRef.current)
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (isOpenAlertModal) {
