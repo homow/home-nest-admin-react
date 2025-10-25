@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react"
+import {useEffect, useState, useRef} from "react";
 import {login} from "@api/requests/auth.js";
 import AlertModal from "@components/ui/AlertModal.jsx";
 import {useAuth} from "@/context/AuthContext.jsx";
@@ -10,29 +10,37 @@ export default function Login() {
     const [remember, setRemember] = useState(false);
     const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
     const inputRef = useRef(null);
+    const alertTimeoutRef = useRef(null);
     const {setAuthInfo} = useAuth();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
         inputRef?.current?.focus();
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (alertModal.isOpen) {
-            setTimeout(() => {
-                setAlertModal({...alertModal, isOpen: false})
-            }, 5000)
+            if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
+
+            alertTimeoutRef.current = setTimeout(() => {
+                setAlertModal({isOpen: false, type: "error", message: ""});
+            }, 5000);
         }
-    }, [alertModal])
+
+        // cleanUp Timer
+        return () => {
+            if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
+        }
+    }, [alertModal]);
 
     const loginHandler = async event => {
-        event.preventDefault()
+        event.preventDefault();
 
         const userInfo = {
             email: email.trim().toLowerCase(),
             password: password.trim(),
             remember
-        }
+        };
 
         try {
             setAlertModal({isOpen: false, type: "error", message: ""});
