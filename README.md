@@ -1,3 +1,8 @@
+# 🏠 نسخه فارسی README 
+
+[🇮🇷 فارسی](./README.FA.md)
+
+
 # HomeNest Admin Panel
 
 A responsive and modern admin dashboard(persian) for the [HomeNest](https://github.com/your-org/home-nest) project.  

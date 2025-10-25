@@ -1,3 +1,8 @@
+# 🏠 English README
+
+[🌍 English](./README.md)
+
+
 # 🏠 HomeNest پنل مدیریت
 
 یک پنل مدیریت فارسیِ مدرن و واکنش‌گرا برای پروژه [HomeNest](https://github.com/your-org/home-nest).
