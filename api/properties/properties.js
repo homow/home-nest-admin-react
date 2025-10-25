@@ -1,8 +1,8 @@
 import supabaseAnon from '../supabaseClient.js';
 import supabaseServer from '../supabaseServer.js';
 
-const supabaseAnonClient = supabaseAnon();
-const supabaseServerClient = supabaseServer();
+const supabase = supabaseAnon();
+const supabaseAdmin = supabaseServer();
 
 // helper: extract bearer token
 function getBearerToken(req) {
@@ -16,10 +16,10 @@ async function isAdmin(req) {
     const token = getBearerToken(req);
     if (!token) return false;
     // verify session / get user
-    const {data: {user}, error} = await supabaseAnonClient.auth.getUser(token);
+    const {data: {user}, error} = await supabase.auth.getUser(token);
     if (error || !user) return false;
     // check role in user_profiles table
-    const {data: profile, error: profErr} = await supabaseServerClient
+    const {data: profile, error: profErr} = await supabaseAdmin
         .from('user_profiles')
         .select('role')
         .eq('id', user.id)
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
             const num = (req.query && req.query?.num) || (new URL(req.url, 'http://localhost')).searchParams.get('num');
             const seq = (req.query && req.query?.seq) || (new URL(req.url, 'http://localhost')).searchParams.get('seq');
 
-            let qb = supabaseServerClient.from('properties').select('*');
+            let qb = supabaseAdmin.from('properties').select('*');
 
             if (id) {
                 qb = qb.eq('id', id).single();
@@ -123,7 +123,7 @@ export default async function handler(req, res) {
 
             Object.keys(insertObj).forEach(k => insertObj[k] === undefined && delete insertObj[k]);
 
-            const {data, error} = await supabaseServerClient
+            const {data, error} = await supabaseAdmin
                 .from('properties')
                 .insert([insertObj])
                 .select()
@@ -157,7 +157,7 @@ export default async function handler(req, res) {
 
             const target = id ? {id} : {property_number: num};
 
-            const {data, error} = await supabaseServerClient
+            const {data, error} = await supabaseAdmin
                 .from('properties')
                 .update(updateObj)
                 .match(target)
@@ -183,7 +183,7 @@ export default async function handler(req, res) {
 
             if (!id && !num) return res.status(400).json({error: 'MISSING_IDENTIFIER', detail: 'id or property_number required'});
 
-            let qb = supabaseServerClient.from('properties');
+            let qb = supabaseAdmin.from('properties');
             if (id) qb = qb?.eq('id', id);
             else qb = qb?.eq('property_number', num);
 
