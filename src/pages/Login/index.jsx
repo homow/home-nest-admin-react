@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react";
+import AlertModal from "@components/ui/AlertModal";
+import {useAuth} from "@/context/AuthContext";
 import {login} from "@api/requests/auth.js";
-import AlertModal from "@components/ui/AlertModal.jsx";
-import {useAuth} from "@/context/AuthContext.jsx";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -126,6 +126,7 @@ export default function Login() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
+                                    aria-label={showPassword ? "Hide Password" : "Show Password"}
                                     className="absolute right-2 top-2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
                                 >
                                     {showPassword ? "مخفی" : "نمایش"}
@@ -134,8 +135,9 @@ export default function Login() {
                         </div>
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label htmlFor="remember" className="flex items-center gap-2 cursor-pointer">
                                 <input
+                                    id="remember"
                                     name={"remember"}
                                     onChange={event => setRemember(event.target.checked)}
                                     type="checkbox"
