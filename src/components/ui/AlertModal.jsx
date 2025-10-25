@@ -41,7 +41,12 @@ export default function AlertModal({message = "", type = "error", isOpen = false
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
                     {title}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-300">{message}</p>
+                <p
+                    className="text-gray-700 dark:text-gray-300"
+                    aria-live={"assertive"}
+                >
+                    {message}
+                </p>
                 <div className="flex justify-end">
                     <button
                         ref={buttonRef}
