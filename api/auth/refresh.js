@@ -76,7 +76,7 @@ export default async function handler(req, res) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/',
-            maxAge: rememberFlag ? 60 * 60 * 24 * 30 : 60 * 60 * 8,
+            maxAge: rememberFlag ? 60 * 60 * 24 * 7 : 60 * 60 * 8,
         };
 
         res.setHeader('Set-Cookie', cookie.serialize('sb_refresh_token', newRefreshToken, cookieOptions));

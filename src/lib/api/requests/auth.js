@@ -25,7 +25,7 @@ const refresh = async () => {
     } catch (e) {
         return {ok: false, error: e};
     }
-}
+};
 
 const logout = async () => {
     try {
@@ -35,6 +35,6 @@ const logout = async () => {
     } catch (e) {
         return {ok: false, error: e};
     }
-}
+};
 
 export {login, refresh, logout};
