@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import {useEffect, useState, useRef} from "react"
 import {login} from "@api/requests/auth.js";
 import AlertModal from "@components/ui/AlertModal.jsx";
 import {useAuth} from "@/context/AuthContext.jsx";
@@ -9,10 +9,12 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
     const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
+    const inputRef = useRef(null);
     const {setAuthInfo} = useAuth();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
+        inputRef?.current?.focus();
     }, [])
 
     useEffect(() => {
@@ -85,6 +87,7 @@ export default function Login() {
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>
                             <input
+                                ref={inputRef}
                                 required
                                 dir={"ltr"}
                                 value={email}
