@@ -12,18 +12,22 @@ export default function AlertModal({message, isOpen, type = "error"}) {
     useEffect(() => {
         setOpen(isOpen);
 
-        // focus on close Button
-        if (isOpen && buttonRef?.current) buttonRef?.current?.focus();
+        if (isOpen) {
+            // focus on close button
+            if (buttonRef?.current) buttonRef.current.focus();
+
+            // ESC key listener
+            const handleKey = (e) => {
+                if (e.key === "Escape") setOpen(false);
+            };
+            window.addEventListener("keydown", handleKey);
+
+            // cleanUp Event
+            return () => {
+                window.removeEventListener("keydown", handleKey);
+            }
+        }
     }, [isOpen]);
-
-    useEffect(() => {
-        const handleKey = e => {
-            if (e.key === "Escape") setOpen(false);
-        };
-
-        if (open) window.addEventListener("keydown", handleKey);
-        return () => window.removeEventListener("keydown", handleKey);
-    }, [open]);
 
     return (
         <div
