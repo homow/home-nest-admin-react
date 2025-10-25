@@ -77,11 +77,10 @@ export default function DropDownAccount({open, className}) {
             const res = await logout();
 
             if (res.ok) {
-                console.log(res)
                 setIsOpenAlertModal(true);
+                setOpenLogoutModal(false);
 
                 setTimeout(() => {
-                    setOpenLogoutModal(false);
                     setIsOpenAlertModal(false);
                     setAuthInfo({userData: {}, accessToken: null});
                 }, 4000);
@@ -115,7 +114,7 @@ export default function DropDownAccount({open, className}) {
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal} z={"z-20"}/>
 
             {/* alert modal for success message after logout */}
-            <AlertModal isOpen={isOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
+            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
         </div>
     )
 };

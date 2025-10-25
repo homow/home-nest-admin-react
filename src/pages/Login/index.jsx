@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useLayoutEffect} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
 import {login} from "@api/requests/auth.js";
@@ -8,22 +8,28 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
-    const [alertModal, setAlertModal] = useState({isOpen: false, type: "error", message: ""});
+    const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
+    const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const inputRef = useRef(null);
     const alertTimeoutRef = useRef(null);
     const {setAuthInfo} = useAuth();
 
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
-        inputRef?.current?.focus();
     }, []);
 
+    useLayoutEffect(() => {
+        inputRef?.current?.focus();
+        console.log(inputRef.current)
+    }, [])
+
     useEffect(() => {
-        if (alertModal.isOpen) {
+        if (isOpenAlertModal) {
             if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
 
             alertTimeoutRef.current = setTimeout(() => {
-                setAlertModal({isOpen: false, type: "error", message: ""});
+                setAlertModalData({type: "error", message: ""});
+                setIsOpenAlertModal(false);
             }, 5000);
         }
 
@@ -31,7 +37,7 @@ export default function Login() {
         return () => {
             if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
         }
-    }, [alertModal]);
+    }, [isOpenAlertModal]);
 
     const loginHandler = async event => {
         event.preventDefault();
@@ -43,12 +49,14 @@ export default function Login() {
         };
 
         try {
-            setAlertModal({isOpen: false, type: "error", message: ""});
+            setAlertModalData({type: "error", message: ""});
+            setIsOpenAlertModal(false);
 
             const res = await login(userInfo);
 
             if (res.ok && res.user.role === "admin") {
-                setAlertModal({isOpen: true, type: "success", message: "خب، بالاخره وارد شدی."});
+                setAlertModalData({type: "success", message: "خب، بالاخره وارد شدی."});
+                setIsOpenAlertModal(true);
 
                 setTimeout(() => {
                     setAuthInfo({userData: res.user, token: res.accessToken});
@@ -73,17 +81,17 @@ export default function Login() {
                 message = "خطا از سمت سرور، بعداً تلاش کن";
             }
 
-            setAlertModal({
-                isOpen: true,
+            setAlertModalData({
                 type: "error",
                 message
             });
+            setIsOpenAlertModal(true);
         }
     }
 
     return (
         <>
-            <AlertModal {...alertModal}/>
+            <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal}/>
             <section className="flex items-center justify-center min-h-screen">
                 <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
                     <h2 className="text-2xl font-bold text-center">خوش اومدی</h2>

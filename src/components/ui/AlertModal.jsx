@@ -1,8 +1,7 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useRef} from "react";
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function AlertModal({message, isOpen, type = "error"}) {
-    const [open, setOpen] = useState(false);
+export default function AlertModal({message = "", type = "error", isOpen = false, setIsOpen}) {
     const buttonRef = useRef(null);
 
     const bgHeader = type === "error" ? "text-rose-500" : "text-emerald-500";
@@ -10,30 +9,33 @@ export default function AlertModal({message, isOpen, type = "error"}) {
     const title = type === "error" ? "خطا" : "موفقیت";
 
     useEffect(() => {
-        setOpen(isOpen);
+        // ESC key listener
+        if (isOpen && buttonRef.current) buttonRef.current.focus();
+
+        const handleKey = (e) => {
+            if (e.key === "Escape") setIsOpen(false);
+        };
 
         if (isOpen) {
-            // focus on close button
-            if (buttonRef?.current) buttonRef.current.focus();
-
-            // ESC key listener
-            const handleKey = (e) => {
-                if (e.key === "Escape") setOpen(false);
-            };
             window.addEventListener("keydown", handleKey);
-
-            // cleanUp Event
-            return () => {
-                window.removeEventListener("keydown", handleKey);
-            }
         }
-    }, [isOpen]);
+
+        // cleanUp Event
+        return () => {
+            window.removeEventListener("keydown", handleKey);
+        }
+    }, [isOpen, setIsOpen]);
+
+    if (!isOpen) return null;
 
     return (
         <div
-            className={cn(`text-sm fixed px-4 top-6 left-1/2 max-w-md w-full -translate-x-1/2 flex items-center justify-center shadow-custom z-30 sm:text-base ${open ? "block" : "hidden"}`)}
-            role={type === "error" ? "alert" : "status"}
+            className={cn(`text-sm fixed px-4 top-6 left-1/2 max-w-md w-full -translate-x-1/2 flex items-center justify-center shadow-custom z-30 sm:text-base ${isOpen ? "block" : "hidden"}`)}
+            role={"alertdialog"}
             aria-live={"assertive"}
+            aria-modal={true}
+            aria-labelledby={"alert-title"}
+            aria-describedby={"alert-desc"}
         >
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full p-6 space-y-4">
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
@@ -43,8 +45,11 @@ export default function AlertModal({message, isOpen, type = "error"}) {
                 <div className="flex justify-end">
                     <button
                         ref={buttonRef}
-                        onClick={() => setOpen(false)}
-                        className={`cursor-pointer px-3 py-1 rounded-lg text-white ${btnBg} transition`}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                            `cursor-pointer px-3 py-1 rounded-lg text-white transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black focus:ring-offset-white hover:brightness-110`,
+                            btnBg
+                        )}
                     >
                         بستن
                     </button>
