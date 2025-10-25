@@ -100,7 +100,7 @@ export default function DropDownAccount({open, className}) {
     ];
 
     return (
-        <div className={cn("w-58 mt-2 absolute top-full left-0 z-30 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
+        <div className={cn("w-58 mt-2 absolute top-full left-0 z-20 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
 
             {/* account info */}
             <AccountInfo className={"pb-4 border-b border-disable-txt/50"}/>
@@ -112,7 +112,7 @@ export default function DropDownAccount({open, className}) {
             <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} cancelText={"نه"} confirmText={"آره"} dangerMode={true}/>
 
             {/* overlay */}
-            <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal}/>
+            <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal} z={"z-20"}/>
 
             {/* alert modal for success message after logout */}
             <AlertModal isOpen={isOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
