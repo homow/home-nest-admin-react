@@ -7,18 +7,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Runtime files
+# Runtime Files
 node_modules
 dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment Variables
 .env
 .env.*
 !.env.example
 
-# Editor directories and files
+# Editor Directories and Files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -29,6 +29,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Analyze File
-analyze.html
+# Vercel Cache
 .vercel
+
+# Analyze Packages File
+analyze.html
