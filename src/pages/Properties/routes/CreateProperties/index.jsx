@@ -8,7 +8,7 @@ export default function SignupForm() {
 
     return (
         <div>
-            افزودن ملک
+            
         </div>
     )
 }
