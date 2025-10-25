@@ -1,4 +1,4 @@
-# 🏠 English README
+# 🌍 English README
 
 [🌍 English](./README.md)
 
@@ -80,6 +80,12 @@ home-nest-admin/
 دستورهای پایه برای نصب، توسعه و بیلد پروژه:
 
 ```bash
+# کلون گرفتن از مخزن
+git clone https://github.com/homow/home-nest-admin.git
+
+# رفتن به روت پروژه
+cd home-nest-admin
+
 # نصب وابستگی‌ها
 npm install
 

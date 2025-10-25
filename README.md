@@ -1,6 +1,6 @@
-# 🏠 نسخه فارسی README 
+# 🌍 نسخه فارسی README 
 
-[🇮🇷 فارسی](./README.FA.md)
+[🌍🇮🇷 فارسی](./README.FA.md)
 
 
 # HomeNest Admin Panel
@@ -79,6 +79,12 @@ This project is optimized for deployment on [Vercel](https://vercel.com), using 
 Install dependencies, run the development server, build the project, and preview the production build.
 
 ```bash
+# Clone Reop
+git clone https://github.com/homow/home-nest-admin.git
+
+# Navigate to Root
+cd home-nest-admin
+
 # Install dependencies
 npm install
 
