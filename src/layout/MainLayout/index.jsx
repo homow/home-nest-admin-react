@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {Outlet} from "react-router-dom";
 import TopBar from "../TopBar";
 import SideBar from "../SideBar";
@@ -8,7 +7,6 @@ import Overlay from "@components/ui/Overlay";
 import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext";
 
 function InnerMainLayout() {
-    const [mobileNavOpen, setMobileNavOpen] = useState(false)
     const {openMobileNav, setOpenMobileNav} = useMobileNav();
 
     return (
@@ -26,7 +24,7 @@ function InnerMainLayout() {
             <section className={"transition-all mr-custom flex-1 px-3 sm:px-6 flex flex-col"}>
 
                 {/* top bar | header */}
-                <TopBar mobileNavOpen={mobileNavOpen} setMobileNavOpen={setMobileNavOpen}/>
+                <TopBar/>
 
                 {/* main content */}
                 <main id="main" className={"@container/main relative h-full pb-5 space-y-6"}>
