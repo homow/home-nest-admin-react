@@ -3,11 +3,11 @@ import {useState, createContext, useContext} from "react";
 const MobileNavContext = createContext(null);
 
 const MobileNavProvider = ({children}) => {
-    const [openNavMenu, setOpenNavMenu] = useState(false);
+    const [openMobileNav, setOpenMobileNav] = useState(false);
 
     const value = {
-        openNavMenu,
-        setOpenNavMenu,
+        openMobileNav,
+        setOpenMobileNav,
     }
 
     return (

@@ -1,9 +1,13 @@
-function OpenMobileNavMenuBtn({setMobileNavOpen}) {
+import {useMobileNav} from "@context/MobileNavContext";
+
+function OpenMobileNavMenuBtn() {
+    const {setOpenMobileNav} = useMobileNav();
+
     return (
         <span
             onClick={
                 () => {
-                    setMobileNavOpen(true);
+                    setOpenMobileNav(true);
                 }}
             className={"cursor-pointer md:hidden"}
         >
@@ -14,10 +18,10 @@ function OpenMobileNavMenuBtn({setMobileNavOpen}) {
     )
 }
 
-export default function Index({setMobileNavOpen}) {
+export default function Right() {
     return (
         <div className={"md:hidden"}>
-            <OpenMobileNavMenuBtn setMobileNavOpen={setMobileNavOpen}/>
+            <OpenMobileNavMenuBtn/>
         </div>
     )
 }

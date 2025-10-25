@@ -1,8 +1,10 @@
 import {NavLink} from "react-router-dom";
+import {useMobileNav} from "@context/MobileNavContext";
 import {cn} from "@/lib/utils/ui-utils.js";
 
-function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
+function SideBarLinks({collapsed, ...props}) {
     const {title, dataLinks} = props.data;
+    const {setOpenMobileNav} = useMobileNav();
 
     return (
         <div>
@@ -23,7 +25,7 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
             <ul className={"mt-3 space-y-1.5"}>
                 {dataLinks && dataLinks.map(link => (
                     <li key={link.text}>
-                        <NavLink onClick={() => setMobileNavOpen && setMobileNavOpen(false)} to={link.url} className={({isActive}) => cn(`h-10.5 flex items-center pr-5.5 py-2 flex-row gap-3 w-full rounded-l-full`, isActive && "grad-links")}>
+                        <NavLink onClick={() => setOpenMobileNav && setOpenMobileNav(false)} to={link.url} className={({isActive}) => cn(`h-10.5 flex items-center pr-5.5 py-2 flex-row gap-3 w-full rounded-l-full`, isActive && "grad-links")}>
 
                             {/* icon */}
                             <span>
@@ -44,7 +46,7 @@ function SideBarLinks({setMobileNavOpen, collapsed, ...props}) {
     )
 }
 
-export default function SideBarMenu({setMobileNavOpen, collapsed}) {
+export default function SideBarMenu({collapsed}) {
     const dataLinks = [
         {
             title: "داشبورد", dataLinks: [
@@ -63,7 +65,7 @@ export default function SideBarMenu({setMobileNavOpen, collapsed}) {
     return (
         <div className={"space-y-5 pb-2"}>
             {dataLinks.length > 0 && dataLinks.map(link => (
-                <SideBarLinks key={link.title} data={link} collapsed={collapsed} setMobileNavOpen={setMobileNavOpen}/>
+                <SideBarLinks key={link.title} data={link} collapsed={collapsed}/>
             ))}
         </div>
     )

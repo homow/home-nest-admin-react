@@ -3,11 +3,13 @@ import {Outlet} from "react-router-dom";
 import TopBar from "../TopBar";
 import SideBar from "../SideBar";
 import Footer from "../Footer";
-import SvgDefs from "@components/ui/SvgDefs.jsx";
-import Overlay from "@components/ui/Overlay.jsx";
+import SvgDefs from "@components/ui/SvgDefs";
+import Overlay from "@components/ui/Overlay";
+import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext";
 
-export default function MainLayout() {
+function InnerMainLayout() {
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
+    const {openMobileNav, setOpenMobileNav} = useMobileNav();
 
     return (
         <section id="app-container" className="flex flex-row min-h-screen">
@@ -16,10 +18,10 @@ export default function MainLayout() {
             <SvgDefs/>
 
             {/* overlay */}
-            <Overlay flag={mobileNavOpen} setFlag={setMobileNavOpen}/>
+            <Overlay flag={openMobileNav} setFlag={setOpenMobileNav}/>
 
             {/* side bar menu and links */}
-            <SideBar mobileNavOpen={mobileNavOpen} setMobileNavOpen={setMobileNavOpen}/>
+            <SideBar/>
 
             <section className={"transition-all mr-custom flex-1 px-3 sm:px-6 flex flex-col"}>
 
@@ -37,5 +39,13 @@ export default function MainLayout() {
                 <Footer/>
             </section>
         </section>
+    )
+}
+
+export default function MainLayout() {
+    return (
+        <MobileNavProvider>
+            <InnerMainLayout/>
+        </MobileNavProvider>
     )
 }
