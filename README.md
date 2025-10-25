@@ -1,6 +1,6 @@
 # HomeNest Admin Panel
 
-A responsive and modern admin dashboard for the [HomeNest](https://github.com/your-org/home-nest) platform.  
+A responsive and modern admin dashboard(persian) for the [HomeNest](https://github.com/your-org/home-nest) project.  
 Built with React, TailwindCSS, and Supabase, this panel provides authenticated access and management tools for administrators.
 
 ---
