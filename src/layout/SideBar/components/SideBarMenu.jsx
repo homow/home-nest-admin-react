@@ -1,10 +1,12 @@
 import {NavLink} from "react-router-dom";
 import {useMobileNav} from "@context/MobileNavContext";
+import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 import {cn} from "@/lib/utils/ui-utils.js";
 
-function SideBarLinks({collapsed, ...props}) {
+function SideBarLinks({...props}) {
     const {title, dataLinks} = props.data;
     const {setOpenMobileNav} = useMobileNav();
+    const {collapsed} = useCollapsedMenu();
 
     return (
         <div>
@@ -46,7 +48,7 @@ function SideBarLinks({collapsed, ...props}) {
     )
 }
 
-export default function SideBarMenu({collapsed}) {
+export default function SideBarMenu() {
     const dataLinks = [
         {
             title: "داشبورد", dataLinks: [
@@ -65,7 +67,7 @@ export default function SideBarMenu({collapsed}) {
     return (
         <div className={"space-y-5 pb-2"}>
             {dataLinks.length > 0 && dataLinks.map(link => (
-                <SideBarLinks key={link.title} data={link} collapsed={collapsed}/>
+                <SideBarLinks key={link.title} data={link}/>
             ))}
         </div>
     )

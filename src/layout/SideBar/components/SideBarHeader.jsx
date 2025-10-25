@@ -1,8 +1,10 @@
+import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils/ui-utils.js";
-import {Link} from "react-router-dom";
+import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 
-export default function SideBarHeader({collapsed, setCollapsed}) {
+export default function SideBarHeader() {
+    const {collapsed, setCollapsed} = useCollapsedMenu();
 
     const toggleCollapse = () => {
         document.documentElement.style.setProperty(
