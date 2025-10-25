@@ -3,6 +3,7 @@ import supabaseServer from '../supabaseServer.js';
 import cookie from 'cookie';
 
 const supabase = supabaseAnon({auth: {persistSession: false}});
+const supabaseAdmin = supabaseServer()
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
         const {access_token: newAccessToken, refresh_token: newRefreshToken} = refreshData.session;
         const userId = refreshData.session.user.id;
 
-        const { data: profile, error: profileErr } = await supabaseServer
+        const { data: profile, error: profileErr } = await supabaseAdmin
             .from('user_profiles')
             .select('last_strict_login_at, session_remember, id, email, display_name, role')
             .eq('id', userId)

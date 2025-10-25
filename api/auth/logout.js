@@ -2,6 +2,9 @@ import cookie from 'cookie';
 import supabaseAnon from '../supabaseClient.js';
 import supabaseServer from '../supabaseServer.js';
 
+const supabase = supabaseAnon();
+const supabaseAdmin = supabaseServer()
+
 function clearRefreshCookie() {
     return cookie.serialize('sb_refresh_token', '', {
         httpOnly: true,
@@ -30,14 +33,14 @@ export default async function handler(req, res) {
         }
 
         try {
-            await supabaseAnon.auth.signOut?.();
+            await supabase.auth.signOut?.();
             // eslint-disable-next-line
         } catch (_) {}
 
         try {
-            if (supabaseServer) {
+            if (supabaseAdmin) {
                 try {
-                    await supabaseServer
+                    await supabaseAdmin
                         .from('auth.sessions')
                         .delete()
                         .eq('refresh_token', refreshToken);

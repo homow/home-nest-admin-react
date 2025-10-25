@@ -3,6 +3,7 @@ import supabaseServer from '../supabaseServer.js';
 import cookie from 'cookie';
 
 const supabase = supabaseAnon({auth: {persistSession: false}});
+const supabaseAdmin = supabaseServer()
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
             return res.status(401).json({error: 'INVALID_SESSION'});
         }
 
-        const {data: profile, error: profileErr} = await supabaseServer
+        const {data: profile, error: profileErr} = await supabaseAdmin
             .from('user_profiles')
             .select('id, role, display_name, email')
             .eq('id', uid)
@@ -65,15 +66,15 @@ export default async function handler(req, res) {
         }
 
         try {
-            await supabaseServer
+            await supabaseAdmin
                 .from('user_profiles')
                 .update({
                     last_strict_login_at: new Date().toISOString(),
                     session_remember: !!remember
                 })
                 .eq('id', uid);
+            // eslint-disable-next-line
         } catch (e) {
-            console.error('Failed to update login markers:', e);
         }
 
         const cookieOptions = {
