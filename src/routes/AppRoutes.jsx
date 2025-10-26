@@ -4,8 +4,8 @@ import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 import PrivateRoutes from "@/routes/PrivateRoutes";
 import PublicRoutes from "@/routes/PublicRoutes";
 
-const MainLayout = lazy(() => import("@/layout/MainLayout"));
 const Login = lazy(() => import("@pages/Login"))
+const MainLayout = lazy(() => import("@/layout/MainLayout"));
 const Home = lazy(() => import("@pages/Home"));
 const Properties = lazy(() => import("@pages/Properties"));
 const CreateProperties = lazy(() => import("@pages/Properties/routes/CreateProperties"))
@@ -47,6 +47,7 @@ const routes = [
             }
         ]
     },
+    // 404 | not found
     {path: "*", element: <NotFound/>}
 ]
 
