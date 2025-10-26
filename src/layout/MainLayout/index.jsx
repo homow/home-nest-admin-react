@@ -2,7 +2,7 @@ import {Outlet} from "react-router-dom";
 import TopBar from "../TopBar";
 import SideBar from "../SideBar";
 import Footer from "../Footer";
-import SvgDefs from "@components/ui/SvgDefs";
+import SvgDefs from "@components/ui/icons/SvgDefs.jsx";
 import Overlay from "@components/ui/Overlay";
 import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext";
 

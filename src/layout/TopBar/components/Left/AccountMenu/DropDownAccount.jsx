@@ -2,10 +2,10 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {cn} from "@/lib/utils/ui-utils";
 import Overlay from "@components/ui/Overlay";
-import AlertModal from "@components/ui/modal/AlertModal.jsx";
-import ConfirmModal from "@components/ui/modal/ConfirmModal.jsx";
+import AlertModal from "@components/ui/modals/AlertModal";
+import ConfirmModal from "@components/ui/modals/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
-import Icon from "@components/ui/Icon";
+import Icon from "@components/ui/icons/Icon";
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
 
@@ -62,7 +62,7 @@ export default function DropDownAccount({open, className}) {
         setOpenLogoutModal(true);
     }
 
-    // close logout modal
+    // close logout modals
     const closeLogoutModalHandler = () => setOpenLogoutModal(false);
 
     const logoutHandler = async () => {
@@ -100,13 +100,13 @@ export default function DropDownAccount({open, className}) {
             {/* drop down options */}
             <DropDownAccountOptions className={"pt-2"} data={dropDownAccountOptionsData}/>
 
-            {/* confirm logout modal */}
+            {/* confirm logout modals */}
             <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} cancelText={"نه"} confirmText={"آره"} dangerMode={true}/>
 
             {/* overlay */}
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal} z={"z-20"}/>
 
-            {/* alert modal for success message after logout */}
+            {/* alert modals for success message after logout */}
             <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
         </div>
     )

@@ -1,7 +1,7 @@
 import {useState} from "react";
-import Input from "@components/ui/form/Input.jsx";
+import Input from "@components/ui/forms/Input.jsx";
 import {cn} from "@/lib/utils/ui-utils.js";
-import CheckBox from "@components/ui/form/CheckBox.jsx";
+import CheckBox from "@components/ui/forms/CheckBox.jsx";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     /** @type {{title: string, category: string, price: string, description: string, province: string, city: string, features: string[], price_with_discount: string, discount_until: string, main_image: string, tags: string, stock: number}} */
