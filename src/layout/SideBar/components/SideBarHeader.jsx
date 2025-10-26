@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils/ui-utils.js";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
+import Icon from "@components/ui/Icon.jsx";
 
 export default function SideBarHeader() {
     const {collapsed, setCollapsed} = useCollapsedMenu();
@@ -25,11 +26,9 @@ export default function SideBarHeader() {
 
             <span
                 onClick={toggleCollapse}
-                className={cn(`hidden md:inline absolute -left-5.5 cursor-pointer -rotate-180 transition-all duration-500 ${collapsed && "rotate-0"}`)}
+                className={cn("hidden md:flex items-center justify-center absolute -left-5.5 cursor-pointer -rotate-180 transition-all duration-500", collapsed && "rotate-0")}
             >
-                <svg className={"size-5"}>
-                    <use href="#chevronDoubleRight-icon"></use>
-                </svg>
+                <Icon icon={"chevronDoubleRight"} className={"size-5"}/>
             </span>
         </div>
     );
