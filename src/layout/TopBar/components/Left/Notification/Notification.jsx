@@ -1,11 +1,5 @@
+import Icon from "@components/ui/Icon";
+
 export default function Notification() {
-    return (
-        <div>
-            <span>
-                <svg className={"size-6"}>
-                    <use href="#notification-icon"></use>
-                </svg>
-            </span>
-        </div>
-    )
+    return <Icon icon={"notification"}/>
 }

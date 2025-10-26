@@ -5,19 +5,12 @@ import Overlay from "@components/ui/Overlay";
 import AlertModal from "@components/ui/AlertModal";
 import ConfirmModal from "@components/ui/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
+import Icon from "@components/ui/Icon";
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
 
 function DropDownAccountOptions({data, className}) {
-    const iconElem = icon => {
-        return (
-            <span>
-                <svg className={"size-5"}>
-                    <use href={`#${icon}-icon`}></use>
-                </svg>
-            </span>
-        )
-    }
+    const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;
 
     return (
         <ul className={cn("divide-y divide-disable-txt/30", className)}>
@@ -30,7 +23,7 @@ function DropDownAccountOptions({data, className}) {
                                 {link.name}
                             </Link>
                         ) : (
-                            <p {...link?.props} className={"flex flex-row items-center gap-2 cursor-pointer"}>
+                            <p {...link?.dropDownProps} className={"flex flex-row items-center gap-2 cursor-pointer"}>
                                 {iconElem(link.icon)}
                                 {link.name}
                             </p>
@@ -95,7 +88,7 @@ export default function DropDownAccount({open, className}) {
     /// drop down option
     const dropDownAccountOptionsData = [
         {icon: "user", url: "/account", name: "اکانت"},
-        {icon: "logout", props: {onClick: openLogoutModalHandler}, name: "خروج"},
+        {icon: "logout", dropDownProps: {onClick: openLogoutModalHandler}, name: "خروج"},
     ];
 
     return (
