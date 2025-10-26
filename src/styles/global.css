@@ -100,4 +100,7 @@
     .main-components {
         @apply bg-main-bg rounded-md shadow-custom p-5;
     }
+    .multi-inputs-style {
+        @apply flex flex-col gap-6 \@3xs/main:bg-active \@3xl/main:*:w-full;
+    }
 }

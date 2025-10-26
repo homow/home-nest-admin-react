@@ -3,7 +3,7 @@ import {cn} from "@/lib/utils/ui-utils.js";
 export default function Input({onChange, name, type = name, id = name, label = name, autoComplete = null, value, placeholder, inputProps, className = null, parentClassName = null, children}) {
     return (
         <div className={cn(parentClassName)}>
-            <label htmlFor={id} className="block text-sm font-medium">{label}</label>
+            <label htmlFor={id} className="block text-sm">{label}</label>
             <input
                 {...inputProps}
                 value={value}
