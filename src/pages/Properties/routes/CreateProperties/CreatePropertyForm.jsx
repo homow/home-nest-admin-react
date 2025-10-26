@@ -3,6 +3,7 @@ import Input from "@/components/ui/Input";
 import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
+    /** @type {{title: string, category: string, price: string, description: string, province: string, city: string, features: string[], price_with_discount: string, discount_until: string, main_image: string, tags: string, stock: number}} */
     const [formData, setFormData] = useState({
         title: "",
         category: "sale",
@@ -10,6 +11,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         description: "",
         province: "",
         city: "",
+        /** @type {string[]} */
         features: [],
         price_with_discount: "",
         discount_until: "",
@@ -22,12 +24,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         setFormData(prev => ({...prev, [name]: value}));
     };
 
-    const handleFeatureToggle = (feature) => {
-        setFormData(prev => ({
-            ...prev,
-            features: prev.features.includes(feature)
-                ? prev.features.filter(f => f !== feature)
-                : [...prev.features, feature]
+    const handleFeatureToggle = feature => {
+        // noinspection JSCheckFunctionSignatures
+        setFormData(prevState => ({
+            ...prevState,
+            features: prevState.features.includes(feature)
+                ? prevState.features.filter(f => f !== feature)
+                : [...prevState.features, feature]
         }));
     };
 
@@ -42,7 +45,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
-            <h2 className="text-xl font-bold mb-4">افزودن ملک جدید</h2>
 
             <Input
                 label="عنوان ملک"
@@ -50,6 +52,14 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 value={formData.title}
                 onChange={(v) => handleChange("title", v)}
                 placeholder="مثلاً آپارتمان نوساز"
+            />
+
+            <Input
+                label="شناسه ملک (اختیاری)"
+                name="property_number"
+                value={formData.property_number || ""}
+                onChange={(v) => handleChange("property_number", v)}
+                placeholder="مثلاً A-1234"
             />
 
             <div>
@@ -83,7 +93,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             />
 
             <Input
-                label="تاریخ پایان تخفیف"
+                label="تاریخ پایان تخفیف (اختیاری حتی در صورت وجود تخفیف)"
                 name="discount_until"
                 type="datetime-local"
                 value={formData.discount_until}
@@ -109,9 +119,19 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             <Input
                 label="تصویر اصلی (URL)"
                 name="main_image"
+                inputProps={{dir: "ltr"}}
                 value={formData.main_image}
                 onChange={(v) => handleChange("main_image", v)}
                 placeholder="https://..."
+            />
+
+            <Input
+                label="تصاویر بیشتر (URLها را با کاما (,) جدا کنید)"
+                inputProps={{dir: "ltr"}}
+                name="images"
+                value={formData.images || ""}
+                onChange={(v) => handleChange("images", v)}
+                placeholder="https://.../1.jpg, https://.../2.jpg"
             />
 
             <Input
@@ -119,7 +139,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 name="description"
                 value={formData.description}
                 onChange={(v) => handleChange("description", v)}
-                placeholder="مثلاً طبقه دوم، ۲ خواب"
+                placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
             />
 
             <div>
@@ -139,29 +159,44 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 </div>
             </div>
 
+            {/* advanced information (metaData) */}
+            <Input
+                label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
+                name="metadata_notes"
+                value={formData.metadata?.notes?.join("، ") || ""}
+                onChange={(v) =>
+                    handleChange("metadata", {
+                        ...formData.metadata,
+                        notes: v.split("،").map(s => s.trim()).filter(Boolean)
+                    })
+                }
+                placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
+            />
+
             <Input
                 label="برچسب‌ها (با کاما جدا کنید)"
                 name="tags"
                 value={formData.tags}
                 onChange={(v) => handleChange("tags", v)}
-                placeholder="مثلاً new, central"
+                placeholder="مثلاً: نوساز، تهران"
             />
 
             <div className="flex items-center gap-2">
                 <input
+                    id={"stock"}
                     type="checkbox"
                     checked={formData.stock === 1}
                     onChange={() => handleChange("stock", formData.stock === 1 ? 0 : 1)}
                     className="accent-violet-500"
                 />
-                <label className="text-sm">در دسترس است</label>
+                <label htmlFor={"stock"} className="text-sm">در دسترس است</label>
             </div>
 
             <button
                 type="submit"
                 disabled={isLoading}
                 className={cn(
-                    "w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-lg transition font-medium",
+                    "w-full bg-violet-600 hover:bg-violet-700 active:bg-violet-700 text-white py-2 rounded-lg transition font-medium cursor-pointer",
                     isLoading && "opacity-60 cursor-not-allowed"
                 )}
             >
