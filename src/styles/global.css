@@ -61,7 +61,7 @@
         @apply bg-stone-800;
     }
     *::-webkit-scrollbar-thumb {
-        @apply bg-violet-500 border-[0.5px] border-stone-800 rounded-none;
+        @apply bg-violet-500 border-x-1 border-stone-800 rounded-none;
     }
     body {
         @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider selection:bg-violet-700 selection:text-white;

@@ -41,7 +41,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     };
 
     const availableFeatures = [
-        "بالکون", "پارکینگ", "آسانسور", "انبار", "استخر"
+        "بالکن", "پارکینگ", "آسانسور", "انبار", "استخر"
     ];
 
     return (
