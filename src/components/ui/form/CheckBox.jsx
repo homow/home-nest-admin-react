@@ -1,6 +1,6 @@
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function CheckboxWithLabel({id = "checkbox", label = "انتخاب کن", checked, onChange, className}) {
+export default function CheckBox({id = "checkbox", label = "انتخاب کن", checked, onChange, className}) {
     return (
         <label htmlFor={id} className={cn("flex items-center gap-2 cursor-pointer text-sm", className)}>
             <input

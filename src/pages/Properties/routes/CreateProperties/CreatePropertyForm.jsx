@@ -1,6 +1,7 @@
 import {useState} from "react";
 import Input from "@components/ui/form/Input.jsx";
 import {cn} from "@/lib/utils/ui-utils.js";
+import CheckBox from "@components/ui/form/CheckBox.jsx";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     /** @type {{title: string, category: string, price: string, description: string, province: string, city: string, features: string[], price_with_discount: string, discount_until: string, main_image: string, tags: string, stock: number}} */
@@ -223,33 +224,27 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
                         <div className="flex flex-wrap gap-3">
                             {availableFeatures.map(feature => (
-                                <label key={feature} className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.features.includes(feature)}
-                                        onChange={() => handleFeatureToggle(feature)}
-                                        className="accent-violet-500"
-                                    />
-                                    <span>{feature}</span>
-                                </label>
+                                <CheckBox
+                                    key={feature}
+                                    id={feature}
+                                    label={feature}
+                                    onChange={() => handleFeatureToggle(feature)}
+                                    checked={formData.features.includes(feature)}
+                                />
                             ))}
                         </div>
                     </div>
                 </div>
-
             </div>
-
 
             {/* stock */}
             <div className="flex items-center gap-2">
-                <input
+                <CheckBox
                     id={"stock"}
-                    type="checkbox"
                     checked={formData.stock === 1}
                     onChange={() => handleChange("stock", formData.stock === 1 ? 0 : 1)}
-                    className="accent-violet-500"
+                    label={"در دسترس است"}
                 />
-                <label htmlFor={"stock"} className="text-sm">در دسترس است</label>
             </div>
 
             {/* submit */}

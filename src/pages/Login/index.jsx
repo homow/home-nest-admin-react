@@ -1,7 +1,8 @@
 import {useEffect, useState, useRef} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
-import Input from "@components/ui/form/Input.jsx";
+import Input from "@components/ui/form/Input";
+import CheckBox from "@components/ui/form/CheckBox";
 import {login} from "@api/requests/auth.js";
 
 export default function Login() {
@@ -147,15 +148,7 @@ export default function Login() {
                         ))}
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
-                            <label htmlFor="remember" className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    id="remember"
-                                    name={"remember"}
-                                    onChange={event => setRemember(event.target.checked)}
-                                    type="checkbox"
-                                    className="w-4 h-4 rounded border-2 border-gray-400 appearance-none checked:bg-violet-500 checked:border-violet-600 cursor-pointer"/>
-                                <span>منو یادت باشه</span>
-                            </label>
+                            <CheckBox id={"remember"} checked={remember} onChange={setRemember} label={"منو یادت باشه"}/>
                         </div>
 
                         <button
