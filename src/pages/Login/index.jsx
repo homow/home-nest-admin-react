@@ -1,8 +1,8 @@
 import {useEffect, useState, useRef} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
+import Input from "@components/ui/Input";
 import {login} from "@api/requests/auth.js";
-import Input from "@components/ui/Input.jsx";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -86,19 +86,46 @@ export default function Login() {
         }
     }
 
-    const data = {
-        onChange: setEmail,
-        name: "email",
-        label: "ایمیل",
-        value: email,
-        placeholder: "you@example.com",
-        id: "email",
-        props: {
-            ref: inputRef,
-            required: true,
-            dir: "ltr",
+    const dataInput = [
+        {
+            onChange: setEmail,
+            name: "email",
+            label: "ایمیل",
+            value: email,
+            placeholder: "you@example.com",
+            id: "email",
+            props: {
+                ref: inputRef,
+                required: true,
+                dir: "ltr",
+                autoComplete: "email",
+            }
+        },
+        {
+            onChange: setPassword,
+            name: "password",
+            label: "پسورد",
+            value: password,
+            placeholder: "******",
+            id: "password",
+            type: showPassword ? "text" : "password",
+            parentClassName: "relative",
+            props: {
+                required: true,
+                dir: "ltr",
+            },
+            children: (
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide Password" : "Show Password"}
+                    className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
+                >
+                    {showPassword ? "مخفی" : "نمایش"}
+                </button>
+            )
         }
-    }
+    ]
 
     return (
         <>
@@ -111,49 +138,9 @@ export default function Login() {
                     </p>
 
                     <form className="space-y-6" onSubmit={loginHandler}>
-                        {/*<div>*/}
-                        {/*    <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>*/}
-                        {/*    <input*/}
-                        {/*        ref={inputRef}*/}
-                        {/*        required*/}
-                        {/*        dir={"ltr"}*/}
-                        {/*        value={email}*/}
-                        {/*        onChange={event => setEmail(event.target.value)}*/}
-                        {/*        name="email"*/}
-                        {/*        autoComplete={"email"}*/}
-                        {/*        type="email"*/}
-                        {/*        id="email"*/}
-                        {/*        placeholder="you@example.com"*/}
-                        {/*        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"*/}
-                        {/*    />*/}
-                        {/*</div>*/}
-
-                        <Input {...data}/>
-
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium">پسورد</label>
-                            <div className="relative">
-                                <input
-                                    required
-                                    dir={"ltr"}
-                                    value={password}
-                                    onChange={event => setPassword(event.target.value)}
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    id="password"
-                                    placeholder="*******"
-                                    className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    aria-label={showPassword ? "Hide Password" : "Show Password"}
-                                    className="absolute right-2 top-2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
-                                >
-                                    {showPassword ? "مخفی" : "نمایش"}
-                                </button>
-                            </div>
-                        </div>
+                        {dataInput.map(data => (
+                            <Input key={data.id} {...data}/>
+                        ))}
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
                             <label htmlFor="remember" className="flex items-center gap-2 cursor-pointer">
