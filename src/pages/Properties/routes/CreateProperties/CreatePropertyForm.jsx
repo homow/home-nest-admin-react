@@ -1,5 +1,5 @@
 import {useState} from "react";
-import Input from "@/components/ui/Input";
+import Input from "@components/ui/form/Input.jsx";
 import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {

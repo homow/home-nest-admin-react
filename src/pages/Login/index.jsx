@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
-import Input from "@components/ui/Input";
+import Input from "@components/ui/form/Input.jsx";
 import {login} from "@api/requests/auth.js";
 
 export default function Login() {
