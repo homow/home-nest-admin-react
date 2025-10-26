@@ -2,6 +2,7 @@ import {NavLink} from "react-router-dom";
 import {useMobileNav} from "@context/MobileNavContext";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 import {cn} from "@/lib/utils/ui-utils.js";
+import Icon from "@components/ui/Icon.jsx";
 
 function SideBarLinks({...props}) {
     const {title, dataLinks} = props.data;
@@ -30,11 +31,7 @@ function SideBarLinks({...props}) {
                         <NavLink onClick={() => setOpenMobileNav && setOpenMobileNav(false)} to={link.url} className={({isActive}) => cn(`h-10.5 flex items-center pr-5.5 py-2 flex-row gap-3 w-full rounded-l-full`, isActive && "grad-links")}>
 
                             {/* icon */}
-                            <span>
-                                <svg className={"size-6"}>
-                                    <use href={`#${link.icon}-icon`}></use>
-                                </svg>
-                            </span>
+                            <Icon icon={link.icon}/>
 
                             {/* text of link */}
                             <span className={`${collapsed && "hidden"}`}>
