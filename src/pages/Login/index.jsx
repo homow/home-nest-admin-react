@@ -2,6 +2,7 @@ import {useEffect, useState, useRef} from "react";
 import AlertModal from "@components/ui/AlertModal";
 import {useAuth} from "@/context/AuthContext";
 import {login} from "@api/requests/auth.js";
+import Input from "@components/ui/Input.jsx";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -85,6 +86,20 @@ export default function Login() {
         }
     }
 
+    const data = {
+        onChange: setEmail,
+        name: "email",
+        label: "ایمیل",
+        value: email,
+        placeholder: "you@example.com",
+        id: "email",
+        props: {
+            ref: inputRef,
+            required: true,
+            dir: "ltr",
+        }
+    }
+
     return (
         <>
             <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal}/>
@@ -96,22 +111,24 @@ export default function Login() {
                     </p>
 
                     <form className="space-y-6" onSubmit={loginHandler}>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>
-                            <input
-                                ref={inputRef}
-                                required
-                                dir={"ltr"}
-                                value={email}
-                                onChange={event => setEmail(event.target.value)}
-                                name="email"
-                                autoComplete={"email"}
-                                type="email"
-                                id="email"
-                                placeholder="you@example.com"
-                                className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
-                            />
-                        </div>
+                        {/*<div>*/}
+                        {/*    <label htmlFor="email" className="block text-sm font-medium">ایمیل</label>*/}
+                        {/*    <input*/}
+                        {/*        ref={inputRef}*/}
+                        {/*        required*/}
+                        {/*        dir={"ltr"}*/}
+                        {/*        value={email}*/}
+                        {/*        onChange={event => setEmail(event.target.value)}*/}
+                        {/*        name="email"*/}
+                        {/*        autoComplete={"email"}*/}
+                        {/*        type="email"*/}
+                        {/*        id="email"*/}
+                        {/*        placeholder="you@example.com"*/}
+                        {/*        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"*/}
+                        {/*    />*/}
+                        {/*</div>*/}
+
+                        <Input {...data}/>
 
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium">پسورد</label>
