@@ -15,11 +15,13 @@ export default function Login() {
     const alertTimeoutRef = useRef(null);
     const {setAuthInfo} = useAuth();
 
+    // focus and set title
     useEffect(() => {
         document.title = "ورود به اکانت ادمین | آشیانه";
         inputRef?.current?.focus();
     }, []);
 
+    // close AlertModal and clear timeOut
     useEffect(() => {
         if (isOpenAlertModal) {
             if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
@@ -36,6 +38,7 @@ export default function Login() {
         }
     }, [isOpenAlertModal]);
 
+    // admin login handler
     const loginHandler = async event => {
         event.preventDefault();
 
@@ -86,6 +89,7 @@ export default function Login() {
         }
     }
 
+    // data inputs
     const dataInput = [
         {
             onChange: setEmail,
@@ -94,11 +98,11 @@ export default function Login() {
             value: email,
             placeholder: "you@example.com",
             id: "email",
-            props: {
+            autoComplete: "email",
+            inputProps: {
                 ref: inputRef,
                 required: true,
                 dir: "ltr",
-                autoComplete: "email",
             }
         },
         {
@@ -110,7 +114,7 @@ export default function Login() {
             id: "password",
             type: showPassword ? "text" : "password",
             parentClassName: "relative",
-            props: {
+            inputProps: {
                 required: true,
                 dir: "ltr",
             },

@@ -1,11 +1,11 @@
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function Input({onChange, name, type = name, id = name, label = name, autoComplete = null, value, placeholder, props, className = null, parentClassName = null, children}) {
+export default function Input({onChange, name, type = name, id = name, label = name, autoComplete = null, value, placeholder, inputProps, className = null, parentClassName = null, children}) {
     return (
         <div className={cn(parentClassName)}>
             <label htmlFor={id} className="block text-sm font-medium">{label}</label>
             <input
-                {...props}
+                {...inputProps}
                 value={value}
                 onChange={
                     event => {
@@ -19,7 +19,7 @@ export default function Input({onChange, name, type = name, id = name, label = n
                 placeholder={placeholder}
                 className={
                     cn("mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition",
-                        className && className
+                        className
                     )}
             />
             {children}
