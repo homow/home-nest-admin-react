@@ -55,7 +55,7 @@
         @apply transition-all scroll-smooth;
     }
     body {
-        @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider;
+        @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider selection:bg-violet-700 selection:text-white;
     }
     h1, h2, h3 {
         @apply font-bold;
