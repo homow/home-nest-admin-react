@@ -1,5 +1,5 @@
 import {useEffect, useState, useRef} from "react";
-import AlertModal from "@components/ui/AlertModal";
+import AlertModal from "@components/ui/modal/AlertModal.jsx";
 import {useAuth} from "@/context/AuthContext";
 import Input from "@components/ui/form/Input";
 import CheckBox from "@components/ui/form/CheckBox";

@@ -1,6 +1,8 @@
+import useScrollLock from "@hooks/useScrollLock";
 import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, confirmText = "تأیید", cancelText = "لغو", dangerMode = false, z = "z-30"}) {
+    useScrollLock(isOpen);
 
     const confirmBtnBg = dangerMode
         ? "bg-rose-600 hover:bg-rose-800"
