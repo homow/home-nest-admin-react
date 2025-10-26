@@ -44,7 +44,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     ];
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
+        <form onSubmit={handleSubmit} className="space-y-8 mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
 
             {/* title and id */}
             <div className={"multi-inputs-style"}>
@@ -163,7 +163,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             </div>
 
             {/* tags, description, metaData, features */}
-            <div className={"space-y-6"}>
+            <div className={"space-y-6 @5xl/main:flex flex-row @5xl/main:*:w-full gap-4 items-start"}>
 
                 {/* description and features */}
                 <div className={"space-y-6"}>
@@ -180,7 +180,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             name="description"
                             id="description"
                             cols="30"
-                            rows="10"
+                            rows="8"
                             value={formData.description}
                             onChange={v => handleChange("description", v.target.value)}
                             placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
@@ -188,30 +188,12 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         >
                         </textarea>
                     </div>
-
-                    {/* features */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
-                        <div className="flex flex-wrap gap-3">
-                            {availableFeatures.map(feature => (
-                                <label key={feature} className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.features.includes(feature)}
-                                        onChange={() => handleFeatureToggle(feature)}
-                                        className="accent-violet-500"
-                                    />
-                                    <span>{feature}</span>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
-                {/* advanced information (metaData) */}
-                <div className={"multi-inputs-style"}>
+                {/* tags and metadata */}
+                <div className={"grid grid-cols-1 gap-6 @3xl:grid-cols-2 @5xl:flex @5xl/main:flex-col"}>
 
-                    {/* tags and metadata */}
+                    {/* advanced information (metaData) */}
                     <Input
                         label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
                         name="metadata_notes"
@@ -233,7 +215,26 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         onChange={(v) => handleChange("tags", v)}
                         placeholder="مثلاً: نوساز، تهران"
                     />
+
+                    {/* features */}
+                    <div>
+                        <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
+                        <div className="flex flex-wrap gap-3">
+                            {availableFeatures.map(feature => (
+                                <label key={feature} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.features.includes(feature)}
+                                        onChange={() => handleFeatureToggle(feature)}
+                                        className="accent-violet-500"
+                                    />
+                                    <span>{feature}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
 
