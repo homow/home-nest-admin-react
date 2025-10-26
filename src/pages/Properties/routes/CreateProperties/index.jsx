@@ -13,8 +13,8 @@ export default function CreateProperty() {
     }
 
     return (
-        <div>
-            <h3></h3>
+        <div className={"space-y-8"}>
+            <h3>افزودن ملک جدید</h3>
             <CreatePropertyForm onSubmit={createPropertyHandler} isLoading={loading}/>
         </div>
     );

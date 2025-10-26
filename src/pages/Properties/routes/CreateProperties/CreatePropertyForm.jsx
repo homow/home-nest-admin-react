@@ -44,122 +44,124 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     ];
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
+        <form onSubmit={handleSubmit} className="space-y-8">
 
-            {/* title and id */}
-            <div className={"multi-inputs-style"}>
-                {/* title */}
-                <Input
-                    label="عنوان ملک"
-                    name="title"
-                    value={formData.title}
-                    onChange={(v) => handleChange("title", v)}
-                    placeholder="مثلاً آپارتمان نوساز"
-                />
+            <div className={"space-y-8 @6xl:grid grid-cols-2 gap-x-4"}>
+                {/* title and id */}
+                <div className={"multi-inputs-style"}>
+                    {/* title */}
+                    <Input
+                        label="عنوان ملک"
+                        name="title"
+                        value={formData.title}
+                        onChange={(v) => handleChange("title", v)}
+                        placeholder="مثلاً آپارتمان نوساز"
+                    />
 
-                {/* id */}
-                <Input
-                    label="شناسه ملک (اختیاری)"
-                    name="property_number"
-                    value={formData.property_number || ""}
-                    onChange={(v) => handleChange("property_number", v)}
-                    placeholder="مثلاً A-1234"
-                />
-            </div>
-
-            {/* category and price */}
-            <div className={"multi-inputs-style"}>
-                {/* category */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">دسته‌بندی</label>
-                    <select
-                        value={formData.category}
-                        onChange={e => handleChange("category", e.target.value)}
-                        className="block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
-                    >
-                        <option className={"bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>
-                        <option className={"bg-main-bg aria-selected:bg-violet-500"} value="rent">اجاره</option>
-                    </select>
+                    {/* id */}
+                    <Input
+                        label="شناسه ملک (اختیاری)"
+                        name="property_number"
+                        value={formData.property_number || ""}
+                        onChange={(v) => handleChange("property_number", v)}
+                        placeholder="مثلاً A-1234"
+                    />
                 </div>
 
-                {/* price */}
-                <Input
-                    label="قیمت (تومان)"
-                    name="price"
-                    type="number"
-                    value={formData.price}
-                    onChange={(v) => handleChange("price", v)}
-                    placeholder="مثلاً 1200000000"
-                />
-            </div>
+                {/* category and price */}
+                <div className={"multi-inputs-style"}>
+                    {/* category */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">دسته‌بندی</label>
+                        <select
+                            value={formData.category}
+                            onChange={e => handleChange("category", e.target.value)}
+                            className="block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
+                        >
+                            <option className={"bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>
+                            <option className={"bg-main-bg aria-selected:bg-violet-500"} value="rent">اجاره</option>
+                        </select>
+                    </div>
 
-            {/* price with discount and discount date */}
-            <div className={"multi-inputs-style"}>
+                    {/* price */}
+                    <Input
+                        label="قیمت (تومان)"
+                        name="price"
+                        type="number"
+                        value={formData.price}
+                        onChange={(v) => handleChange("price", v)}
+                        placeholder="مثلاً 1200000000"
+                    />
+                </div>
 
-                {/* price with discount */}
-                <Input
-                    label="قیمت با تخفیف (اختیاری)"
-                    name="price_with_discount"
-                    type="number"
-                    value={formData.price_with_discount}
-                    onChange={(v) => handleChange("price_with_discount", v)}
-                    placeholder="مثلاً 1100000000"
-                />
+                {/* price with discount and discount date */}
+                <div className={"multi-inputs-style"}>
 
-                {/* discount date */}
-                <Input
-                    label="تاریخ پایان تخفیف (اختیاری)"
-                    name="discount_until"
-                    type="datetime-local"
-                    value={formData.discount_until}
-                    onChange={(v) => handleChange("discount_until", v)}
-                />
-            </div>
+                    {/* price with discount */}
+                    <Input
+                        label="قیمت با تخفیف (اختیاری)"
+                        name="price_with_discount"
+                        type="number"
+                        value={formData.price_with_discount}
+                        onChange={(v) => handleChange("price_with_discount", v)}
+                        placeholder="مثلاً 1100000000"
+                    />
 
-            {/* province and city */}
-            <div className={'multi-inputs-style'}>
+                    {/* discount date */}
+                    <Input
+                        label="تاریخ پایان تخفیف (اختیاری)"
+                        name="discount_until"
+                        type="datetime-local"
+                        value={formData.discount_until}
+                        onChange={(v) => handleChange("discount_until", v)}
+                    />
+                </div>
 
-                {/* province */}
-                <Input
-                    label="استان"
-                    name="province"
-                    value={formData.province}
-                    onChange={(v) => handleChange("province", v)}
-                    placeholder="مثلاً تهران"
-                />
+                {/* province and city */}
+                <div className={'multi-inputs-style'}>
 
-                {/* city */}
-                <Input
-                    label="شهر"
-                    name="city"
-                    value={formData.city}
-                    onChange={(v) => handleChange("city", v)}
-                    placeholder="مثلاً تهران"
-                />
-            </div>
+                    {/* province */}
+                    <Input
+                        label="استان"
+                        name="province"
+                        value={formData.province}
+                        onChange={(v) => handleChange("province", v)}
+                        placeholder="مثلاً تهران"
+                    />
 
-            {/* images */}
-            <div className={"multi-inputs-style"}>
-
-                {/* main_images */}
-                <Input
-                    label="تصویر اصلی (URL)"
-                    name="main_image"
-                    inputProps={{dir: "ltr"}}
-                    value={formData.main_image}
-                    onChange={(v) => handleChange("main_image", v)}
-                    placeholder="https://..."
-                />
+                    {/* city */}
+                    <Input
+                        label="شهر"
+                        name="city"
+                        value={formData.city}
+                        onChange={(v) => handleChange("city", v)}
+                        placeholder="مثلاً تهران"
+                    />
+                </div>
 
                 {/* images */}
-                <Input
-                    label="تصاویر بیشتر (URLها را با کاما (,) جدا کنید)"
-                    inputProps={{dir: "ltr"}}
-                    name="images"
-                    value={formData.images || ""}
-                    onChange={(v) => handleChange("images", v)}
-                    placeholder="https://.../1.jpg, https://.../2.jpg"
-                />
+                <div className={"multi-inputs-style"}>
+
+                    {/* main_images */}
+                    <Input
+                        label="تصویر اصلی (URL)"
+                        name="main_image"
+                        inputProps={{dir: "ltr"}}
+                        value={formData.main_image}
+                        onChange={(v) => handleChange("main_image", v)}
+                        placeholder="https://..."
+                    />
+
+                    {/* images */}
+                    <Input
+                        label="تصاویر بیشتر (URLها را با کاما (,) جدا کنید)"
+                        inputProps={{dir: "ltr"}}
+                        name="images"
+                        value={formData.images || ""}
+                        onChange={(v) => handleChange("images", v)}
+                        placeholder="https://.../1.jpg, https://.../2.jpg"
+                    />
+                </div>
             </div>
 
             {/* tags, description, metaData, features */}
