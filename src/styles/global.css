@@ -55,13 +55,13 @@
         letter-spacing: 1px;
     }
     *::-webkit-scrollbar {
-        @apply size-4;
+        @apply size-3;
     }
     *::-webkit-scrollbar-track {
         @apply bg-stone-800;
     }
     *::-webkit-scrollbar-thumb {
-        @apply bg-violet-500 border-3 border-stone-800 rounded-none;
+        @apply bg-violet-500 border-[0.5px] border-stone-800 rounded-none;
     }
     body {
         @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider selection:bg-violet-700 selection:text-white;
@@ -101,6 +101,10 @@
         @apply bg-main-bg rounded-md shadow-custom p-5;
     }
     .multi-inputs-style {
-        @apply flex flex-col gap-6 \@3xs/main:bg-active \@3xl/main:*:w-full;
+        @apply flex flex-col gap-6;
+
+        @container main (min-width: 48rem) {
+            @apply flex-row *:w-full;
+        }
     }
 }

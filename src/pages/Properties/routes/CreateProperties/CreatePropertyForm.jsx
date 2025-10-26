@@ -44,7 +44,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     ];
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
+        <form onSubmit={handleSubmit} className="space-y-6 mx-auto bg-main-bg p-6 rounded-2xl shadow-custom">
 
             {/* title and id */}
             <div className={"multi-inputs-style"}>
@@ -67,7 +67,9 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 />
             </div>
 
+            {/* category and price */}
             <div className={"multi-inputs-style"}>
+                {/* category */}
                 <div>
                     <label className="block text-sm font-medium mb-1">دسته‌بندی</label>
                     <select
@@ -80,6 +82,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     </select>
                 </div>
 
+                {/* price */}
                 <Input
                     label="قیمت (تومان)"
                     name="price"
@@ -90,8 +93,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 />
             </div>
 
-            {/* price */}
+            {/* price with discount and discount date */}
             <div className={"multi-inputs-style"}>
+
+                {/* price with discount */}
                 <Input
                     label="قیمت با تخفیف (اختیاری)"
                     name="price_with_discount"
@@ -101,6 +106,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     placeholder="مثلاً 1100000000"
                 />
 
+                {/* discount date */}
                 <Input
                     label="تاریخ پایان تخفیف (اختیاری)"
                     name="discount_until"
@@ -110,7 +116,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 />
             </div>
 
+            {/* province and city */}
             <div className={'multi-inputs-style'}>
+
+                {/* province */}
                 <Input
                     label="استان"
                     name="province"
@@ -119,6 +128,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     placeholder="مثلاً تهران"
                 />
 
+                {/* city */}
                 <Input
                     label="شهر"
                     name="city"
@@ -127,7 +137,11 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     placeholder="مثلاً تهران"
                 />
             </div>
+
+            {/* images */}
             <div className={"multi-inputs-style"}>
+
+                {/* main_images */}
                 <Input
                     label="تصویر اصلی (URL)"
                     name="main_image"
@@ -137,6 +151,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     placeholder="https://..."
                 />
 
+                {/* images */}
                 <Input
                     label="تصاویر بیشتر (URLها را با کاما (,) جدا کنید)"
                     inputProps={{dir: "ltr"}}
@@ -147,66 +162,82 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 />
             </div>
 
-            {/* description */}
-            <div>
-                <label
-                    htmlFor="description"
-                    className={"block text-sm font-medium"}
-                >
-                    توضیحات
-                </label>
-                <textarea
-                    name="description"
-                    id="description"
-                    cols="30"
-                    rows="10"
-                    value={formData.description}
-                    onChange={v => handleChange("description", v.target.value)}
-                    placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
-                    className={"mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"}
-                >
-                </textarea>
-            </div>
+            {/* tags, description, metaData, features */}
+            <div className={"space-y-6"}>
 
-            <div>
-                <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
-                <div className="flex flex-wrap gap-3">
-                    {availableFeatures.map(feature => (
-                        <label key={feature} className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={formData.features.includes(feature)}
-                                onChange={() => handleFeatureToggle(feature)}
-                                className="accent-violet-500"
-                            />
-                            <span>{feature}</span>
+                {/* description and features */}
+                <div className={"space-y-6"}>
+
+                    {/* description */}
+                    <div>
+                        <label
+                            htmlFor="description"
+                            className={"block text-sm font-medium"}
+                        >
+                            توضیحات
                         </label>
-                    ))}
+                        <textarea
+                            name="description"
+                            id="description"
+                            cols="30"
+                            rows="10"
+                            value={formData.description}
+                            onChange={v => handleChange("description", v.target.value)}
+                            placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
+                            className={"mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"}
+                        >
+                        </textarea>
+                    </div>
+
+                    {/* features */}
+                    <div>
+                        <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
+                        <div className="flex flex-wrap gap-3">
+                            {availableFeatures.map(feature => (
+                                <label key={feature} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.features.includes(feature)}
+                                        onChange={() => handleFeatureToggle(feature)}
+                                        className="accent-violet-500"
+                                    />
+                                    <span>{feature}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* advanced information (metaData) */}
+                <div className={"multi-inputs-style"}>
+
+                    {/* tags and metadata */}
+                    <Input
+                        label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
+                        name="metadata_notes"
+                        value={formData.metadata?.notes?.join("، ") || ""}
+                        onChange={(v) =>
+                            handleChange("metadata", {
+                                ...formData.metadata,
+                                notes: v.split("،").map(s => s.trim()).filter(Boolean)
+                            })
+                        }
+                        placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
+                    />
+
+                    {/* tags */}
+                    <Input
+                        label="برچسب‌ها (با کاما جدا کنید)"
+                        name="tags"
+                        value={formData.tags}
+                        onChange={(v) => handleChange("tags", v)}
+                        placeholder="مثلاً: نوساز، تهران"
+                    />
                 </div>
             </div>
 
-            {/* advanced information (metaData) */}
-            <Input
-                label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
-                name="metadata_notes"
-                value={formData.metadata?.notes?.join("، ") || ""}
-                onChange={(v) =>
-                    handleChange("metadata", {
-                        ...formData.metadata,
-                        notes: v.split("،").map(s => s.trim()).filter(Boolean)
-                    })
-                }
-                placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
-            />
 
-            <Input
-                label="برچسب‌ها (با کاما جدا کنید)"
-                name="tags"
-                value={formData.tags}
-                onChange={(v) => handleChange("tags", v)}
-                placeholder="مثلاً: نوساز، تهران"
-            />
-
+            {/* stock */}
             <div className="flex items-center gap-2">
                 <input
                     id={"stock"}
@@ -218,6 +249,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 <label htmlFor={"stock"} className="text-sm">در دسترس است</label>
             </div>
 
+            {/* submit */}
             <button
                 type="submit"
                 disabled={isLoading}
