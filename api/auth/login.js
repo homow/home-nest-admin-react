@@ -61,10 +61,6 @@ export default async function handler(req, res) {
             return res.status(500).json({error: 'PROFILE_FETCH_FAILED'});
         }
 
-        if (profile?.role !== 'admin') {
-            return res.status(403).json({error: 'ACCESS_DENIED'});
-        }
-
         try {
             await supabaseAdmin
                 .from('user_profiles')
