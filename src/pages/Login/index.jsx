@@ -1,9 +1,9 @@
 import {useEffect, useState, useRef} from "react";
-import AlertModal from "@components/ui/modals/AlertModal.jsx";
+import AlertModal from "@components/ui/modals/AlertModal";
 import {useAuth} from "@/context/AuthContext";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {login} from "@api/requests/auth.js";
+import loginHandler from "@api/handlers/loginHandler.js";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -39,8 +39,7 @@ export default function Login() {
         }
     }, [isOpenAlertModal]);
 
-    // admin login handler
-    const loginHandler = async event => {
+    const submitHandler = async event => {
         event.preventDefault();
 
         const userInfo = {
@@ -49,63 +48,7 @@ export default function Login() {
             remember
         };
 
-        try {
-            // reset modal
-            setAlertModalData({type: "error", message: ""});
-            setIsOpenAlertModal(false);
-
-            const res = await login(userInfo);
-
-            if (res.ok) {
-                // admin
-                if (res.user.role === "admin") {
-                    setAlertModalData({type: "success", message: "خب، بالاخره وارد شدی."});
-                    setIsOpenAlertModal(true);
-
-                    setTimeout(() => {
-                        setAuthInfo({userData: res.user, token: res.accessToken});
-                    }, 3000)
-                    // user
-                } else {
-                    setAlertModalData({type: "error", message: "اجازه ورود به این بخش رو نداری."})
-                }
-                setIsOpenAlertModal(true)
-            }
-
-        } catch (err) {
-            const data = err.response?.data || {};
-            const status = err.response?.status;
-            let message;
-
-            switch (true) {
-                case (status === 503 || data.error === "NETWORK_ERROR"): {
-                    message = "ارتباط با سرور برقرار نشد، اینترنت یا سرور را بررسی کن";
-                    break;
-                }
-                case (status === 401 || data.error === "INVALID_CREDENTIALS"): {
-                    message = "رمز یا ایمیلت اشتباهه";
-                    break;
-                }
-                case (status === 403 || data.error === "ACCESS_DENIED"): {
-                    message = "شما اجازه ورود ندارید";
-                    break;
-                }
-                case (status >= 500): {
-                    message = "خطا از سمت سرور، بعداً تلاش کن";
-                    break;
-                }
-                default: {
-                    message = "مشکلی ناشناخته";
-                    break;
-                }
-            }
-
-            setAlertModalData({
-                type: "error",
-                message
-            });
-            setIsOpenAlertModal(true);
-        }
+        await loginHandler(userInfo, setAlertModalData, setIsOpenAlertModal, setAuthInfo);
     }
 
     // data inputs
@@ -160,7 +103,7 @@ export default function Login() {
                         به اکانت ادمین وارد شو.
                     </p>
 
-                    <form className="space-y-6" onSubmit={loginHandler}>
+                    <form className="space-y-6" onSubmit={submitHandler}>
                         {dataInput.map(data => (
                             <Input key={data.id} {...data}/>
                         ))}
