@@ -77,10 +77,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         <select
                             value={formData.category}
                             onChange={e => handleChange("category", e.target.value)}
-                            className="block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
+                            className="block w-full rounded-lg border border-gray-300 text-secondary-txt bg-primary-bg/40 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
                         >
-                            <option className={"bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>
-                            <option className={"bg-main-bg aria-selected:bg-violet-500"} value="rent">اجاره</option>
+                            <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>
+                            <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="rent">اجاره</option>
                         </select>
                     </div>
 
@@ -187,7 +187,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             value={formData.description}
                             onChange={v => handleChange("description", v.target.value)}
                             placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
-                            className={"mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"}
+                            className={"mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"}
                         >
                         </textarea>
                     </div>
