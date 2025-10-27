@@ -8,13 +8,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
         title: "",
         category: "sale",
-        price: "",
+        price: 0,
         description: "",
         province: "",
         city: "",
         /** @type {string[]} */
         features: [],
-        price_with_discount: "",
+        price_with_discount: null,
         discount_until: "",
         main_image: "",
         tags: "",
@@ -47,7 +47,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
 
-            <div className={"space-y-8 @6xl:grid grid-cols-2 gap-x-4"}>
+            <div className={"space-y-8 @6xl/main:grid grid-cols-2 gap-x-4"}>
                 {/* title and id */}
                 <div className={"multi-inputs-style"}>
                     {/* title */}
@@ -194,7 +194,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 </div>
 
                 {/* tags and metadata */}
-                <div className={"grid grid-cols-1 gap-6 @3xl:grid-cols-2 @5xl:flex @5xl/main:flex-col"}>
+                <div className={"grid grid-cols-1 gap-6 @3xl/main:grid-cols-2 @5xl/main:flex @5xl/main:flex-col"}>
 
                     {/* advanced information (metaData) */}
                     <Input
@@ -219,32 +219,36 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         placeholder="مثلاً: نوساز، تهران"
                     />
 
-                    {/* features */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">ویژگی‌ها</label>
-                        <div className="flex flex-wrap gap-3">
-                            {availableFeatures.map(feature => (
-                                <CheckBox
-                                    key={feature}
-                                    id={feature}
-                                    label={feature}
-                                    onChange={() => handleFeatureToggle(feature)}
-                                    checked={formData.features.includes(feature)}
-                                />
-                            ))}
+                    {/* features and stock */}
+                    <div className={"flex flex-col items-start gap-4 divide-y divide-secondary-txt @xl/main:divide-y-0 @xl/main:divide-x @xl/main:flex-row @xl/main:items-start @3xl/main:col-span-2"}>
+                        {/* features */}
+                        <div>
+                            <p className="block text-sm font-medium mb-2">ویژگی‌ها</p>
+                            <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
+                                {availableFeatures.map(feature => (
+                                    <CheckBox
+                                        key={feature}
+                                        id={feature}
+                                        label={feature}
+                                        onChange={() => handleFeatureToggle(feature)}
+                                        checked={formData.features.includes(feature)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* stock */}
+                        <div>
+                            <p className={"text-sm font-medium mb-2"}>موجودی</p>
+                            <CheckBox
+                                id={"stock"}
+                                checked={formData.stock === 1}
+                                onChange={() => handleChange("stock", formData.stock === 1 ? 0 : 1)}
+                                label={"در دسترس است"}
+                            />
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* stock */}
-            <div className="flex items-center gap-2">
-                <CheckBox
-                    id={"stock"}
-                    checked={formData.stock === 1}
-                    onChange={() => handleChange("stock", formData.stock === 1 ? 0 : 1)}
-                    label={"در دسترس است"}
-                />
             </div>
 
             {/* submit */}
