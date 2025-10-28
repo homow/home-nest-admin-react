@@ -81,17 +81,23 @@ export default function ImagesForm(propertyID) {
                     />
                 </div>
 
-                {mainPreview && <img
-                    src={`${mainPreview}`}
-                    alt="main preview"
-                    className={"max-w-60 mt-6"}/>
-                }
-
-                {othersPreview.length > 0 && (
-                    <div className={"flex gap-8 mt-8"}>
-                        {othersPreview.map((u, i) => <img key={i} src={u} alt={`preview ${i}`} className={"size-20 object-cover"}/>)}
+                <div className={"flex flex-wrap gap-2 justify-between items-center"}>
+                    <div className={"max-w-60 mt-6"}>
+                        {mainPreview && <img
+                            src={`${mainPreview}`}
+                            alt="main preview"
+                            className={"w-full"}/>
+                        }
                     </div>
-                )}
+
+                    <div>
+                        {othersPreview.length > 0 && (
+                            <div className={"flex flex-wrap gap-8 mt-8"}>
+                                {othersPreview.map((u, i) => <img key={i} src={u} alt={`preview ${i}`} className={"size-30 object-cover"}/>)}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </form>
         </>
     )

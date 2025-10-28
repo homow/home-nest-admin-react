@@ -16,7 +16,7 @@ export default function CreateProperty() {
     }
 
     return (
-        <div className={"space-y-8"}>
+        <div className={"space-y-12"}>
             <h3>افزودن ملک جدید</h3>
 
             {/* image property form */}
