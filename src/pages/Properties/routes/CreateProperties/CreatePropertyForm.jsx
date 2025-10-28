@@ -2,12 +2,13 @@ import {useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
+import {formatToPriceDebounce} from "@/lib/utils/helper.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
         title: "",
         category: "sale",
-        price: null,
+        price: "",
         description: "",
         province: "",
         city: "",
@@ -85,10 +86,14 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <Input
                         label="قیمت (تومان)"
                         name="price"
-                        type="number"
+                        type="text"
                         value={formData.price}
-                        onChange={(event) => handleChange("price", event.target.value)}
-                        placeholder="مثلاً 1200000000"
+
+                        onChange={event => {
+                            handleChange("price", event.target.value);
+                            formatToPriceDebounce(event, handleChange, "price");
+                        }}
+                        placeholder="مثلاً 1,200,000,000"
                     />
                 </div>
 
@@ -99,10 +104,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <Input
                         label="قیمت با تخفیف (اختیاری)"
                         name="price_with_discount"
-                        type="number"
+                        type="text"
                         value={formData.price_with_discount}
-                        onChange={(event) => handleChange("price_with_discount", event.target.value)}
-                        placeholder="مثلاً 1100000000"
+                        onChange={event => {
+                            handleChange("price", event.target.value);
+                            formatToPriceDebounce(event, handleChange, "price");
+                        }}
+                        placeholder="مثلاً 1,100,000,000"
                     />
 
                     {/* discount date */}
