@@ -8,6 +8,7 @@ import Icon from "@components/ui/icons/Icon";
 export default function SideBarHeader() {
     const {collapsed, setCollapsed} = useCollapsedMenu();
 
+    // apply collapsed state from size
     const applySpacing = useCallback(collapsedState => {
         if (window.innerWidth < 768) {
             document.documentElement.style.setProperty("--spacing-custom", "0px");
@@ -19,6 +20,7 @@ export default function SideBarHeader() {
         }
     }, []);
 
+    // run in component mounted
     useEffect(() => {
         const saved = localStorage.getItem("collapsedMenu") === "true";
         applySpacing(saved);

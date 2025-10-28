@@ -1,5 +1,6 @@
 import {useEffect, useRef} from "react";
 import {cn} from "@/lib/utils/ui-utils.js";
+import {escapeStack} from "@/lib/utils/ui-utils.js";
 
 export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, confirmText = "تأیید", cancelText = "لغو", dangerMode = false, z = "z-30"}) {
     const buttonRef = useRef(null);
@@ -13,10 +14,16 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
         : "bg-rose-600 hover:bg-rose-800";
 
     const modalHeaderColor = dangerMode ? "text-rose-500" : "text-emerald-500";
-
+    
     useEffect(() => {
         isOpen && buttonRef.current.focus();
-    }, [isOpen]);
+        
+        isOpen && escapeStack.push(onCancel)
+
+        return () => {
+            escapeStack.remove(onCancel)
+        }
+    }, [isOpen, onCancel]);
 
     return (
         <div

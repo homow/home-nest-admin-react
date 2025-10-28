@@ -53,6 +53,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <Input
                         label="عنوان ملک"
                         name="title"
+                        autoComplete="title"
                         value={formData.title}
                         onChange={event => handleChange("title", event.target.value)}
                         placeholder="مثلاً آپارتمان نوساز"
@@ -60,6 +61,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* id */}
                     <Input
+                        autoComplete="property_number"
                         label="شناسه ملک (اختیاری)"
                         name="property_number"
                         value={formData.property_number || ""}
@@ -88,6 +90,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="قیمت (تومان)"
                         name="price"
                         type="text"
+                        autoComplete="price"
                         value={formData.price}
 
                         onChange={event => {
@@ -103,6 +106,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* price with discount */}
                     <Input
+                        autoComplete="price_with_discount"
                         label="قیمت با تخفیف (اختیاری)"
                         name="price_with_discount"
                         type="text"
@@ -129,6 +133,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* province */}
                     <Input
+                        autoComplete="province"
                         label="استان"
                         name="province"
                         value={formData.province}
@@ -140,6 +145,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <Input
                         label="شهر"
                         name="city"
+                        autoComplete="city"
                         value={formData.city}
                         onChange={(event) => handleChange("city", event.target.value)}
                         placeholder="مثلاً تهران"
