@@ -1,5 +1,5 @@
-import supabaseAnon from '../supabaseClient.js';
-import supabaseServer from '../supabaseServer.js';
+import supabaseAnon from './config/supabaseClient.js';
+import supabaseServer from './config/supabaseServer.js';
 
 const supabase = supabaseAnon();
 const supabaseAdmin = supabaseServer();
