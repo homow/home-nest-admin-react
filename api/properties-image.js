@@ -101,10 +101,12 @@ export default async function handler(req, res) {
                 try {
                     fs.unlinkSync(f.filepath || f.path);
                     // eslint-disable-next-line
-                } catch (e) {}
+                } catch (e) {
+                }
             });
             // eslint-disable-next-line
-        } catch (e) {}
+        } catch (e) {
+        }
 
         return res.status(200).json({ok: true, uploaded: respData});
     } catch (err) {

@@ -16,6 +16,6 @@ export async function uploadPropertyImages({propertyId, main_image, images = []}
         return data;
     } catch (err) {
         console.error("Upload error:", err.response?.data || err.message);
-        throw err;
+        return err;
     }
 }

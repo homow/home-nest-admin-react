@@ -2,7 +2,7 @@ import {useState} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
 
-export default function ImagesForm(propertyID) {
+export default function ImagesForm() {
     const [mainPreview, setMainPreview] = useState("");
     const [othersPreview, setOthersPreview] = useState([]);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
@@ -17,7 +17,6 @@ export default function ImagesForm(propertyID) {
             const form = event.target;
             const mainFile = form.elements["main_image"]?.files[0] ?? null;
             const otherFiles = form.elements["images"]?.files ?? null;
-            const commonOpts = {property_id: propertyID}
             const results = [];
 
             if (mainFile) {
