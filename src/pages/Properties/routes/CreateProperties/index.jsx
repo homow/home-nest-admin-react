@@ -10,13 +10,19 @@ export default function CreateProperty() {
     }, []);
 
     const createPropertyHandler = data => {
+        setLoading(true);
         console.log("createPropertyHandler", data);
+        setLoading(false);
     }
 
     return (
         <div className={"space-y-8"}>
             <h3>افزودن ملک جدید</h3>
+
+            {/* image property form */}
             <ImagesForm/>
+
+            {/* data property form */}
             <CreatePropertyForm
                 onSubmit={createPropertyHandler}
                 isLoading={loading}
