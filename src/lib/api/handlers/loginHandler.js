@@ -1,6 +1,12 @@
 import {login} from "@api/requests/auth.js";
 
 const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAuthInfo) => {
+    // show alert modal
+    const showAlert = (type, message) => {
+        setAlertModalData({type, message});
+        setIsOpenAlertModal(true);
+    }
+
     try {
         // reset modal
         setAlertModalData({type: "error", message: ""});
@@ -9,19 +15,21 @@ const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAut
         const res = await login(data);
 
         if (res.ok) {
-            // admin
-            if (res.user.role === "admin") {
-                setAlertModalData({type: "success", message: "خب، بالاخره وارد شدی."});
-                setIsOpenAlertModal(true);
+            switch (res.user.role) {
+                // admin
+                case "admin": {
+                    showAlert("success","خب، بالاخره وارد شدی.")
 
-                setTimeout(() => {
+                    await new Promise(resolve => setTimeout(resolve, 3000));
                     setAuthInfo({userData: res.user, token: res.accessToken});
-                }, 3000)
+                    break;
+                }
                 // user
-            } else {
-                setAlertModalData({type: "error", message: "اجازه ورود به این بخش رو نداری."})
+                default: {
+                    showAlert("error", "اجازه ورود به این بخش رو نداری.")
+                    break;
+                }
             }
-            setIsOpenAlertModal(true)
         }
 
     } catch (err) {
@@ -52,11 +60,7 @@ const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAut
             }
         }
 
-        setAlertModalData({
-            type: "error",
-            message
-        });
-        setIsOpenAlertModal(true);
+        showAlert("error", message);
     }
 }
 
