@@ -1,17 +1,23 @@
 import {useEffect, useState, useRef} from "react";
-import AlertModal from "@components/ui/modals/AlertModal";
+import Button from "@components/ui/Button";
 import {useAuth} from "@/context/AuthContext";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
+import AlertModal from "@components/ui/modals/AlertModal";
 import loginHandler from "@api/handlers/loginHandler.js";
+import logo from "@img/logo.webp"
 
 export default function Login() {
+    // state variables
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
     const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
+
+    // ref
     const inputRef = useRef(null);
     const alertTimeoutRef = useRef(null);
     const {setAuthInfo} = useAuth();
@@ -41,6 +47,7 @@ export default function Login() {
 
     const submitHandler = async event => {
         event.preventDefault();
+        setLoading(true);
 
         const userInfo = {
             email: email.trim().toLowerCase(),
@@ -48,7 +55,8 @@ export default function Login() {
             remember
         };
 
-        await loginHandler(userInfo, setAlertModalData, setIsOpenAlertModal, setAuthInfo);
+        await loginHandler(userInfo, setAlertModalData, setIsOpenAlertModal, setAuthInfo, setLoading);
+        setLoading(false);
     }
 
     // data inputs
@@ -95,7 +103,12 @@ export default function Login() {
 
     return (
         <>
+            {/* alert modal for state */}
             <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal}/>
+
+            {/* logo */}
+            <img className={"max-w-20 absolute top-20 left-1/2 -translate-x-1/2"} src={`${logo}`} alt="logo"/>
+
             <section className="flex items-center justify-center min-h-screen">
                 <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
                     <h2 className="text-2xl font-bold text-center">خوش اومدی</h2>
@@ -112,12 +125,11 @@ export default function Login() {
                             <CheckBox id={"remember"} checked={remember} onChange={setRemember} label={"منو یادت باشه"}/>
                         </div>
 
-                        <button
-                            type="submit"
-                            className="w-full cursor-pointer bg-violet-500 text-white font-semibold rounded-lg py-2 hover:bg-violet-600 transition"
-                        >
-                            Login
-                        </button>
+                        <Button
+                            type={"submit"}
+                            text={loading ? "در حال پردازش" : "ارسال"}
+                            disabled={loading}
+                        />
                     </form>
                 </div>
             </section>

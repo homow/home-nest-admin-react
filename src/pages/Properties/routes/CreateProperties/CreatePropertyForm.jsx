@@ -1,18 +1,16 @@
 import {useState} from "react";
+import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
-    /** @type {{title: string, category: string, price: string, description: string, province: string, city: string, features: string[], price_with_discount: string, discount_until: string, main_image: string, tags: string, stock: number}} */
     const [formData, setFormData] = useState({
         title: "",
         category: "sale",
-        price: 0,
+        price: null,
         description: "",
         province: "",
         city: "",
-        /** @type {string[]} */
         features: [],
         price_with_discount: null,
         discount_until: "",
@@ -80,7 +78,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             className="block w-full rounded-lg border border-gray-300 text-secondary-txt bg-primary-bg/40 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
                         >
                             <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>
-                            <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="rent">اجاره</option>
+                            <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="rent">رهن</option>
                         </select>
                     </div>
 
@@ -252,16 +250,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             </div>
 
             {/* submit */}
-            <button
-                type="submit"
-                disabled={isLoading}
-                className={cn(
-                    "w-full bg-violet-600 hover:bg-violet-700 active:bg-violet-700 text-white py-2 rounded-lg transition font-medium cursor-pointer",
-                    isLoading && "opacity-60 cursor-not-allowed"
-                )}
-            >
-                {isLoading ? "در حال ارسال..." : "ثبت ملک"}
-            </button>
+            <Button disabled={isLoading} text={isLoading ? "در حال ارسال..." : "ثبت ملک"} type={"submit"}/>
         </form>
     );
 }

@@ -103,7 +103,7 @@
     .multi-inputs-style {
         @apply flex flex-col gap-6;
 
-        @container main (min-width: 48rem) {
+        @container main (min-width: 38rem) {
             @apply flex-row *:w-full;
         }
     }
