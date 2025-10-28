@@ -8,16 +8,16 @@ function debounce(callback, delay = 300) {
 }
 
 // format to price with comma
-const formatToPrice = value => {
+const priceToStrFormat = value => {
     const raw = String(value).replace(/\D/g, "");
     if (!raw) return "";
     return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // format number
-const formatToPriceDebounce = debounce((input, callback, name) => {
-    const value = formatToPrice(input.target.value);
+const priceToStrFormatDebounce = debounce((input, callback, name) => {
+    const value = priceToStrFormat(input.target.value);
     callback(name, value)
 }, 300);
 
-export {formatToPrice, formatToPriceDebounce};
+export {priceToStrFormatDebounce};

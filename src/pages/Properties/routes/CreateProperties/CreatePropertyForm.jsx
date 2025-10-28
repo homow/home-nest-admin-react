@@ -2,21 +2,22 @@ import {useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {formatToPriceDebounce} from "@/lib/utils/helper.js";
+import {priceToStrFormatDebounce} from "@/lib/utils/helper.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
         title: "",
         category: "sale",
         price: "",
+        price_with_discount: "",
         description: "",
         province: "",
         city: "",
         features: [],
-        price_with_discount: null,
         discount_until: "",
         tags: "",
         stock: 1,
+        metadata_notes: [],
     });
 
     const handleChange = (name, value) => {
@@ -91,7 +92,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                         onChange={event => {
                             handleChange("price", event.target.value);
-                            formatToPriceDebounce(event, handleChange, "price");
+                            priceToStrFormatDebounce(event, handleChange, "price");
                         }}
                         placeholder="مثلاً 1,200,000,000"
                     />
@@ -107,8 +108,8 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         type="text"
                         value={formData.price_with_discount}
                         onChange={event => {
-                            handleChange("price", event.target.value);
-                            formatToPriceDebounce(event, handleChange, "price");
+                            handleChange("price_with_discount", event.target.value);
+                            priceToStrFormatDebounce(event, handleChange, "price_with_discount");
                         }}
                         placeholder="مثلاً 1,100,000,000"
                     />
@@ -181,23 +182,19 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <Input
                         label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
                         name="metadata_notes"
-                        value={formData.metadata?.notes?.join("، ") || ""}
-                        onChange={(event) =>
-                            handleChange("metadata", {
-                                ...formData.metadata,
-                                notes: event.target.value.split("،").map(s => s.trim()).filter(Boolean)
-                            })
+                        value={formData.metadata_notes}
+                        onChange={event => handleChange("metadata_notes", event.target.value)
                         }
                         placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
                     />
 
                     {/* tags */}
                     <Input
-                        label="برچسب‌ها (با کاما جدا کنید)"
+                        label="برچسب‌ها (با کاما '،' جدا کنید)"
                         name="tags"
                         value={formData.tags}
-                        onChange={(event) => handleChange("tags", event.target.value)}
-                        placeholder="مثلاً: نوساز، تهران"
+                        onChange={event => handleChange("tags", event.target.value)}
+                        placeholder="مثلاً: نوساز، غرب_تهران"
                     />
 
                     {/* features and stock */}

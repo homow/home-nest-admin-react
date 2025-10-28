@@ -1,18 +1,40 @@
+import {useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils/ui-utils.js";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
-import Icon from "@components/ui/icons/Icon.jsx";
+import Icon from "@components/ui/icons/Icon";
 
 export default function SideBarHeader() {
     const {collapsed, setCollapsed} = useCollapsedMenu();
 
+    const applySpacing = useCallback(collapsedState => {
+        if (window.innerWidth < 768) {
+            document.documentElement.style.setProperty("--spacing-custom", "0px");
+        } else {
+            document.documentElement.style.setProperty(
+                "--spacing-custom",
+                collapsedState ? "80px" : "260px"
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        const saved = localStorage.getItem("collapsedMenu") === "true";
+        applySpacing(saved);
+    }, [applySpacing]);
+
+    useEffect(() => {
+        const handleResize = () => applySpacing(collapsed);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [collapsed, applySpacing]);
+
     const toggleCollapse = () => {
-        document.documentElement.style.setProperty(
-            "--spacing-custom",
-            !collapsed ? "80px" : "260px"
-        );
-        setCollapsed(!collapsed)
+        const newState = !collapsed;
+        setCollapsed(newState);
+        localStorage.setItem("collapsedMenu", JSON.stringify(newState));
+        applySpacing(newState);
     };
 
     return (
