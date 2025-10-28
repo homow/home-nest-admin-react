@@ -7,11 +7,7 @@ export default function Input({onChange, name, type = name, id = name, label = n
             <input
                 {...inputProps}
                 {...(type !== "file" && {value: value ?? ""})}
-                onChange={
-                    event => {
-                        onChange(event)
-                    }
-                }
+                onChange={onChange}
                 id={id}
                 name={name}
                 type={type}

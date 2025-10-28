@@ -39,14 +39,14 @@ export default function ImagesForm(propertyID) {
     };
 
     const handleMainChange = event => {
-        console.log(event)
+        console.log(event.target.files)
         const f = event.target.files?.[0];
         if (f) setMainPreview(URL.createObjectURL(f));
         else setOthersPreview(null);
     };
 
     const handleOthersChange = event => {
-        console.log(event)
+        console.log(event.target.files)
         const files = Array.from(event.target.files || []);
         setOthersPreview(files.map(f => URL.createObjectURL(f)));
     };

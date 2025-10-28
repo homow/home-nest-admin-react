@@ -52,7 +52,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="عنوان ملک"
                         name="title"
                         value={formData.title}
-                        onChange={(v) => handleChange("title", v)}
+                        onChange={event => handleChange("title", event.target.value)}
                         placeholder="مثلاً آپارتمان نوساز"
                     />
 
@@ -61,7 +61,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="شناسه ملک (اختیاری)"
                         name="property_number"
                         value={formData.property_number || ""}
-                        onChange={(v) => handleChange("property_number", v)}
+                        onChange={event => handleChange("property_number", event.target.value)}
                         placeholder="مثلاً A-1234"
                     />
                 </div>
@@ -87,7 +87,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         name="price"
                         type="number"
                         value={formData.price}
-                        onChange={(v) => handleChange("price", v)}
+                        onChange={(event) => handleChange("price", event.target.value)}
                         placeholder="مثلاً 1200000000"
                     />
                 </div>
@@ -101,7 +101,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         name="price_with_discount"
                         type="number"
                         value={formData.price_with_discount}
-                        onChange={(v) => handleChange("price_with_discount", v)}
+                        onChange={(event) => handleChange("price_with_discount", event.target.value)}
                         placeholder="مثلاً 1100000000"
                     />
 
@@ -111,7 +111,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         name="discount_until"
                         type="datetime-local"
                         value={formData.discount_until}
-                        onChange={(v) => handleChange("discount_until", v)}
+                        onChange={(event) => handleChange("discount_until", event.target.value)}
                     />
                 </div>
 
@@ -123,7 +123,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="استان"
                         name="province"
                         value={formData.province}
-                        onChange={(v) => handleChange("province", v)}
+                        onChange={(event) => handleChange("province", event.target.value)}
                         placeholder="مثلاً تهران"
                     />
 
@@ -132,7 +132,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="شهر"
                         name="city"
                         value={formData.city}
-                        onChange={(v) => handleChange("city", v)}
+                        onChange={(event) => handleChange("city", event.target.value)}
                         placeholder="مثلاً تهران"
                     />
                 </div>
@@ -174,10 +174,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
                         name="metadata_notes"
                         value={formData.metadata?.notes?.join("، ") || ""}
-                        onChange={(v) =>
+                        onChange={(event) =>
                             handleChange("metadata", {
                                 ...formData.metadata,
-                                notes: v.split("،").map(s => s.trim()).filter(Boolean)
+                                notes: event.target.value.split("،").map(s => s.trim()).filter(Boolean)
                             })
                         }
                         placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
@@ -188,7 +188,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         label="برچسب‌ها (با کاما جدا کنید)"
                         name="tags"
                         value={formData.tags}
-                        onChange={(v) => handleChange("tags", v)}
+                        onChange={(event) => handleChange("tags", event.target.value)}
                         placeholder="مثلاً: نوساز، تهران"
                     />
 
