@@ -18,18 +18,21 @@ const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAut
             switch (res.user.role) {
                 // admin
                 case "admin": {
-                    showAlert("success","خب، بالاخره وارد شدی.")
+                    showAlert("success", "خب، بالاخره وارد شدی.")
 
                     await new Promise(resolve => setTimeout(resolve, 3000));
                     setAuthInfo({userData: res.user, token: res.accessToken});
-                    break;
+                    return true;
                 }
                 // user
                 default: {
                     showAlert("error", "اجازه ورود به این بخش رو نداری.")
-                    break;
+                    return false;
                 }
             }
+        } else {
+            showAlert("error", res.message || "ورود ناموفق بود، دوباره تلاش کن.");
+            return false;
         }
 
     } catch (err) {
@@ -61,6 +64,7 @@ const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAut
         }
 
         showAlert("error", message);
+        return false;
     }
 }
 
