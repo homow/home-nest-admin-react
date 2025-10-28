@@ -21,8 +21,9 @@ export default function ImagesForm() {
     // handle other images
     const handleOthersChange = event => {
         const files = Array.from(event.target.files || []);
-
+        console.log(files);
         if (files.length > 2) {
+            console.log("ok")
             setAlertModalData({type: "error", message: "تعداد تصاویر باید کمتر از 3 عدد باشد"});
             setIsOpenAlertModal(true);
         } else {
@@ -47,7 +48,7 @@ export default function ImagesForm() {
         <form onSubmit={submitHandler}>
 
             {/* alert modal */}
-            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} {...alertModalData}/>
+            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData} {...alertModalData}/>
 
             {/* images */}
             <div className={"multi-inputs-style"}>

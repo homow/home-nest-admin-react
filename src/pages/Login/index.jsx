@@ -19,7 +19,6 @@ export default function Login() {
 
     // ref
     const inputRef = useRef(null);
-    const alertTimeoutRef = useRef(null);
     const {setAuthInfo} = useAuth();
 
     // focus and set title
@@ -90,7 +89,7 @@ export default function Login() {
     return (
         <>
             {/* alert modal for state */}
-            <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal}/>
+            <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData}/>
 
             {/* logo */}
             <img className={"max-w-20 absolute top-20 left-1/2 -translate-x-1/2"} src={`${logo}`} alt="logo"/>

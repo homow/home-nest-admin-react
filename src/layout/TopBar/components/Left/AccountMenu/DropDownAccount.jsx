@@ -107,7 +107,7 @@ export default function DropDownAccount({open, className}) {
             <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal} z={"z-20"}/>
 
             {/* alert modals for success message after logout */}
-            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} message={"خروج موفق بود"} type={"success"}/>
+            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={} message={"خروج موفق بود"} type={"success"}/>
         </div>
     )
 };
