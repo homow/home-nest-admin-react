@@ -14,7 +14,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         features: [],
         price_with_discount: null,
         discount_until: "",
-        main_image: "",
         tags: "",
         stock: 1,
     });
@@ -135,30 +134,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.city}
                         onChange={(v) => handleChange("city", v)}
                         placeholder="مثلاً تهران"
-                    />
-                </div>
-
-                {/* images */}
-                <div className={"multi-inputs-style"}>
-
-                    {/* main_images */}
-                    <Input
-                        label="تصویر اصلی (URL)"
-                        name="main_image"
-                        inputProps={{dir: "ltr"}}
-                        value={formData.main_image}
-                        onChange={(v) => handleChange("main_image", v)}
-                        placeholder="https://..."
-                    />
-
-                    {/* images */}
-                    <Input
-                        label="تصاویر بیشتر (URLها را با کاما (,) جدا کنید)"
-                        inputProps={{dir: "ltr"}}
-                        name="images"
-                        value={formData.images || ""}
-                        onChange={(v) => handleChange("images", v)}
-                        placeholder="https://.../1.jpg, https://.../2.jpg"
                     />
                 </div>
             </div>

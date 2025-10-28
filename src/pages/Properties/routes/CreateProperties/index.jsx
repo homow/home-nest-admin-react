@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm"
 
 export default function CreateProperty() {
@@ -15,7 +16,11 @@ export default function CreateProperty() {
     return (
         <div className={"space-y-8"}>
             <h3>افزودن ملک جدید</h3>
-            <CreatePropertyForm onSubmit={createPropertyHandler} isLoading={loading}/>
+            <ImagesForm/>
+            <CreatePropertyForm
+                onSubmit={createPropertyHandler}
+                isLoading={loading}
+            />
         </div>
     );
 };

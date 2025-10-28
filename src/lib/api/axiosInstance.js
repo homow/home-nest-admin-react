@@ -2,8 +2,9 @@ import axios from "axios";
 import {refresh} from "@api/requests/auth.js";
 
 let accessTokenGetter = null;
+let refreshPromise = null;
 
-const setAccessTokenGetter = (getter) => {
+const setAccessTokenGetter = getter => {
     accessTokenGetter = getter;
 };
 
@@ -32,6 +33,10 @@ axiosInstance.interceptors.response.use(
 
         if (!originalRequest._retry && error.response?.status === 401) {
             originalRequest._retry = true;
+
+            if (!refreshPromise) {
+                refreshPromise = refresh().finally(() => refreshPromise = null);
+            }
 
             const newToken = await refresh();
 
