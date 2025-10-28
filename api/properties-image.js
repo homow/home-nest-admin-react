@@ -1,5 +1,6 @@
 import formidable from 'formidable';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import supabaseServer from './config/supabaseServer.js';
 
 const BUCKET = process.env.SUPABASE_BUCKET_IMAGE_PROPERTIES || 'public';
@@ -20,15 +21,10 @@ export default async function handler(req, res) {
         );
 
         const s = supabaseServer(); // service role client for storage operations
-        const userId = (() => {
-            try {
-                const payload = JSON.parse(Buffer.from(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'));
-                return payload.sub || payload.user_id || null;
-                // eslint-disable-next-line
-            } catch (e) {
-                return null;
-            }
-        })();
+
+        // Decode token safely
+        const payload = jwt.decode(token);
+        const userId = payload?.sub || payload?.user_id || null;
         if (!userId) return res.status(400).json({error: 'Invalid token payload'});
 
         const uploaded = [];
@@ -39,9 +35,9 @@ export default async function handler(req, res) {
             const ext = (original.split('.').pop() || 'jpg').toLowerCase();
             const prefix = `/properties${fields.property_id ? `/${fields.property_id}` : ''}`;
             const filename = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-            const stream = fs.createReadStream(tmpPath);
+            const buffer = fs.readFileSync(tmpPath);
 
-            const {error: upErr} = await s.storage.from(BUCKET).upload(filename, stream, {
+            const {error: upErr} = await s.storage.from(BUCKET).upload(filename, buffer, {
                 contentType: fileObj.mimetype || undefined,
                 upsert: false,
             });
@@ -66,8 +62,6 @@ export default async function handler(req, res) {
         }
 
         // insert rows into image_records using user's JWT (to respect RLS) or service role with owner_id
-        // We'll use user's token via REST to respect RLS policies (owner must equal auth.uid()).
-        // Build array of rows
         const rows = uploaded.map(u => ({
             property_id: fields.property_id || null,
             path: u.path,
@@ -76,7 +70,6 @@ export default async function handler(req, res) {
             owner_id: userId
         }));
 
-        // insert via Supabase REST using user's token to enforce RLS
         const apiUrl = `${process.env.SUPABASE_URL}/rest/v1/image_records`;
         const resp = await fetch(apiUrl, {
             method: 'POST',

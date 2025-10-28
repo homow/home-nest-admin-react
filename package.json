@@ -16,6 +16,7 @@
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
     "formidable": "^3.5.4",
+    "jsonwebtoken": "^9.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.3",

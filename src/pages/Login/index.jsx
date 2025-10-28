@@ -28,23 +28,6 @@ export default function Login() {
         inputRef?.current?.focus();
     }, []);
 
-    // close AlertModal and clear timeOut
-    useEffect(() => {
-        if (isOpenAlertModal) {
-            if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
-
-            alertTimeoutRef.current = setTimeout(() => {
-                setAlertModalData({type: "error", message: ""});
-                setIsOpenAlertModal(false);
-            }, 5000);
-        }
-
-        // cleanUp Timer
-        return () => {
-            if (alertTimeoutRef.current) clearTimeout(alertTimeoutRef.current);
-        }
-    }, [isOpenAlertModal]);
-
     const submitHandler = async event => {
         event.preventDefault();
         setLoading(true);

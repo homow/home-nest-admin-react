@@ -1,14 +1,24 @@
 import {useEffect, useRef} from "react";
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function AlertModal({message = "", type = "error", isOpen = false, setIsOpen}) {
+export default function AlertModal({message = "", type = "error", isOpen = false, setIsOpen, closeDelay = 5000}) {
     const buttonRef = useRef(null);
+    const alertRef = useRef(null);
 
     const bgHeader = type === "error" ? "text-rose-500" : "text-emerald-500";
     const btnBg = type === "error" ? "bg-rose-500 hover:bg-rose-600" : "bg-emerald-500 hover:bg-emerald-600";
     const title = type === "error" ? "خطا" : "موفقیت";
 
     useEffect(() => {
+        // remove alert modal after many seconds (just is open)
+        if (isOpen) {
+            if (alertRef.current) clearTimeout(alertRef.current);
+            
+            alertRef.current = setTimeout(() => {
+                setIsOpen(false);
+            }, closeDelay);
+        }
+
         // ESC key listener
         if (isOpen && buttonRef.current) buttonRef.current.focus();
 
@@ -20,11 +30,12 @@ export default function AlertModal({message = "", type = "error", isOpen = false
             window.addEventListener("keydown", handleKey);
         }
 
-        // cleanUp Event
+        // cleanUp Event and timeOut
         return () => {
+            if (alertRef.current) clearTimeout(alertRef.current);
             window.removeEventListener("keydown", handleKey);
         }
-    }, [isOpen, setIsOpen]);
+    }, [closeDelay, isOpen, setIsOpen]);
 
     if (!isOpen) return null;
 
