@@ -2,7 +2,7 @@ import formidable from 'formidable';
 import fs from 'fs';
 import supabaseServer from './config/supabaseServer.js';
 
-const BUCKET = process.env.SUPABASE_BUCKET || 'public';
+const BUCKET = process.env.SUPABASE_BUCKET_IMAGE_PROPERTIES || 'public';
 
 export const config = {api: {bodyParser: false}};
 
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
             const tmpPath = fileObj.filepath || fileObj.path;
             const original = fileObj.originalFilename || fileObj.name || `file-${Date.now()}`;
             const ext = (original.split('.').pop() || 'jpg').toLowerCase();
-            const prefix = `img/public/properties${fields.property_id ? `/${fields.property_id}` : ''}`;
+            const prefix = `/properties${fields.property_id ? `/${fields.property_id}` : ''}`;
             const filename = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
             const stream = fs.createReadStream(tmpPath);
 
@@ -107,7 +107,6 @@ export default async function handler(req, res) {
         } catch (e) {}
 
         return res.status(200).json({ok: true, uploaded: respData});
-        // eslint-disable-next-line
     } catch (err) {
         return res.status(500).json({error: err.message || 'upload failed'});
     }
