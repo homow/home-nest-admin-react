@@ -1,6 +1,12 @@
+import {useState} from "react";
 import Input from "@components/ui/forms/Input";
 
 export default function ImagesForm() {
+    const [mainPreview, setMainPreview] = useState(null);
+    const [othersPreview, setOthersPreview] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState(null);
+
     const submitHandler = event => {
         event.preventDefault();
     }
