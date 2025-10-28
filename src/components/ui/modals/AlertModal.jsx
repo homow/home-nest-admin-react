@@ -33,7 +33,7 @@ export default function AlertModal({message = "", type = "error", isOpen = false
             
             alertRef.current = setTimeout(() => {
                 setIsOpen(false);
-                setData({type: null, message: ""});
+                setData && setData({type: null, message: ""});
             }, closeDelay);
         }
         
