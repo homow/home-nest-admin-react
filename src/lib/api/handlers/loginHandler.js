@@ -1,4 +1,5 @@
 import {login} from "@api/requests/auth.js";
+import {delay} from "@/lib/utils/api-utils.js";
 
 const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAuthInfo) => {
     // show alert modal
@@ -20,7 +21,8 @@ const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAut
                 case "admin": {
                     showAlert("success", "خب، بالاخره وارد شدی.")
 
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    await delay(3000);
+
                     setAuthInfo({userData: res.user, token: res.accessToken});
                     return true;
                 }
