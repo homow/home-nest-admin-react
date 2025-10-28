@@ -13,28 +13,27 @@ export default async function handler(req, res) {
             form.parse(req, (err, fields, files) => (err ? reject(err) : resolve({fields, files})))
         );
 
-        const s = supabaseServer(); // service role client
+        const s = supabaseServer(); // service role
         const propertyId = fields.property_id || null;
 
         const uploaded = [];
 
         async function uploadAndReturn(fileObj) {
-            const path = fileObj.filepath || fileObj.path;
-            const name = fileObj.originalFilename || fileObj.name || `file-${Date.now()}`;
-            const ext = (name.split('.').pop() || 'jpg').toLowerCase();
-            const keyPrefix = propertyId ? `properties/${propertyId}` : 'uploads';
-            const filename = `${keyPrefix}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const tmpPath = fileObj.filepath || fileObj.path;
+            const original = fileObj.originalFilename || fileObj.name || `file-${Date.now()}`;
+            const ext = (original.split('.').pop() || 'jpg').toLowerCase();
+            const basePrefix = 'img/public/properties';
+            const prefix = propertyId ? `${basePrefix}/${propertyId}` : basePrefix;
+            const filename = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-            const stream = fs.createReadStream(path);
+            const stream = fs.createReadStream(tmpPath);
 
-            // upload and check error strictly
-            const { error} = await s.storage.from(BUCKET).upload(filename, stream, {
+            const {error} = await s.storage.from(BUCKET).upload(filename, stream, {
                 contentType: fileObj.mimetype || undefined,
                 upsert: false,
             });
             if (error) throw error;
 
-            // get url: prefer public URL; if not available, create signed URL
             const {data: publicData} = s.storage.from(BUCKET).getPublicUrl(filename);
             if (publicData && publicData.publicUrl) {
                 return {path: filename, url: publicData.publicUrl};
@@ -47,19 +46,17 @@ export default async function handler(req, res) {
 
         if (files.main_image) {
             const f = Array.isArray(files.main_image) ? files.main_image[0] : files.main_image;
-            const r = await uploadAndReturn(f);
-            uploaded.push({field: 'main_image', ...r});
+            uploaded.push({field: 'main_image', ...(await uploadAndReturn(f))});
         }
 
         if (files.images) {
-            const images = Array.isArray(files.images) ? files.images : [files.images];
-            for (const img of images) {
-                const r = await uploadAndReturn(img);
-                uploaded.push({field: 'images', ...r});
+            const imgs = Array.isArray(files.images) ? files.images : [files.images];
+            for (const img of imgs) {
+                uploaded.push({field: 'images', ...(await uploadAndReturn(img))});
             }
         }
 
-        // cleanup temp files
+        // cleanup temp
         try {
             const all = [];
             if (files.main_image) all.push(...(Array.isArray(files.main_image) ? files.main_image : [files.main_image]));
@@ -67,11 +64,11 @@ export default async function handler(req, res) {
             all.forEach(f => {
                 try {
                     fs.unlinkSync(f.filepath || f.path);
-                    // eslint-disable-next-line
-                } catch (e) {}
+                } catch (e) {
+                }
             });
-            // eslint-disable-next-line
-        } catch (e) {}
+        } catch (e) {
+        }
 
         return res.status(200).json({ok: true, uploaded});
     } catch (err) {

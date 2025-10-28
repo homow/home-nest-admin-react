@@ -59,10 +59,13 @@ export default function Login() {
         setLoading(false);
     }
 
+    const setEmailHandler = event => setEmail(event.target.value);
+    const setPasswordHandler = event => setPassword(event.target.value);
+
     // data inputs
     const dataInput = [
         {
-            onChange: setEmail,
+            onChange: setEmailHandler,
             name: "email",
             label: "ایمیل",
             value: email,
@@ -76,7 +79,7 @@ export default function Login() {
             }
         },
         {
-            onChange: setPassword,
+            onChange: setPasswordHandler,
             name: "password",
             label: "پسورد",
             value: password,

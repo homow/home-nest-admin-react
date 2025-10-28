@@ -6,10 +6,10 @@ export default function Input({onChange, name, type = name, id = name, label = n
             <label htmlFor={id} className="block text-sm">{label}</label>
             <input
                 {...inputProps}
-                value={value}
+                {...(type !== "file" && {value: value ?? ""})}
                 onChange={
                     event => {
-                        onChange(event.target.value)
+                        onChange(event)
                     }
                 }
                 id={id}

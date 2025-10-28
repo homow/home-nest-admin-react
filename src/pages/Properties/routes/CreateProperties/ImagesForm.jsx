@@ -3,8 +3,8 @@ import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
 
 export default function ImagesForm(propertyID) {
-    const [mainPreview, setMainPreview] = useState(null);
-    const [othersPreview, setOthersPreview] = useState(null);
+    const [mainPreview, setMainPreview] = useState("");
+    const [othersPreview, setOthersPreview] = useState([]);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
 
@@ -39,12 +39,14 @@ export default function ImagesForm(propertyID) {
     };
 
     const handleMainChange = event => {
+        console.log(event)
         const f = event.target.files?.[0];
         if (f) setMainPreview(URL.createObjectURL(f));
         else setOthersPreview(null);
     };
 
     const handleOthersChange = event => {
+        console.log(event)
         const files = Array.from(event.target.files || []);
         setOthersPreview(files.map(f => URL.createObjectURL(f)));
     };
@@ -79,11 +81,15 @@ export default function ImagesForm(propertyID) {
                     />
                 </div>
 
-                {mainPreview && <img src={`${mainPreview}`} alt="main preview" style={{maxWidth: 240, marginTop: 8}}/>}
+                {mainPreview && <img
+                    src={`${mainPreview}`}
+                    alt="main preview"
+                    className={"max-w-60 mt-6"}/>
+                }
 
                 {othersPreview.length > 0 && (
-                    <div style={{display: 'flex', gap: 8, marginTop: 8}}>
-                        {othersPreview.map((u, i) => <img key={i} src={u} alt={`preview ${i}`} style={{width: 80, height: 80, objectFit: 'cover'}}/>)}
+                    <div className={"flex gap-8 mt-8"}>
+                        {othersPreview.map((u, i) => <img key={i} src={u} alt={`preview ${i}`} className={"size-20 object-cover"}/>)}
                     </div>
                 )}
             </form>
