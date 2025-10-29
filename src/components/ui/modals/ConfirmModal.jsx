@@ -53,9 +53,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
             aria-labelledby="modal-title"
             aria-describedby="modal-message"
             className={cn(
-                `fixed inset-0 flex items-center justify-center ${z} ${
-                    isOpen ? "block" : "hidden"
-                }`
+                "fixed inset-0 flex items-center justify-center", isOpen ? "block" : "hidden", z
             )}
         >
             {/* backdrop */}
@@ -72,7 +70,7 @@ export default function ConfirmModal({isOpen, message, title = "تأیید", onC
             >
                 <h3
                     id="modal-title"
-                    className={cn(`text-lg font-medium ${modalHeaderColor}`)}
+                    className={cn("text-lg font-medium", modalHeaderColor)}
                 >
                     {title}
                 </h3>
