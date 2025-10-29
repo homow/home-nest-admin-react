@@ -26,17 +26,18 @@ export default function AlertModal({message = "", type = "error", isOpen = false
             window.removeEventListener("keydown", handleKey);
         }
     }, [isOpen, setIsOpen]);
-    
+
+    // auto close after many seconds
     useEffect(() => {
         if (isOpen) {
             if (alertRef.current) clearTimeout(alertRef.current);
-            
+
             alertRef.current = setTimeout(() => {
                 setIsOpen(false);
                 setData && setData({type: null, message: ""});
             }, closeDelay);
         }
-        
+
         return () => {
             if (alertRef.current) clearTimeout(alertRef.current);
         }
@@ -46,14 +47,14 @@ export default function AlertModal({message = "", type = "error", isOpen = false
 
     return (
         <div
-            className={cn(`text-sm fixed px-4 top-6 left-1/2 max-w-md w-full -translate-x-1/2 flex items-center justify-center shadow-custom z-30 sm:text-base ${isOpen ? "block" : "hidden"}`)}
+            className={cn("text-sm fixed top-6 left-1/2 max-w-md w-full -translate-x-1/2 flex items-center rounded-xl overflow-hidden justify-center shadow-2xl z-30 sm:text-base", isOpen ? "block" : "hidden")}
             role={"alertdialog"}
             aria-live={"assertive"}
             aria-modal={true}
             aria-labelledby={"alert-title"}
             aria-describedby={"alert-desc"}
         >
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full p-6 space-y-4">
+            <div className="bg-white dark:bg-gray-800 shadow-xl w-full p-6 space-y-4">
                 <h3 className={`text-lg font-semibold ${bgHeader}`}>
                     {title}
                 </h3>

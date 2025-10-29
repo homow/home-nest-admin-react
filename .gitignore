@@ -34,3 +34,6 @@ dist-ssr
 
 # Analyze Packages File
 analyze.html
+
+# test files
+test.js

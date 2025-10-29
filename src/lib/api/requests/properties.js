@@ -4,7 +4,7 @@ const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
 }
 
-async function uploadPropertyImages({propertyId, main_image, images = []}) {
+const uploadPropertyImages = async ({propertyId, main_image, images = []}) => {
     const formData = new FormData();
     formData.append("property_id", propertyId);
 
