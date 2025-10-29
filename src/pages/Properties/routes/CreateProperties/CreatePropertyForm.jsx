@@ -2,7 +2,7 @@ import {useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {priceToStrFormatDebounce} from "@/lib/utils/helper.js";
+import {formatPriceDebounced} from "@/lib/utils/helper.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
@@ -94,7 +94,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.price}
                         onChange={event => {
                             handleChange("price", event.target.value);
-                            priceToStrFormatDebounce(event, handleChange, "price");
+                            formatPriceDebounced(event, handleChange, "price");
                         }}
                         placeholder="مثلاً 1,200,000,000"
                     />
@@ -112,7 +112,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.price_with_discount}
                         onChange={event => {
                             handleChange("price_with_discount", event.target.value);
-                            priceToStrFormatDebounce(event, handleChange, "price_with_discount");
+                            formatPriceDebounced(event, handleChange, "price_with_discount");
                         }}
                         placeholder="مثلاً 1,100,000,000"
                     />
@@ -206,7 +206,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <div className={"flex flex-col items-start gap-4 divide-y divide-secondary-txt @xl/main:divide-y-0 @xl/main:divide-x @xl/main:flex-row @xl/main:items-start @3xl/main:col-span-2"}>
                         {/* features */}
                         <div>
-                            <p className="block text-sm font-medium mb-2">ویژگی‌ها</p>
+                            <p className="block text-sm font-medium mb-2"> ویژگی‌ها (حداقل یکی)</p>
                             <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
                                 {availableFeatures.map(feature => (
                                     <CheckBox
