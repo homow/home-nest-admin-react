@@ -57,6 +57,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.title}
                         onChange={event => handleChange("title", event.target.value)}
                         placeholder="مثلاً آپارتمان نوساز"
+                        req={true}
                     />
 
                     {/* id */}
