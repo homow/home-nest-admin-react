@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
                 refreshPromise = refresh().finally(() => refreshPromise = null);
             }
 
-            const newToken = await refresh();
+            const newToken = await refreshPromise();
 
             if (newToken) {
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
