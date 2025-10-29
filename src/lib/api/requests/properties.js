@@ -1,6 +1,10 @@
 import axiosInstance from "../axiosInstance.js";
 
-export async function uploadPropertyImages({propertyId, main_image, images = []}) {
+const createProperty = async data => {
+    return await axiosInstance.post("/api/properties", data);
+}
+
+async function uploadPropertyImages({propertyId, main_image, images = []}) {
     const formData = new FormData();
     formData.append("property_id", propertyId);
 
@@ -19,3 +23,5 @@ export async function uploadPropertyImages({propertyId, main_image, images = []}
         return err;
     }
 }
+
+export {createProperty, uploadPropertyImages}
