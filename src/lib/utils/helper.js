@@ -7,12 +7,19 @@ function debounce(callback, delay = 300) {
     };
 }
 
-// format to price with comma
+// number format to str with comma
 const priceToStrFormat = value => {
     const raw = String(value).replace(/\D/g, "");
     if (!raw) return "";
     return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// str format to number without comma
+const priceFromStrFormat = value => {
+    if (typeof value !== 'string') return value;
+    const raw = value.replace(/,/g, '').trim();
+    return raw === '' ? null : Number(raw);
+};
 
 // format number
 const priceToStrFormatDebounce = debounce((input, callback, name) => {
@@ -20,4 +27,11 @@ const priceToStrFormatDebounce = debounce((input, callback, name) => {
     callback(name, value)
 }, 300);
 
-export {priceToStrFormatDebounce};
+const buildObjectFromArray = data => {
+    return data.reduce((acc, item) => {
+        const [key, value] = item.split("=");
+        return {...acc, [key.trim()]: value.trim()};
+    }, {})
+}
+
+export {priceToStrFormatDebounce, priceFromStrFormat, buildObjectFromArray};

@@ -17,9 +17,7 @@ export default function AlertModal({message = "", type = "error", isOpen = false
             if (e.key === "Escape") setIsOpen(false);
         };
 
-        if (isOpen) {
-            window.addEventListener("keydown", handleKey);
-        }
+        if (isOpen) window.addEventListener("keydown", handleKey);
 
         // cleanUp Event
         return () => {
@@ -30,14 +28,17 @@ export default function AlertModal({message = "", type = "error", isOpen = false
     // auto close after many seconds
     useEffect(() => {
         if (isOpen) {
+            // cleanUp timeOut (if exist)
             if (alertRef.current) clearTimeout(alertRef.current);
 
+            // add new timer
             alertRef.current = setTimeout(() => {
                 setIsOpen(false);
                 setData && setData({type: null, message: ""});
             }, closeDelay);
         }
 
+        // cleanUp timeOut
         return () => {
             if (alertRef.current) clearTimeout(alertRef.current);
         }

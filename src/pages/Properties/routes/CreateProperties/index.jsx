@@ -1,6 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
+import {priceFromStrFormat, buildObjectFromArray} from "@/lib/utils/helper.js"
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
@@ -10,11 +11,23 @@ export default function CreateProperty() {
         document.title = "افزودن ملک | آشیانه";
     }, []);
 
-    const createPropertyHandler = () => {
-        setLoading(true);
-        setLoading(false);
-        const res = Array.from(imagesFormData.current);
-        console.log(res);
+    const createPropertyHandler = data => {
+        // setLoading(true);
+        // setLoading(false);
+        const fixData = {
+            tags: data.tags.split("،").map(item => item.trim()),
+            price_with_discount: data.price_with_discount && priceFromStrFormat(data.price_with_discount),
+            price: priceFromStrFormat(data.price),
+            metadata_notes: data.metadata_notes && buildObjectFromArray(data.metadata_notes.split("،")),
+        }
+        const dataProperty = {
+            ...data,
+            ...fixData
+        }
+        // const res = Array.from(imagesFormData.current);
+        // console.log("images:", res);
+        console.log("data:", data);
+        console.log("dataProperty:", dataProperty);
     };
 
     return (
