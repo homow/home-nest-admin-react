@@ -12,22 +12,19 @@ export default function CreateProperty() {
     }, []);
 
     const createPropertyHandler = data => {
-        // setLoading(true);
-        // setLoading(false);
         const fixData = {
-            tags: data.tags.split("،").map(item => item.trim()),
+            tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
             price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
             price: parsePriceFromString(data.price),
-            metadata_notes: data.metadata_notes.trim() ? buildObjectFromKeyValueArray(data.metadata_notes.split("،")) : undefined,
+            metadata: data.metadata.trim() ? buildObjectFromKeyValueArray(data.metadata.split("،")) : undefined,
             discount_until: data.discount_until.trim() ? data.discount_until : undefined,
         }
         const dataProperty = {
             ...data,
             ...fixData
         }
-        // const res = Array.from(imagesFormData.current);
-        // console.log("images:", res);
-        console.log("data:", data);
+        const res = Array.from(imagesFormData.current);
+        console.log("images:", res);
         console.log("dataProperty:", dataProperty);
     };
 

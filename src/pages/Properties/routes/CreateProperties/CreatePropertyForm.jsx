@@ -17,7 +17,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         discount_until: "",
         tags: "",
         stock: 1,
-        metadata_notes: "",
+        metadata: "",
     });
 
     const handleChange = (name, value) => {
@@ -186,9 +186,9 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     {/* advanced information (metaData) */}
                     <Input
                         label="اطلاعات اضافی (هر ویژگی را با '،' جدا کنید)"
-                        name="metadata_notes"
-                        value={formData.metadata_notes}
-                        onChange={event => handleChange("metadata_notes", event.target.value)
+                        name="metadata"
+                        value={formData.metadata}
+                        onChange={event => handleChange("metadata", event.target.value)
                         }
                         placeholder="مثلاً  فضای پارکینگ = دو ماشین، سقف = 3متر"
                     />
