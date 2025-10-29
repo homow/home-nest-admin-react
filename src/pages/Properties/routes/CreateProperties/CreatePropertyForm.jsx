@@ -11,13 +11,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         price: "",
         price_with_discount: "",
         description: "",
-        province: "",
-        city: "",
+        province_and_city: "",
+        address: "",
         features: [],
         discount_until: "",
         tags: "",
         stock: 1,
-        metadata_notes: [],
+        metadata_notes: "",
     });
 
     const handleChange = (name, value) => {
@@ -34,7 +34,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
         if (onSubmit) onSubmit(formData);
     };
@@ -92,7 +92,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         type="text"
                         autoComplete="price"
                         value={formData.price}
-
                         onChange={event => {
                             handleChange("price", event.target.value);
                             priceToStrFormatDebounce(event, handleChange, "price");
@@ -131,24 +130,24 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 {/* province and city */}
                 <div className={'multi-inputs-style'}>
 
-                    {/* province */}
+                    {/* province_and_city */}
                     <Input
-                        autoComplete="province"
-                        label="استان"
-                        name="province"
-                        value={formData.province}
-                        onChange={(event) => handleChange("province", event.target.value)}
-                        placeholder="مثلاً تهران"
+                        autoComplete="province_and_city"
+                        label="استان و شهر"
+                        name="province_and_city"
+                        value={formData.province_and_city}
+                        onChange={(event) => handleChange("province_and_city", event.target.value)}
+                        placeholder="مثلاً فارس، شیراز"
                     />
 
                     {/* city */}
                     <Input
-                        label="شهر"
-                        name="city"
-                        autoComplete="city"
-                        value={formData.city}
-                        onChange={(event) => handleChange("city", event.target.value)}
-                        placeholder="مثلاً تهران"
+                        label="آدرس"
+                        name="address"
+                        autoComplete="address"
+                        value={formData.address}
+                        onChange={(event) => handleChange("address", event.target.value)}
+                        placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
                     />
                 </div>
             </div>
@@ -186,12 +185,12 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* advanced information (metaData) */}
                     <Input
-                        label="اطلاعات اضافی ملک (هر ویژگی را با '،' جدا کنید)"
+                        label="اطلاعات اضافی (هر ویژگی را با '،' جدا کنید)"
                         name="metadata_notes"
                         value={formData.metadata_notes}
                         onChange={event => handleChange("metadata_notes", event.target.value)
                         }
-                        placeholder="مثلاً نورگیر عالی، سقف بلند، چشم‌انداز کوه"
+                        placeholder="مثلاً  فضای پارکینگ = دو ماشین، سقف = 3متر"
                     />
 
                     {/* tags */}
@@ -236,7 +235,11 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             </div>
 
             {/* submit */}
-            <Button disabled={isLoading} text={isLoading ? "در حال ارسال..." : "ثبت ملک"} type={"submit"}/>
+            <Button
+                disabled={isLoading}
+                text={isLoading ? "در حال ارسال..." : "ثبت ملک"}
+                type={"submit"}
+            />
         </form>
     );
-}
+};

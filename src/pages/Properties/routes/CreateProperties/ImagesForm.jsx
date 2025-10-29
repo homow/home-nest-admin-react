@@ -38,7 +38,7 @@ export default function ImagesForm({formRef, refData}) {
             setOthersPreview(files.map(f => URL.createObjectURL(f)));
         }
     };
-    
+
     useEffect(() => {
         const formData = new FormData();
 
@@ -52,7 +52,7 @@ export default function ImagesForm({formRef, refData}) {
 
         refData.current = formData;
     }, [mainFile, otherFiles, refData]);
-    
+
     const submitHandler = event => event.preventDefault();
 
     return (
@@ -100,7 +100,6 @@ export default function ImagesForm({formRef, refData}) {
                     )}
                 </div>
             </div>
-            <button type={"submit"}>submit</button>
         </form>
     )
 };

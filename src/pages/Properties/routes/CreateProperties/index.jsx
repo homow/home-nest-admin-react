@@ -1,21 +1,21 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
-import CreatePropertyForm from "./CreatePropertyForm"
+import CreatePropertyForm from "./CreatePropertyForm";
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
     const imagesFormData = useRef(null);
 
     useEffect(() => {
-        document.title = "افزودن ملک | آشیانه"
+        document.title = "افزودن ملک | آشیانه";
     }, []);
 
-    const createPropertyHandler = data => {
+    const createPropertyHandler = () => {
         setLoading(true);
-        console.log("createPropertyHandler", data);
         setLoading(false);
-        console.log(imagesFormData.current)
-    }
+        const res = Array.from(imagesFormData.current);
+        console.log(res);
+    };
 
     return (
         <div className={"space-y-12"}>
