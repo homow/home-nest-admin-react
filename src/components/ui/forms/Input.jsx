@@ -4,7 +4,7 @@ import {RedStarField} from "@components/ui/Fragments";
 export default function Input({onChange, name, type = name, id = name, label, autoComplete = null, value, placeholder, req, inputProps, className = null, parentClassName = null, children}) {
     return (
         <div className={cn(parentClassName)}>
-            <label htmlFor={id} className="block text-sm">{label} {req && <RedStarField/>}</label>
+            <label htmlFor={id} className="flex flex-row gap-1 text-sm">{label} {req && <RedStarField/>}</label>
             <input
                 {...inputProps}
                 {...(type !== "file" && {value: value ?? ""})}

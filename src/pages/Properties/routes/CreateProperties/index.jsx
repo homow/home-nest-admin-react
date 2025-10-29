@@ -16,7 +16,7 @@ export default function CreateProperty() {
         const fixData = {
             tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
             price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
-            price: parsePriceFromString(data.price),
+            price: data.price.trim() ? parsePriceFromString(data.price) : "توافقی",
             metadata: data.metadata.trim() ? buildObjectFromKeyValueArray(data.metadata.split("،")) : undefined,
             discount_until: data.discount_until.trim() ? data.discount_until : undefined,
         }

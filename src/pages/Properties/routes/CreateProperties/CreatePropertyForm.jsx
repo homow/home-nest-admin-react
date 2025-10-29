@@ -2,6 +2,7 @@ import {useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
+import {RedStarField} from "@components/ui/Fragments";
 import {formatPriceDebounced} from "@/lib/utils/helper.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
@@ -75,8 +76,9 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 <div className={"multi-inputs-style"}>
                     {/* category */}
                     <div>
-                        <label className="block text-sm font-medium mb-1">دسته‌بندی</label>
+                        <label htmlFor={"category"} className="flex flex-row gap-1 text-sm font-medium mb-1">دسته بندی <RedStarField/></label>
                         <select
+                            id="category"
                             value={formData.category}
                             onChange={e => handleChange("category", e.target.value)}
                             className="block w-full rounded-lg border border-gray-300 text-secondary-txt bg-primary-bg/40 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"
@@ -88,7 +90,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* price */}
                     <Input
-                        label="قیمت (تومان)"
+                        label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
                         name="price"
                         type="text"
                         autoComplete="price"
@@ -98,6 +100,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             formatPriceDebounced(event, handleChange, "price");
                         }}
                         placeholder="مثلاً 1,200,000,000"
+                        req={true}
                     />
                 </div>
 
@@ -139,6 +142,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.province_and_city}
                         onChange={(event) => handleChange("province_and_city", event.target.value)}
                         placeholder="مثلاً فارس، شیراز"
+                        req={true}
                     />
 
                     {/* city */}
@@ -149,6 +153,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         value={formData.address}
                         onChange={(event) => handleChange("address", event.target.value)}
                         placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
+                        req={true}
                     />
                 </div>
             </div>
@@ -163,9 +168,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <div>
                         <label
                             htmlFor="description"
-                            className={"block text-sm font-medium"}
+                            className={"flex flex-row gap-1 text-sm font-medium"}
                         >
                             توضیحات
+                            <RedStarField/>
                         </label>
                         <textarea
                             name="description"
@@ -207,7 +213,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <div className={"flex flex-col items-start gap-4 divide-y divide-secondary-txt @xl/main:divide-y-0 @xl/main:divide-x @xl/main:flex-row @xl/main:items-start @3xl/main:col-span-2"}>
                         {/* features */}
                         <div>
-                            <p className="block text-sm font-medium mb-2"> ویژگی‌ها (حداقل یکی)</p>
+                            <p className="flex flex-row gap-1 text-sm font-medium mb-2">
+                                ویژگی‌ها (حداقل یکی)
+                                <RedStarField/>
+                            </p>
                             <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
                                 {availableFeatures.map(feature => (
                                     <CheckBox
@@ -223,7 +232,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                         {/* stock */}
                         <div>
-                            <p className={"text-sm font-medium mb-2"}>موجودی</p>
+                            <p className={"flex flex-row gap-1 text-sm font-medium mb-2"}>
+                                موجودی
+                                <RedStarField/>
+                            </p>
                             <CheckBox
                                 id={"stock"}
                                 checked={formData.stock === 1}
