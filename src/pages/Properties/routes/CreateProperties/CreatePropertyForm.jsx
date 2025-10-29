@@ -64,7 +64,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     {/* id */}
                     <Input
                         autoComplete="property_number"
-                        label="شناسه ملک (اختیاری)"
+                        label="شناسه ملک"
                         name="property_number"
                         value={formData.property_number || ""}
                         onChange={event => handleChange("property_number", event.target.value)}
@@ -110,7 +110,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     {/* price with discount */}
                     <Input
                         autoComplete="price_with_discount"
-                        label="قیمت با تخفیف (اختیاری)"
+                        label="قیمت با تخفیف"
                         name="price_with_discount"
                         type="text"
                         value={formData.price_with_discount}
@@ -123,7 +123,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* discount date */}
                     <Input
-                        label="تاریخ پایان تخفیف (اختیاری)"
+                        label="تاریخ پایان تخفیف"
                         name="discount_until"
                         type="datetime-local"
                         value={formData.discount_until}

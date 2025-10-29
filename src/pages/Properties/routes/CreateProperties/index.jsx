@@ -32,7 +32,7 @@ export default function CreateProperty() {
     return (
         <div className={"space-y-12"}>
             <h3>افزودن ملک جدید</h3>
-            <p>فیلدهایی که با <RedStarField/> مشخص شدن، اجباری هستند.</p>
+            <p>فیلدهایی که با <RedStarField/> مشخص شدن اجباری، و بقیه فیلدها اختیاری هستند.</p>
 
             {/* image property form */}
             <ImagesForm refData={imagesFormData}/>
