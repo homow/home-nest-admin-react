@@ -234,7 +234,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         <div>
                             <p className={"flex flex-row gap-1 text-sm font-medium mb-2"}>
                                 موجودی
-                                <RedStarField/>
                             </p>
                             <CheckBox
                                 id={"stock"}

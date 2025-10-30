@@ -21,5 +21,5 @@ export default function Input({onChange, name, type = name, id = name, label, au
             />
             {children}
         </div>
-    )
-}
+    );
+};
