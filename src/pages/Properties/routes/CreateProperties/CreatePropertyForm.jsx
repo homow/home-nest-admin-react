@@ -76,7 +76,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 <div className={"multi-inputs-style"}>
                     {/* category */}
                     <div>
-                        <label htmlFor={"category"} className="flex flex-row gap-1 text-sm font-medium mb-1">دسته بندی <RedStarField/></label>
+                        <label htmlFor={"category"} className="flex flex-row gap-1 text-sm font-medium mb-1">دسته بندی</label>
                         <select
                             id="category"
                             value={formData.category}
@@ -100,7 +100,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             formatPriceDebounced(event, handleChange, "price");
                         }}
                         placeholder="مثلاً 1,200,000,000"
-                        req={true}
                     />
                 </div>
 
