@@ -1,24 +1,52 @@
+import {useCallback, useEffect, useRef} from "react";
 import {NavLink} from "react-router-dom";
 import {useMobileNav} from "@context/MobileNavContext";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
-import Icon from "@components/ui/icons/Icon.jsx";
+import Icon from "@components/ui/icons/Icon";
 import {cn} from "@/lib/utils/ui-utils.js";
 
 function SideBarLinks({...props}) {
     const {title, dataLinks} = props.data;
     const {setOpenMobileNav} = useMobileNav();
     const {collapsed} = useCollapsedMenu();
+    let handleCollapsed = useRef(false);
+
+    const applySizing = useCallback( ()=> {
+        if (window.innerWidth > 768) {
+            handleCollapsed.current = false;
+        } else {
+            handleCollapsed.current = collapsed;
+        }
+    }, [collapsed])
+
+    useEffect(() => {
+        const applySizing = ()=> {
+            if (window.innerWidth < 768) {
+                handleCollapsed.current = false;
+            } else {
+                handleCollapsed.current = collapsed;
+            }
+        }
+        applySizing();
+
+        window.addEventListener("resize", applySizing);
+
+        // cleanUp event
+        return () => {
+            window.removeEventListener("resize", applySizing);
+        }
+    }, [applySizing, collapsed]);
 
     return (
         <div>
             {/* title links */}
-            <div className={`h-4.5 flex items-center gap-4 ${collapsed && "px-2"}`}>
+            <div className={`h-4.5 flex items-center gap-4 ${handleCollapsed.current && "px-2"}`}>
 
                 {/* border */}
-                <div className={`w-10 h-px bg-disable-txt ${collapsed && "hidden"}`}></div>
+                <div className={`w-10 h-px bg-disable-txt ${handleCollapsed.current && "hidden"}`}></div>
 
                 {/* title */}
-                <p className={`text-sm text-disable-txt ${collapsed && "hidden"}`}>{title}</p>
+                <p className={`text-sm text-disable-txt ${handleCollapsed.current && "hidden"}`}>{title}</p>
 
                 {/* border */}
                 <div className="flex-1 h-px bg-disable-txt"></div>
@@ -34,7 +62,7 @@ function SideBarLinks({...props}) {
                             <Icon icon={link.icon}/>
 
                             {/* text of link */}
-                            <span className={`${collapsed && "hidden"}`}>
+                            <span className={`${handleCollapsed.current && "hidden"}`}>
                                 {link.text}
                             </span>
                         </NavLink>
