@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Overlay from "@components/ui/Overlay";
 import AccountAvatar from "../../common/AccountAvatar";
 import DropDownAccount from "./DropDownAccount";

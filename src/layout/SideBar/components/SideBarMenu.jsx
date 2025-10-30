@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useMobileNav} from "@context/MobileNavContext";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
@@ -9,44 +9,38 @@ function SideBarLinks({...props}) {
     const {title, dataLinks} = props.data;
     const {setOpenMobileNav} = useMobileNav();
     const {collapsed} = useCollapsedMenu();
-    let handleCollapsed = useRef(false);
+    const [collapsedState, setCollapsedState] = useState(false);
 
-    const applySizing = useCallback( ()=> {
-        if (window.innerWidth > 768) {
-            handleCollapsed.current = false;
-        } else {
-            handleCollapsed.current = collapsed;
-        }
-    }, [collapsed])
-
+    // applySize
     useEffect(() => {
-        const applySizing = ()=> {
-            if (window.innerWidth < 768) {
-                handleCollapsed.current = false;
+        // applySize handler
+        const applySize = collapse => {
+            if (window.innerWidth < 896) {
+                setCollapsedState(false);
             } else {
-                handleCollapsed.current = collapsed;
+                setCollapsedState(collapse);
             }
-        }
-        applySizing();
+        };
+        applySize(collapsed); // run when component mounted
 
-        window.addEventListener("resize", applySizing);
+        window.addEventListener("resize", applySize.bind(null, collapsed));
 
         // cleanUp event
         return () => {
-            window.removeEventListener("resize", applySizing);
+            window.removeEventListener("resize", applySize.bind(null, collapsed));
         }
-    }, [applySizing, collapsed]);
+    }, [collapsed]);
 
     return (
         <div>
             {/* title links */}
-            <div className={`h-4.5 flex items-center gap-4 ${handleCollapsed.current && "px-2"}`}>
+            <div className={cn("h-4.5 flex items-center gap-4", collapsedState && "px-2")}>
 
                 {/* border */}
-                <div className={`w-10 h-px bg-disable-txt ${handleCollapsed.current && "hidden"}`}></div>
+                <div className={cn("w-10 h-px bg-disable-txt", collapsedState && "hidden")}></div>
 
                 {/* title */}
-                <p className={`text-sm text-disable-txt ${handleCollapsed.current && "hidden"}`}>{title}</p>
+                <p className={cn("text-sm text-disable-txt", collapsedState && "hidden")}>{title}</p>
 
                 {/* border */}
                 <div className="flex-1 h-px bg-disable-txt"></div>
@@ -62,7 +56,7 @@ function SideBarLinks({...props}) {
                             <Icon icon={link.icon}/>
 
                             {/* text of link */}
-                            <span className={`${handleCollapsed.current && "hidden"}`}>
+                            <span className={cn(collapsedState && "hidden")}>
                                 {link.text}
                             </span>
                         </NavLink>

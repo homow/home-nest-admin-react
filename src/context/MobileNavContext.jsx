@@ -1,9 +1,11 @@
 import {useState, createContext, useContext} from "react";
+import useScrollLock from "@hooks/useScrollLock";
 
 const MobileNavContext = createContext(null);
 
 const MobileNavProvider = ({children}) => {
     const [openMobileNav, setOpenMobileNav] = useState(false);
+    useScrollLock(openMobileNav);
 
     const value = {
         openMobileNav,

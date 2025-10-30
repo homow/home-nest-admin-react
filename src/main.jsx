@@ -6,9 +6,9 @@ import "@/styles/global.css"
 import App from './App'
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
+    // <StrictMode>
         <BrowserRouter basename={BASE_PATH}>
             <App/>
         </BrowserRouter>
-    </StrictMode>
+    // </StrictMode>
 );

@@ -2,15 +2,15 @@ import {useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils/ui-utils.js";
-import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 import Icon from "@components/ui/icons/Icon";
+import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 
 export default function SideBarHeader() {
     const {collapsed, setCollapsed} = useCollapsedMenu();
 
     // apply collapsed state from size
     const applySpacing = useCallback(collapsedState => {
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 896) {
             document.documentElement.style.setProperty("--spacing-custom", "0px");
         } else {
             document.documentElement.style.setProperty(
@@ -22,16 +22,20 @@ export default function SideBarHeader() {
 
     // run in component mounted
     useEffect(() => {
-        const saved = localStorage.getItem("collapsedMenu") === "true";
-        applySpacing(saved);
-    }, [applySpacing]);
+        applySpacing(collapsed);
+    }, [applySpacing, collapsed]);
 
+    // apply space in resize
     useEffect(() => {
         const handleResize = () => applySpacing(collapsed);
+
         window.addEventListener("resize", handleResize);
+
+        // cleanUp event
         return () => window.removeEventListener("resize", handleResize);
     }, [collapsed, applySpacing]);
 
+    // toggle collapse when click to button
     const toggleCollapse = () => {
         const newState = !collapsed;
         setCollapsed(newState);
