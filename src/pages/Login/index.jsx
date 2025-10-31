@@ -56,7 +56,6 @@ export default function Login() {
             autoComplete: "email",
             inputProps: {
                 ref: inputRef,
-                required: true,
                 dir: "ltr",
             }
         },
@@ -70,7 +69,6 @@ export default function Login() {
             type: showPassword ? "text" : "password",
             parentClassName: "relative",
             inputProps: {
-                required: true,
                 dir: "ltr",
             },
             children: (
@@ -92,7 +90,7 @@ export default function Login() {
             <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData}/>
 
             {/* logo */}
-            <img className={"max-w-20 absolute top-5 right-5"} src={`${logo}`} alt="logo"/>
+            <img className={"max-w-20 absolute top-5 left-5"} src={`${logo}`} alt="logo"/>
 
             <section className="flex items-center justify-center min-h-screen">
                 <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
