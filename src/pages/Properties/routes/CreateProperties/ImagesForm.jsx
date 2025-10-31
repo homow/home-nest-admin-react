@@ -28,7 +28,7 @@ export default function ImagesForm({formRef, refData}) {
         const files = Array.from(event.target.files || []);
 
         if (files.length > 3) {
-            setAlertModalData({type: "error", message: "تعداد تصاویر باید کمتر از 3 عدد باشد"});
+            setAlertModalData({type: "error", message: "تعداد تصاویر باید حداکثر 3 عدد باشد"});
             setIsOpenAlertModal(true);
             otherFilesRef.current.value = "";
             setOtherFiles([]);
