@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced} from "@/lib/utils/helper.js";
+import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
@@ -44,6 +45,14 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         }));
     };
 
+    // check features error
+    useEffect(() => {
+        if (errors.features && formData.features.length > 0) {
+            setErrors({...errors, features: ""})
+        }
+    }, [errors, formData.features.length]);
+
+    // handle submit
     const handleSubmit = e => {
         e.preventDefault();
         const titleTrimmed = formData.title.trim();
@@ -88,6 +97,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             onChange={event => handleChange("title", event.target.value)}
                             placeholder="مثلاً آپارتمان نوساز"
                             req={true}
+                            className={errors.title && "border-rose-600 bg-rose-600/10 bg-rose-600/10"}
                         />
                         <ErrorMessageInputs msg={errors.title}/>
                     </div>
@@ -174,20 +184,25 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             onChange={(event) => handleChange("province_and_city", event.target.value)}
                             placeholder="مثلاً فارس، شیراز"
                             req={true}
+                            className={errors.title && "border-rose-600 bg-rose-600/10"}
                         />
                         <ErrorMessageInputs msg={errors.province_and_city}/>
                     </div>
 
-                    {/* city */}
-                    <Input
-                        label="آدرس"
-                        name="address"
-                        autoComplete="address"
-                        value={formData.address}
-                        onChange={(event) => handleChange("address", event.target.value)}
-                        placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
-                        req={true}
-                    />
+                    <div>
+                        {/* address */}
+                        <Input
+                            label="آدرس"
+                            name="address"
+                            autoComplete="address"
+                            value={formData.address}
+                            onChange={(event) => handleChange("address", event.target.value)}
+                            placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
+                            req={true}
+                            className={errors.address && "border-rose-600 bg-rose-600/10"}
+                        />
+                        <ErrorMessageInputs msg={errors.address}/>
+                    </div>
                 </div>
             </div>
 
@@ -212,7 +227,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             value={formData.description}
                             onChange={v => handleChange("description", v.target.value)}
                             placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
-                            className={"mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"}
+                            className={cn("mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition", errors.description && "border-rose-600 bg-rose-600/10")}
                         >
                         </textarea>
                     </div>
@@ -244,13 +259,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     {/* features and stock */}
                     <div className={"flex flex-col items-start gap-4 divide-y divide-secondary-txt @xl/main:divide-y-0 @xl/main:divide-x @xl/main:flex-row @xl/main:items-start @3xl/main:col-span-2"}>
                         {/* features */}
-                        <div>
+                        <div className={cn("pb-4 @xl/main:pl-4 @xl/main:pb-0", errors.features && "bg-rose-600/10")}>
                             <div>
                                 <p className="flex flex-row gap-1 text-sm font-medium mb-2">
                                     ویژگی‌ها (حداقل یکی)
                                     <RedStarField/>
                                 </p>
-                                <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
+                                <div className="flex items-center flex-wrap gap-3">
                                     {availableFeatures.map(feature => (
                                         <CheckBox
                                             key={feature}
