@@ -25,6 +25,7 @@ export default function Login() {
     // ref
     const inputRef = useRef(null);
     const {setAuthInfo} = useAuth();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     // focus and set title
     useEffect(() => {
@@ -51,6 +52,12 @@ export default function Login() {
             return;
         }
 
+        if (!emailRegex.test(trimmedEmail)) {
+            setLoading(false);
+            setErrors({...errors, email: "فرمت ایمیل اشتباهه"});
+            return;
+        }
+
         const userInfo = {
             email: email.trim().toLowerCase(),
             password: password.trim(),
@@ -61,8 +68,20 @@ export default function Login() {
         setLoading(false);
     }
 
-    const setEmailHandler = event => setEmail(event.target.value);
-    const setPasswordHandler = event => setPassword(event.target.value);
+    const setEmailHandler = event => {
+        setEmail(event.target.value);
+        if (emailRegex.test(event.target.value) && errors.email) setErrors({
+            ...errors,
+            email: ""
+        });
+    }
+    const setPasswordHandler = event => {
+        setPassword(event.target.value);
+        if (event.target.value && errors.password) setErrors({
+            ...errors,
+            password: ""
+        });
+    }
 
     const ShowPasswordButton = () => {
         return (
@@ -95,6 +114,7 @@ export default function Login() {
                     <form className="space-y-6" onSubmit={submitHandler}>
                         <div className={"space-y-2"}>
                             <Input
+                                type={"text"}
                                 id={"email"}
                                 value={email}
                                 name={"email"}
@@ -123,7 +143,7 @@ export default function Login() {
                                 onChange={setPasswordHandler}
                                 children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
-                                className={cn(errors.email && "border-rose-600")}
+                                className={cn(errors.password && "border-rose-600")}
                                 dir={"ltr"}/>
                             <p
                                 className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}

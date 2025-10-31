@@ -1,7 +1,7 @@
 import {cn} from "@/lib/utils/ui-utils.js";
 import {RedStarField} from "@components/ui/Fragments";
 
-export default function Input({onChange, name, type = name, id = name, label, autoComplete = null, value, placeholder, req, inputProps, className = null, parentClassName = null, children, ...props}) {
+export default function Input({onChange, name, type = name, id = name, label, autoComplete = null, value, placeholder, req, className = null, parentClassName = null, children, ...props}) {
     return (
         <div className={cn(parentClassName)}>
             <label htmlFor={id} className="flex flex-row gap-1 text-sm">{label} {req && <RedStarField/>}</label>
