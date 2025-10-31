@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from "react";
 import {cn} from "@/lib/utils/ui-utils.js";
-import loginHandler from "@api/handlers/loginHandler.js";
 
 export default function AlertModal({message = "", type = "error", isOpen = false, setIsOpen, setData, closeDelay = 5000}) {
     const [barWidth, setBarWidth] = useState(100)

@@ -6,6 +6,7 @@ import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
 import loginHandler from "@api/handlers/loginHandler.js";
 import logo from "@img/logo.webp"
+import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function Login() {
     // state variables
@@ -16,6 +17,10 @@ export default function Login() {
     const [remember, setRemember] = useState(false);
     const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
+    const [errors, setErrors] = useState({
+        email: "",
+        password: ""
+    });
 
     // ref
     const inputRef = useRef(null);
@@ -27,9 +32,24 @@ export default function Login() {
         inputRef?.current?.focus();
     }, []);
 
+    // login handler
     const submitHandler = async event => {
         event.preventDefault();
         setLoading(true);
+
+        const trimmedEmail = email.trim().toLowerCase();
+        const trimPassword = password.trim();
+
+        const newErrors = {
+            email: trimmedEmail ? "" : "ایمیل رو وارد کن",
+            password: trimPassword ? "" : "پسورد رو وارد کن",
+        }
+
+        if (newErrors.email || newErrors.password) {
+            setLoading(false);
+            setErrors(newErrors);
+            return;
+        }
 
         const userInfo = {
             email: email.trim().toLowerCase(),
@@ -44,45 +64,18 @@ export default function Login() {
     const setEmailHandler = event => setEmail(event.target.value);
     const setPasswordHandler = event => setPassword(event.target.value);
 
-    // data inputs
-    const dataInput = [
-        {
-            onChange: setEmailHandler,
-            name: "email",
-            label: "ایمیل",
-            value: email,
-            placeholder: "you@example.com",
-            id: "email",
-            autoComplete: "email",
-            inputProps: {
-                ref: inputRef,
-                dir: "ltr",
-            }
-        },
-        {
-            onChange: setPasswordHandler,
-            name: "password",
-            label: "پسورد",
-            value: password,
-            placeholder: "******",
-            id: "password",
-            type: showPassword ? "text" : "password",
-            parentClassName: "relative",
-            inputProps: {
-                dir: "ltr",
-            },
-            children: (
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide Password" : "Show Password"}
-                    className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
-                >
-                    {showPassword ? "مخفی" : "نمایش"}
-                </button>
-            )
-        }
-    ]
+    const ShowPasswordButton = () => {
+        return (
+            <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide Password" : "Show Password"}
+                className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
+            >
+                {showPassword ? "مخفی" : "نمایش"}
+            </button>
+        )
+    }
 
     return (
         <>
@@ -100,9 +93,45 @@ export default function Login() {
                     </p>
 
                     <form className="space-y-6" onSubmit={submitHandler}>
-                        {dataInput.map(data => (
-                            <Input key={data.id} {...data}/>
-                        ))}
+                        <div className={"space-y-2"}>
+                            <Input
+                                id={"email"}
+                                value={email}
+                                name={"email"}
+                                ref={inputRef}
+                                label={"ایمیل"}
+                                autoComplete={"email"}
+                                onChange={setEmailHandler}
+                                placeholder={"you@example.com"}
+                                className={cn(errors.email && "border-rose-600")}
+                                dir={"ltr"}/>
+                            <p
+                                className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
+                            >
+                                {errors.email}
+                            </p>
+                        </div>
+
+                        <div className={"space-y-2"}>
+                            <Input
+                                id="password"
+                                label={"پسورد"}
+                                value={password}
+                                name={"password"}
+                                placeholder={"******"}
+                                parentClassName={"relative"}
+                                onChange={setPasswordHandler}
+                                children={<ShowPasswordButton/>}
+                                type={showPassword ? "text" : "password"}
+                                className={cn(errors.email && "border-rose-600")}
+                                dir={"ltr"}/>
+                            <p
+                                className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
+                            >
+                                {errors.password}
+                            </p>
+                        </div>
+
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
                             <CheckBox id={"remember"} checked={remember} onChange={setRemember} label={"منو یادت باشه"}/>
