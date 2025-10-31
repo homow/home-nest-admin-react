@@ -20,6 +20,11 @@ export default function CreateProperty() {
             price: data.price.trim() ? parsePriceFromString(data.price) : "توافقی",
             metadata: data.metadata.trim() ? buildObjectFromKeyValueArray(data.metadata.split("،")) : undefined,
             discount_until: data.discount_until.trim() ? data.discount_until : undefined,
+            title: data.title.trim(),
+            description: data.description.trim(),
+            province_and_city: data.province_and_city.trim(),
+            address: data.address.trim(),
+            property_id: data.property_id.trim() ? data.property_id.trim() : undefined,
         }
         const dataProperty = {
             ...data,

@@ -31,6 +31,7 @@ const formatPriceDebounced = debounce((input, callback, name) => {
 const buildObjectFromKeyValueArray = data => {
     return data.reduce((acc, item) => {
         const [key, value] = item.split("=");
+        if (!key.trim() || !value.trim()) return acc;
         acc[key.trim()] = value.trim();
         return acc;
     }, {});

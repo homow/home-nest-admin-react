@@ -22,7 +22,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         stock: 1,
         metadata: "",
     });
-
     const [errors, setErrors] = useState({
         title: "",
         description: "",
@@ -31,10 +30,17 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         features: "",
     });
 
+    // handle changes in data form
     const handleChange = (name, value) => {
         setFormData(prev => ({...prev, [name]: value}));
     };
 
+    // features available
+    const availableFeatures = [
+        "بالکن", "پارکینگ", "آسانسور", "انبار", "استخر"
+    ];
+
+    // handle features
     const handleFeatureToggle = feature => {
         // noinspection JSCheckFunctionSignatures
         setFormData(prevState => ({
@@ -77,10 +83,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
     };
 
-    const availableFeatures = [
-        "بالکن", "پارکینگ", "آسانسور", "انبار", "استخر"
-    ];
-
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
 
@@ -101,7 +103,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                                     setErrors({...errors, title: ""});
                                 }
                             }}
-                            placeholder="مثلاً آپارتمان نوساز"
+                            placeholder="مثلاً: ویلایی، صدرا"
                             req={true}
                             className={errors.title && "border-rose-600 bg-rose-600/10"}
                         />
