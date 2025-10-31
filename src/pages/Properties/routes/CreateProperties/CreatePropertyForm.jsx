@@ -28,7 +28,8 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         province_and_city: "",
         address: "",
         features: "",
-        price: ""
+        price: "",
+        discount: ""
     });
 
     // handle changes in data form
@@ -88,7 +89,8 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             province_and_city: province_and_cityTrimmed ? "" : "استان و شهر اجباریه",
             address: addressTrimmed ? "" : "آدرس ملک اجباریه",
             features: featuresTrimmed ? "" : "حداقل یک ویژگی باید انتخاب شود",
-            price: priceChecked ? "" : "تخفیف باید از قیمت اصلی کمتر باشد"
+            discount: priceChecked ? "" : "تخفیف باید از قیمت اصلی کمتر باشد",
+            price: priceChecked ? "" : "قیمت اصلی باید از تخفیف بیشتر باشد"
         };
 
         if (!titleTrimmed || !descriptionTrimmed || !province_and_cityTrimmed || !addressTrimmed || !featuresTrimmed || !priceChecked) {
@@ -154,19 +156,29 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     </div>
 
                     {/* price */}
-                    <Input
-                        label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
-                        name="price"
-                        type="text"
-                        autoComplete="price"
-                        value={formData.price}
-                        onChange={event => {
-                            handleChange("price", event.target.value);
-                            formatPriceDebounced(event, handleChange, "price");
-                        }}
-                        placeholder="مثلاً 1,200,000,000"
-                        className={errors.price && "border-rose-600 bg-rose-600/10"}
-                    />
+                    <div>
+                        <Input
+                            label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
+                            name="price"
+                            type="text"
+                            autoComplete="price"
+                            value={formData.price}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("price", val);
+                                formatPriceDebounced(event, handleChange, "price");
+
+                                const priceChecked = checkPrice(val);
+
+                                if (errors.price && priceChecked) {
+                                    setErrors({...errors, price: "", discount: ""});
+                                }
+                            }}
+                            placeholder="مثلاً 1,200,000,000"
+                            className={errors.price && "border-rose-600 bg-rose-600/10"}
+                        />
+                        <ErrorMessageInputs msg={errors.price}/>
+                    </div>
                 </div>
 
                 {/* price with discount and discount date */}
@@ -183,17 +195,18 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             onChange={event => {
                                 const val = event.target.value;
                                 handleChange("price_with_discount", val);
+
                                 formatPriceDebounced(event, handleChange, "price_with_discount");
                                 const priceChecked = checkPrice(formData.price, val);
 
                                 if (errors.price && priceChecked) {
-                                    setErrors({...errors, price: ""});
+                                    setErrors({...errors, price: "", discount: ""});
                                 }
                             }}
                             placeholder="مثلاً 1,100,000,000"
                             className={errors.price && "border-rose-600 bg-rose-600/10"}
                         />
-                        <ErrorMessageInputs msg={errors.price}/>
+                        <ErrorMessageInputs msg={errors.discount}/>
                     </div>
 
                     {/* discount date */}
