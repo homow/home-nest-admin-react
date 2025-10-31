@@ -69,7 +69,8 @@ export default function ImagesForm({formRef, refData}) {
                     type={"file"}
                     label="تصویر اصلی"
                     name="main_image"
-                    inputProps={{dir: "ltr", accept: "image/*"}}
+                    dir={"ltr"}
+                    accept={"image/*"}
                     onChange={handleMainChange}
                 />
 
@@ -77,7 +78,10 @@ export default function ImagesForm({formRef, refData}) {
                 <Input
                     type={"file"}
                     label="تصاویر بیشتر(حداکثر 3)"
-                    inputProps={{dir: "ltr", multiple: true, accept: "image/*", ref: otherFilesRef}}
+                    dir={"ltr"}
+                    accept={"image/*"}
+                    multiple={true}
+                    ref={otherFilesRef}
                     name="images"
                     onChange={handleOthersChange}
                 />
