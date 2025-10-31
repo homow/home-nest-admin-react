@@ -94,10 +94,16 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             name="title"
                             autoComplete="title"
                             value={formData.title}
-                            onChange={event => handleChange("title", event.target.value)}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("title", val)
+                                if (errors.title && val.trim()) {
+                                    setErrors({...errors, title: ""});
+                                }
+                            }}
                             placeholder="مثلاً آپارتمان نوساز"
                             req={true}
-                            className={errors.title && "border-rose-600 bg-rose-600/10 bg-rose-600/10"}
+                            className={errors.title && "border-rose-600 bg-rose-600/10"}
                         />
                         <ErrorMessageInputs msg={errors.title}/>
                     </div>
@@ -181,10 +187,16 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             label="استان و شهر"
                             name="province_and_city"
                             value={formData.province_and_city}
-                            onChange={(event) => handleChange("province_and_city", event.target.value)}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("province_and_city", val);
+                                if (errors.province_and_city && val.trim()) {
+                                    setErrors({...errors, province_and_city: ""});
+                                }
+                            }}
                             placeholder="مثلاً فارس، شیراز"
                             req={true}
-                            className={errors.title && "border-rose-600 bg-rose-600/10"}
+                            className={errors.province_and_city && "border-rose-600 bg-rose-600/10"}
                         />
                         <ErrorMessageInputs msg={errors.province_and_city}/>
                     </div>
@@ -196,7 +208,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             name="address"
                             autoComplete="address"
                             value={formData.address}
-                            onChange={(event) => handleChange("address", event.target.value)}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("address", val);
+                                if (errors.address && val.trim()) {
+                                    setErrors({...errors, address: ""});
+                                }
+                            }}
                             placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
                             req={true}
                             className={errors.address && "border-rose-600 bg-rose-600/10"}
@@ -225,7 +243,13 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             cols="30"
                             rows="8"
                             value={formData.description}
-                            onChange={v => handleChange("description", v.target.value)}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("description", val);
+                                if (errors.description && val.trim()) {
+                                    setErrors({...errors, description: ""});
+                                }
+                            }}
                             placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
                             className={cn("mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition", errors.description && "border-rose-600 bg-rose-600/10")}
                         >
