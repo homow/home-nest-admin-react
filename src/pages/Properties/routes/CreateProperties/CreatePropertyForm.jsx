@@ -58,9 +58,6 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         const priceTrimmed = price ? parsePriceFromString(price) : 0;
         const priceWithDiscountTrimmed = discount ? parsePriceFromString(discount) : 0;
 
-        console.log(priceWithDiscountTrimmed);
-        console.log(priceTrimmed);
-
         if (!priceTrimmed && !priceWithDiscountTrimmed) return true;
         return priceWithDiscountTrimmed < priceTrimmed;
     }
