@@ -54,7 +54,7 @@ export default function Login() {
 
         if (!emailRegex.test(trimmedEmail)) {
             setLoading(false);
-            setErrors({...errors, email: "فرمت ایمیل اشتباهه"});
+            setErrors({...newErrors, email: "فرمت ایمیل اشتباهه"});
             return;
         }
 
@@ -68,6 +68,7 @@ export default function Login() {
         setLoading(false);
     }
 
+    // set email handler
     const setEmailHandler = event => {
         setEmail(event.target.value);
         if (emailRegex.test(event.target.value) && errors.email) setErrors({
@@ -75,6 +76,8 @@ export default function Login() {
             email: ""
         });
     }
+
+    // set password handler
     const setPasswordHandler = event => {
         setPassword(event.target.value);
         if (event.target.value && errors.password) setErrors({
@@ -83,6 +86,7 @@ export default function Login() {
         });
     }
 
+    // show and hide password button
     const ShowPasswordButton = () => {
         return (
             <button
