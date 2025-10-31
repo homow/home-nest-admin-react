@@ -55,8 +55,8 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
     // check price
     const checkPrice = (price = formData.price, discount = formData.price_with_discount) => {
-        const priceTrimmed = price ? parsePriceFromString(price) : 0;
-        const priceWithDiscountTrimmed = discount ? parsePriceFromString(discount) : 0;
+        const priceTrimmed = price.trim() ? parsePriceFromString(price) : 0;
+        const priceWithDiscountTrimmed = discount.trim() ? parsePriceFromString(discount) : 0;
 
         if (!priceTrimmed && !priceWithDiscountTrimmed) return true;
         return priceWithDiscountTrimmed < priceTrimmed;
