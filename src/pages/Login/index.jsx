@@ -4,6 +4,7 @@ import {useAuth} from "@/context/AuthContext";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
+import {ErrorMessageInputs} from "@components/ui/Fragments";
 import loginHandler from "@api/handlers/loginHandler.js";
 import logo from "@img/logo.webp"
 import {cn} from "@/lib/utils/ui-utils.js";
@@ -130,11 +131,7 @@ export default function Login() {
                                 className={cn("text-sm xs:text-base", errors.email && "border-rose-600")}
                                 dir={"ltr"}
                             />
-                            <p
-                                className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
-                            >
-                                {errors.email}
-                            </p>
+                            <ErrorMessageInputs msg={errors.email}/>
                         </div>
 
                         <div className={"space-y-2"}>
@@ -151,11 +148,7 @@ export default function Login() {
                                 className={cn("text-sm xs:text-base", errors.password && "border-rose-600")}
                                 dir={"ltr"}
                             />
-                            <p
-                                className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
-                            >
-                                {errors.password}
-                            </p>
+                            <ErrorMessageInputs msg={errors.password}/>
                         </div>
 
 
