@@ -4,10 +4,10 @@ const RedStarField = () => {
     return <span className={"inline-block max-h-5 text-xl text-rose-600"}>*</span>;
 }
 
-const ErrorMessageInputs = ({msg = ""}) => {
+const ErrorMessageInputs = ({cls, msg = ""}) => {
     return (
         <p
-            className={cn("font-medium text-sm text-rose-600 dark:text-rose-500", msg ? "block" : "hidden")}
+            className={cn("mt-2 font-medium text-sm text-rose-600 dark:text-rose-500", msg ? "block" : "hidden", cls)}
         >
             {msg}
         </p>

@@ -2,7 +2,7 @@ import {useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {RedStarField} from "@components/ui/Fragments";
+import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced} from "@/lib/utils/helper.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
@@ -78,17 +78,19 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             <div className={"space-y-8 @6xl/main:grid grid-cols-2 gap-x-4"}>
                 {/* title and id */}
                 <div className={"multi-inputs-style"}>
-                    {/* title */}
-                    <Input
-                        label="عنوان ملک"
-                        name="title"
-                        autoComplete="title"
-                        value={formData.title}
-                        onChange={event => handleChange("title", event.target.value)}
-                        placeholder="مثلاً آپارتمان نوساز"
-                        req={true}
-                    />
-
+                    <div>
+                        {/* title */}
+                        <Input
+                            label="عنوان ملک"
+                            name="title"
+                            autoComplete="title"
+                            value={formData.title}
+                            onChange={event => handleChange("title", event.target.value)}
+                            placeholder="مثلاً آپارتمان نوساز"
+                            req={true}
+                        />
+                        <ErrorMessageInputs msg={errors.title}/>
+                    </div>
 
                     {/* id */}
                     <Input
@@ -163,15 +165,18 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 <div className={'multi-inputs-style'}>
 
                     {/* province_and_city */}
-                    <Input
-                        autoComplete="province_and_city"
-                        label="استان و شهر"
-                        name="province_and_city"
-                        value={formData.province_and_city}
-                        onChange={(event) => handleChange("province_and_city", event.target.value)}
-                        placeholder="مثلاً فارس، شیراز"
-                        req={true}
-                    />
+                    <div>
+                        <Input
+                            autoComplete="province_and_city"
+                            label="استان و شهر"
+                            name="province_and_city"
+                            value={formData.province_and_city}
+                            onChange={(event) => handleChange("province_and_city", event.target.value)}
+                            placeholder="مثلاً فارس، شیراز"
+                            req={true}
+                        />
+                        <ErrorMessageInputs msg={errors.province_and_city}/>
+                    </div>
 
                     {/* city */}
                     <Input
@@ -187,12 +192,10 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
             </div>
 
             {/* tags, description, metaData, features */}
-            <div className={"space-y-6 @5xl/main:flex flex-row @5xl/main:*:w-full gap-4 items-start"}>
+            <div className={"space-y-6 @5xl/main:space-y-0 @5xl/main:flex flex-row @5xl/main:*:w-full gap-4 items-start"}>
 
-                {/* description and features */}
-                <div className={"space-y-6"}>
-
-                    {/* description */}
+                {/* description */}
+                <div>
                     <div>
                         <label
                             htmlFor="description"
@@ -213,6 +216,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         >
                         </textarea>
                     </div>
+                    <ErrorMessageInputs msg={errors.description}/>
                 </div>
 
                 {/* tags and metadata */}
@@ -241,21 +245,24 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                     <div className={"flex flex-col items-start gap-4 divide-y divide-secondary-txt @xl/main:divide-y-0 @xl/main:divide-x @xl/main:flex-row @xl/main:items-start @3xl/main:col-span-2"}>
                         {/* features */}
                         <div>
-                            <p className="flex flex-row gap-1 text-sm font-medium mb-2">
-                                ویژگی‌ها (حداقل یکی)
-                                <RedStarField/>
-                            </p>
-                            <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
-                                {availableFeatures.map(feature => (
-                                    <CheckBox
-                                        key={feature}
-                                        id={feature}
-                                        label={feature}
-                                        onChange={() => handleFeatureToggle(feature)}
-                                        checked={formData.features.includes(feature)}
-                                    />
-                                ))}
+                            <div>
+                                <p className="flex flex-row gap-1 text-sm font-medium mb-2">
+                                    ویژگی‌ها (حداقل یکی)
+                                    <RedStarField/>
+                                </p>
+                                <div className="flex items-center flex-wrap gap-3 pb-4 @xl/main:last:pl-4">
+                                    {availableFeatures.map(feature => (
+                                        <CheckBox
+                                            key={feature}
+                                            id={feature}
+                                            label={feature}
+                                            onChange={() => handleFeatureToggle(feature)}
+                                            checked={formData.features.includes(feature)}
+                                        />
+                                    ))}
+                                </div>
                             </div>
+                            <ErrorMessageInputs msg={errors.features}/>
                         </div>
 
                         {/* stock */}

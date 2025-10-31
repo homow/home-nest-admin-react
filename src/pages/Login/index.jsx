@@ -117,7 +117,7 @@ export default function Login() {
                     </p>
 
                     <form className="space-y-6" onSubmit={submitHandler}>
-                        <div className={"space-y-2"}>
+                        <div>
                             <Input
                                 type={"text"}
                                 id={"email"}
@@ -134,7 +134,7 @@ export default function Login() {
                             <ErrorMessageInputs msg={errors.email}/>
                         </div>
 
-                        <div className={"space-y-2"}>
+                        <div>
                             <Input
                                 id="password"
                                 label={"پسورد"}
