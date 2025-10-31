@@ -15,9 +15,9 @@ export default function Loading({msg = "لطفاً صبر کنید..."}) {
                     >
                         <defs>
                             <linearGradient id="g1" x1="0%" x2="100%">
-                                <stop offset="0%" stopColor="#7c3aed"/>
+                                <stop offset="10%" stopColor="var(--color-orange-600)"/>
                                 <stop offset="50%" stopColor="#06b6d4"/>
-                                <stop offset="100%" stopColor="#f97316"/>
+                                <stop offset="100%" stopColor="var(--color-violet-600)"/>
                             </linearGradient>
                         </defs>
 
@@ -123,14 +123,14 @@ export default function Loading({msg = "لطفاً صبر کنید..."}) {
                             marginLeft: -11,
                             marginTop: -11,
                             borderRadius: "50%",
-                            background: "linear-gradient(180deg,#ffffff,#f8fafc)",
+                            background: "linear-gradient(180deg,var(--color-violet-600),var(--color-sky-600))",
                             boxShadow: "inset 0 -6px 14px rgba(0,0,0,0.06), 0 6px 18px rgba(2,6,23,0.06)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             fontSize: 10,
                             fontWeight: 700,
-                            color: "#333",
+                            color: "var(--color-gray-300)",
                             zIndex: 2,
                             animation: "pulse 1.8s ease-in-out infinite",
                         }}
@@ -164,7 +164,7 @@ export default function Loading({msg = "لطفاً صبر کنید..."}) {
             50% { transform: scale(1.12); box-shadow: 0 14px 34px rgba(2,6,23,0.08); }
             100% { transform: scale(1); box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
           }
-
+          
           /* reduce motion preference */
           @media (prefers-reduced-motion: reduce) {
             .animate, svg, span, div { animation: none !important; transition: none !important; }

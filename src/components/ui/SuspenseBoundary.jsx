@@ -1,5 +1,5 @@
 import {Suspense} from 'react'
-import Loading from "@components/ui/Loading";
+import Loading from "./Loading";
 
 export default function SuspenseBoundary({children, fallback}) {
     return (

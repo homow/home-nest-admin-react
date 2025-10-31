@@ -1,4 +1,5 @@
 import {useEffect} from "react";
+import Loading from "@components/ui/Loading";
 
 export default function User() {
     useEffect(() => {
@@ -6,6 +7,6 @@ export default function User() {
     }, [])
 
     return (
-        <h1>User</h1>
+        <Loading/>
     )
 }
