@@ -13,10 +13,10 @@ function DropDownAccountOptions({data, className}) {
     const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;
 
     return (
-        <ul className={cn("divide-y divide-disable-txt/30", className)}>
+        <ul className={cn("divide-y divide-disable-txt/30 *:last:hover:bg-red-600", className)}>
             {data.map(link => {
                 return (
-                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-70 *:transition-all *:duration-300 *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
+                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-100 hover:bg-violet-500 *:transition-all *:duration-300 *:rounded-md *:active:bg-violet-500 *:active:text-white"}>
                         {link.url ? (
                             <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}
