@@ -128,7 +128,7 @@ export default function Login() {
                                 autoComplete={"email"}
                                 onChange={setEmailHandler}
                                 placeholder={"you@example.com"}
-                                className={cn("text-sm xs:text-base", errors.email && "border-rose-600")}
+                                className={cn("text-sm xs:text-base", errors.email && "border-rose-600 bg-rose-600/10")}
                                 dir={"ltr"}
                             />
                             <ErrorMessageInputs msg={errors.email}/>
@@ -145,7 +145,7 @@ export default function Login() {
                                 onChange={setPasswordHandler}
                                 children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
-                                className={cn("text-sm xs:text-base", errors.password && "border-rose-600")}
+                                className={cn("text-sm xs:text-base", errors.password && "border-rose-600 bg-rose-600/10")}
                                 dir={"ltr"}
                             />
                             <ErrorMessageInputs msg={errors.password}/>
