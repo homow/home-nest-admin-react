@@ -7,11 +7,19 @@ function debounce(callback, delay = 300) {
     };
 }
 
+// convert persian numbers to english
+function normalizeDigits(str) {
+    return str
+        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+}
+
 // format number to string with commas
 const formatPriceToString = value => {
-    const raw = String(value).replace(/\D/g, "");
-    if (!raw) return "";
-    return raw.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const normalized = normalizeDigits(String(value));
+    const number = Number(normalized.replace(/\D/g, ""));
+    if (!number) return "";
+    return new Intl.NumberFormat("en-US").format(number);
 };
 
 // convert formatted string to number

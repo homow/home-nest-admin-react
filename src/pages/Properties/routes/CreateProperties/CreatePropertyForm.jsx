@@ -3,7 +3,7 @@ import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
-import {formatPriceDebounced} from "@/lib/utils/helper.js";
+import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function CreatePropertyForm({onSubmit, isLoading}) {
@@ -28,6 +28,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         province_and_city: "",
         address: "",
         features: "",
+        price: ""
     });
 
     // handle changes in data form
@@ -51,6 +52,18 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         }));
     };
 
+    // check price
+    const checkPrice = (price = formData.price, discount = formData.price_with_discount) => {
+        const priceTrimmed = price ? parsePriceFromString(price) : 0;
+        const priceWithDiscountTrimmed = discount ? parsePriceFromString(discount) : 0;
+
+        console.log(priceWithDiscountTrimmed);
+        console.log(priceTrimmed);
+
+        if (!priceTrimmed && !priceWithDiscountTrimmed) return true;
+        return priceWithDiscountTrimmed < priceTrimmed;
+    }
+
     // check features error
     useEffect(() => {
         if (errors.features && formData.features.length > 0) {
@@ -67,15 +80,18 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         const addressTrimmed = formData.address.trim();
         const featuresTrimmed = formData.features.length > 0;
 
+        const priceChecked = checkPrice();
+
         const newError = {
             title: titleTrimmed ? "" : "عنوان ملک اجباریه",
             description: descriptionTrimmed ? "" : "توضیحات ملک اجباریه",
             province_and_city: province_and_cityTrimmed ? "" : "استان و شهر اجباریه",
             address: addressTrimmed ? "" : "آدرس ملک اجباریه",
             features: featuresTrimmed ? "" : "حداقل یک ویژگی باید انتخاب شود",
+            price: priceChecked ? "" : "تخفیف باید از قیمت اصلی کمتر باشد"
         };
 
-        if (!titleTrimmed || !descriptionTrimmed || !province_and_cityTrimmed || !addressTrimmed || !featuresTrimmed) {
+        if (!titleTrimmed || !descriptionTrimmed || !province_and_cityTrimmed || !addressTrimmed || !featuresTrimmed || !priceChecked) {
             setErrors(newError);
         } else {
             if (onSubmit) onSubmit(formData);
@@ -149,6 +165,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                             formatPriceDebounced(event, handleChange, "price");
                         }}
                         placeholder="مثلاً 1,200,000,000"
+                        className={errors.price && "border-rose-600 bg-rose-600/10"}
                     />
                 </div>
 
@@ -156,18 +173,28 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                 <div className={"multi-inputs-style"}>
 
                     {/* price with discount */}
-                    <Input
-                        autoComplete="price_with_discount"
-                        label="قیمت با تخفیف"
-                        name="price_with_discount"
-                        type="text"
-                        value={formData.price_with_discount}
-                        onChange={event => {
-                            handleChange("price_with_discount", event.target.value);
-                            formatPriceDebounced(event, handleChange, "price_with_discount");
-                        }}
-                        placeholder="مثلاً 1,100,000,000"
-                    />
+                    <div>
+                        <Input
+                            autoComplete="price_with_discount"
+                            label="قیمت با تخفیف"
+                            name="price_with_discount"
+                            type="text"
+                            value={formData.price_with_discount}
+                            onChange={event => {
+                                const val = event.target.value;
+                                handleChange("price_with_discount", val);
+                                formatPriceDebounced(event, handleChange, "price_with_discount");
+                                const priceChecked = checkPrice(formData.price, val);
+
+                                if (errors.price && priceChecked) {
+                                    setErrors({...errors, price: ""});
+                                }
+                            }}
+                            placeholder="مثلاً 1,100,000,000"
+                            className={errors.price && "border-rose-600 bg-rose-600/10"}
+                        />
+                        <ErrorMessageInputs msg={errors.price}/>
+                    </div>
 
                     {/* discount date */}
                     <Input
