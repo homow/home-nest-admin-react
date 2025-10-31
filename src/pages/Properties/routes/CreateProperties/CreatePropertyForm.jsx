@@ -8,6 +8,7 @@ import {formatPriceDebounced} from "@/lib/utils/helper.js";
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
         title: "",
+        property_id: "",
         category: "sale",
         price: "",
         price_with_discount: "",
@@ -19,6 +20,14 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         tags: "",
         stock: 1,
         metadata: "",
+    });
+
+    const [errors, setErrors] = useState({
+        title: "",
+        description: "",
+        province_and_city: "",
+        address: "",
+        features: "",
     });
 
     const handleChange = (name, value) => {
@@ -37,7 +46,26 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
     const handleSubmit = e => {
         e.preventDefault();
-        if (onSubmit) onSubmit(formData);
+        const titleTrimmed = formData.title.trim();
+        const descriptionTrimmed = formData.description.trim();
+        const province_and_cityTrimmed = formData.province_and_city.trim();
+        const addressTrimmed = formData.address.trim();
+        const featuresTrimmed = formData.features.length > 0;
+
+        const newError = {
+            title: titleTrimmed ? "" : "عنوان ملک اجباریه",
+            description: descriptionTrimmed ? "" : "توضیحات ملک اجباریه",
+            province_and_city: province_and_cityTrimmed ? "" : "استان و شهر اجباریه",
+            address: addressTrimmed ? "" : "آدرس ملک اجباریه",
+            features: featuresTrimmed ? "" : "حداقل یک ویژگی باید انتخاب شود",
+        };
+
+        if (!titleTrimmed || !descriptionTrimmed || !province_and_cityTrimmed || !addressTrimmed || !featuresTrimmed) {
+            setErrors(newError);
+        } else {
+            if (onSubmit) onSubmit(formData);
+        }
+
     };
 
     const availableFeatures = [
@@ -61,13 +89,14 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         req={true}
                     />
 
+
                     {/* id */}
                     <Input
-                        autoComplete="property_number"
+                        autoComplete="property_id"
                         label="شناسه ملک"
-                        name="property_number"
-                        value={formData.property_number || ""}
-                        onChange={event => handleChange("property_number", event.target.value)}
+                        name="property_id"
+                        value={formData.property_id || ""}
+                        onChange={event => handleChange("property_id", event.target.value)}
                         placeholder="مثلاً A-1234"
                     />
                 </div>

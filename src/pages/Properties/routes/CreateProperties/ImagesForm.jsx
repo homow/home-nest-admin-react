@@ -59,7 +59,11 @@ export default function ImagesForm({formRef, refData}) {
         <form ref={formRef} onSubmit={submitHandler}>
 
             {/* alert modal */}
-            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData} {...alertModalData}/>
+            <AlertModal
+                isOpen={isOpenAlertModal}
+                setIsOpen={setIsOpenAlertModal}
+                setData={setAlertModalData} {...alertModalData}
+            />
 
             {/* images */}
             <div className={"multi-inputs-style"}>

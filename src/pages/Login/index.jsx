@@ -127,8 +127,9 @@ export default function Login() {
                                 autoComplete={"email"}
                                 onChange={setEmailHandler}
                                 placeholder={"you@example.com"}
-                                className={cn("text-sm xs:text-base",errors.email && "border-rose-600")}
-                                dir={"ltr"}/>
+                                className={cn("text-sm xs:text-base", errors.email && "border-rose-600")}
+                                dir={"ltr"}
+                            />
                             <p
                                 className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
                             >
@@ -147,8 +148,9 @@ export default function Login() {
                                 onChange={setPasswordHandler}
                                 children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
-                                className={cn("text-sm xs:text-base",errors.password && "border-rose-600")}
-                                dir={"ltr"}/>
+                                className={cn("text-sm xs:text-base", errors.password && "border-rose-600")}
+                                dir={"ltr"}
+                            />
                             <p
                                 className={cn("font-medium text-sm text-rose-600 dark:text-rose-500")}
                             >
@@ -158,7 +160,12 @@ export default function Login() {
 
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
-                            <CheckBox id={"remember"} checked={remember} onChange={setRemember} label={"منو یادت باشه"}/>
+                            <CheckBox
+                                id={"remember"}
+                                checked={remember}
+                                onChange={setRemember}
+                                label={"منو یادت باشه"}
+                            />
                         </div>
 
                         <Button

@@ -13,6 +13,7 @@ export default function CreateProperty() {
     }, []);
 
     const createPropertyHandler = data => {
+        setLoading(true);
         const fixData = {
             tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
             price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
@@ -27,6 +28,7 @@ export default function CreateProperty() {
         const res = Array.from(imagesFormData.current);
         console.log("images:", res);
         console.log("dataProperty:", dataProperty);
+        setLoading(false);
     };
 
     return (
