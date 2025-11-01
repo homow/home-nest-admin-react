@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
 
@@ -9,34 +9,52 @@ export default function ImagesForm({formRef, refData}) {
     const [othersPreview, setOthersPreview] = useState([]);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
-    const otherFilesRef = useRef(null);
+    const maxSizeMB = 3;
 
     // handle main image
     const handleMainChange = event => {
         const file = event.target.files?.[0];
         setMainFile(file);
 
-        if (file) {
-            setMainPreview(URL.createObjectURL(file));
-        } else {
+        if (file && file.size / 1024 / 1024 > maxSizeMB) {
+            setAlertModalData({type: "error", message: "سایز تصویر باید کمتر از 3 مگابایت باشد."});
+            setIsOpenAlertModal(true);
+            event.target.value = "";
+            setMainFile(null);
             setMainPreview("");
+            return;
         }
+        setMainFile(file);
+        setMainPreview(file ? URL.createObjectURL(file) : "");
+
     };
 
     // handle other images
     const handleOthersChange = event => {
+        const resetFiles = message => {
+            setAlertModalData({type: "error", message});
+            setIsOpenAlertModal(true);
+            setOtherFiles([]);
+            setOthersPreview([]);
+            event.target.value = "";
+        };
+
         const files = Array.from(event.target.files || []);
 
-        if (files.length > 3) {
-            setAlertModalData({type: "error", message: "تعداد تصاویر باید حداکثر 3 عدد باشد"});
-            setIsOpenAlertModal(true);
-            otherFilesRef.current.value = "";
-            setOtherFiles([]);
-            setOthersPreview([])
-        } else {
-            setOtherFiles(files);
-            setOthersPreview(files.map(f => URL.createObjectURL(f)));
+        if (files.length > 2) {
+            resetFiles("تعداد تصاویر باید حداکثر 2 عدد باشد")
+            return;
         }
+
+        for (const f of files) {
+            if (f.size / 1024 / 1024 > maxSizeMB) {
+                resetFiles("سایز تصویر باید کمتر از 3 مگابایت باشد.")
+                return;
+            }
+        }
+
+        setOtherFiles(files);
+        setOthersPreview(files.map(f => URL.createObjectURL(f)));
     };
 
     useEffect(() => {
@@ -57,7 +75,9 @@ export default function ImagesForm({formRef, refData}) {
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>
-
+            <h4 className={"mb-4 text-yellow-600"}>
+                توجه: سایز هر تصویر باید زیر 3 مگابایت باشه
+            </h4>
             {/* alert modal */}
             <AlertModal
                 isOpen={isOpenAlertModal}
@@ -81,11 +101,10 @@ export default function ImagesForm({formRef, refData}) {
                 {/* images */}
                 <Input
                     type={"file"}
-                    label="تصاویر بیشتر(حداکثر 3)"
+                    label="تصاویر بیشتر(حداکثر 2)"
                     dir={"ltr"}
                     accept={"image/*"}
                     multiple={true}
-                    ref={otherFilesRef}
                     name="images"
                     onChange={handleOthersChange}
                 />

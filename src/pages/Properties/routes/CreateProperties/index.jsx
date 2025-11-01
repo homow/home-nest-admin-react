@@ -30,9 +30,13 @@ export default function CreateProperty() {
             ...data,
             ...fixData
         }
+
+        console.log("dataProperty:", dataProperty);
+        imagesFormData.current.append("property_id", 124124)
+
         const res = Array.from(imagesFormData.current);
         console.log("images:", res);
-        console.log("dataProperty:", dataProperty);
+
         setLoading(false);
     };
 
