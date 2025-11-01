@@ -9,7 +9,7 @@ import {cn} from "@/lib/utils/ui-utils.js";
 export default function CreatePropertyForm({onSubmit, isLoading}) {
     const [formData, setFormData] = useState({
         title: "",
-        property_id: "",
+        property_number: "",
         category: "sale",
         price: "",
         price_with_discount: "",
@@ -127,11 +127,11 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
 
                     {/* id */}
                     <Input
-                        autoComplete="property_id"
+                        autoComplete="property_number"
                         label="شناسه ملک"
-                        name="property_id"
-                        value={formData.property_id || ""}
-                        onChange={event => handleChange("property_id", event.target.value)}
+                        name="property_number"
+                        value={formData.property_number || ""}
+                        onChange={event => handleChange("property_number", event.target.value)}
                         placeholder="مثلاً A-1234"
                     />
                 </div>

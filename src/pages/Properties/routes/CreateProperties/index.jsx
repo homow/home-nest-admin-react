@@ -24,7 +24,7 @@ export default function CreateProperty() {
             description: data.description.trim(),
             province_and_city: data.province_and_city.trim(),
             address: data.address.trim(),
-            property_id: data.property_id.trim() ? data.property_id.trim() : undefined,
+            property_number: data.property_number.trim() ? data.property_number.trim() : undefined,
         }
         const dataProperty = {
             ...data,
