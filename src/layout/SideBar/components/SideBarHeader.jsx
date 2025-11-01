@@ -1,7 +1,7 @@
 import {useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.js";
 import Icon from "@components/ui/icons/Icon";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext";
 
@@ -47,7 +47,7 @@ export default function SideBarHeader() {
         <div className={"relative flex items-center justify-between h-16"}>
 
             {/* brand and logo */}
-            <Link to="/" className={"pr-4 flex flex-row items-center gap-4 hover:opacity-100"}>
+            <Link to="/" className={"pr-4 flex flex-row items-center gap-4 hover:text-primary-txt"}>
                 <img className={"size-8"} src={`${logo}`} alt="ashianeh logo"/>
                 <span className={`font-medium ${collapsed && "hidden"}`}>پنل مدیریت</span>
             </Link>
