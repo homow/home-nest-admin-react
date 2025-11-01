@@ -80,9 +80,10 @@ export default function ImagesForm({formRef, refData}) {
             </h4>
             {/* alert modal */}
             <AlertModal
+                {...alertModalData}
                 isOpen={isOpenAlertModal}
+                setData={setAlertModalData}
                 setIsOpen={setIsOpenAlertModal}
-                setData={setAlertModalData} {...alertModalData}
             />
 
             {/* images */}
