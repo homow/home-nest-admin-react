@@ -16,7 +16,7 @@ function DropDownAccountOptions({data, className}) {
         <ul className={cn("divide-y divide-disable-txt/30 *:last:hover:bg-rose-600 *:last:active:bg-rose-600", className)}>
             {data.map(link => {
                 return (
-                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-100 hover:text-white hover:bg-violet-500 active:bg-violet-500 active:text-white *:transition-all *:duration-300 *:rounded-md"}>
+                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-100 hover:text-white hover:bg-violet-500 active:bg-violet-500 active:text-white *:active:text-white *:hover:text-white *:transition-all *:duration-300 *:rounded-md"}>
                         {link.url ? (
                             <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}

@@ -82,7 +82,7 @@
         @apply text-xl md:text-2xl lg:text-3xl;
     }
     a {
-        @apply hover:opacity-70 active:opacity-70 transition-all;
+        @apply hover:text-violet-400 active:text-violet-400 transition-all;
     }
     #login-logo {
         @apply hidden;
