@@ -72,10 +72,14 @@ export default function Login() {
     // set email handler
     const setEmailHandler = event => {
         setEmail(event.target.value);
-        if (emailRegex.test(event.target.value) && errors.email) setErrors({
-            ...errors,
-            email: ""
-        });
+        if (emailRegex.test(event.target.value) && errors.email) {
+            setErrors({
+                ...errors,
+                email: ""
+            });
+        } else if (!emailRegex.test(event.target.value)) {
+            setErrors({...errors, email: "فرمت ایمیل اشتباهه"})
+        }
     }
 
     // set password handler

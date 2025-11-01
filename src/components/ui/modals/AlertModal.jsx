@@ -76,7 +76,7 @@ export default function AlertModal({message = "", type = "error", isOpen = false
 
     return (
         <div
-            className={cn("text-sm fixed top-3 right-3 max-w-sm w-full flex items-center overflow-hidden justify-center shadow-2xl z-30 sm:text-base", isOpen ? "block" : "hidden")}
+            className={cn("max-w-70 text-sm fixed top-3 right-3 w-full flex items-center overflow-hidden justify-center shadow-2xl z-30 xs:max-w-xs sm:text-base sm:max-w-sm", isOpen ? "block" : "hidden")}
             role={"alertdialog"}
             aria-live={"assertive"}
             aria-modal={true}
@@ -88,7 +88,7 @@ export default function AlertModal({message = "", type = "error", isOpen = false
                     {title}
                 </h3>
                 <p
-                    className="text-gray-700 px-3 dark:text-gray-300"
+                    className="max-w-max text-gray-700 px-3 dark:text-gray-300"
                     aria-live={"assertive"}
                 >
                     {message}
