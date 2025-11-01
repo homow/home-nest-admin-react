@@ -1,7 +1,6 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
-import {RedStarField} from "@components/ui/Fragments";
 import {parsePriceFromString, buildObjectFromKeyValueArray} from "@/lib/utils/helper.js"
 
 export default function CreateProperty() {
@@ -43,7 +42,6 @@ export default function CreateProperty() {
     return (
         <div className={"space-y-12"}>
             <h3>افزودن ملک جدید</h3>
-            <p>فیلدهایی که با <RedStarField/> مشخص شدن اجباری، و بقیه فیلدها اختیاری هستند.</p>
 
             {/* image property form */}
             <ImagesForm refData={imagesFormData}/>
@@ -52,7 +50,6 @@ export default function CreateProperty() {
             <CreatePropertyForm
                 onSubmit={createPropertyHandler}
                 isLoading={loading}
-                RedStarField={<RedStarField/>}
             />
         </div>
     );

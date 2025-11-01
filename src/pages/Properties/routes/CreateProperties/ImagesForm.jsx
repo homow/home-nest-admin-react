@@ -17,7 +17,7 @@ export default function ImagesForm({formRef, refData}) {
         setMainFile(file);
 
         if (file && file.size / 1024 / 1024 > maxSizeMB) {
-            setAlertModalData({type: "error", message: "سایز تصویر باید کمتر از 3 مگابایت باشد."});
+            setAlertModalData({type: "warning", message: "سایز تصویر باید کمتر از 3 مگابایت باشد."});
             setIsOpenAlertModal(true);
             event.target.value = "";
             setMainFile(null);
@@ -32,7 +32,7 @@ export default function ImagesForm({formRef, refData}) {
     // handle other images
     const handleOthersChange = event => {
         const resetFiles = message => {
-            setAlertModalData({type: "info", message});
+            setAlertModalData({type: "warning", message});
             setIsOpenAlertModal(true);
             setOtherFiles([]);
             setOthersPreview([]);
