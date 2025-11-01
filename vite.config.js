@@ -51,6 +51,7 @@ export default defineConfig(({mode}) => {
                 '@hooks': path.resolve(__dirname, 'src/hooks'),
                 '@api': path.resolve(__dirname, 'src/lib/api'),
                 '@context': path.resolve(__dirname, 'src/context'),
+                '@utils': path.resolve(__dirname, 'src/lib/utils'),
             }
         },
         plugins: [

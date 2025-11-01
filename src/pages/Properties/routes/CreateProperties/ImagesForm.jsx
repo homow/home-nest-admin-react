@@ -32,7 +32,7 @@ export default function ImagesForm({formRef, refData}) {
     // handle other images
     const handleOthersChange = event => {
         const resetFiles = message => {
-            setAlertModalData({type: "error", message});
+            setAlertModalData({type: "info", message});
             setIsOpenAlertModal(true);
             setOtherFiles([]);
             setOthersPreview([]);
@@ -75,7 +75,7 @@ export default function ImagesForm({formRef, refData}) {
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>
-            <h4 className={"mb-4 text-yellow-600"}>
+            <h4 className={"mb-4 text-amber-500"}>
                 توجه: سایز هر تصویر باید زیر 3 مگابایت باشه
             </h4>
             {/* alert modal */}

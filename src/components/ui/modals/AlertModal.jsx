@@ -1,14 +1,38 @@
 import {useEffect, useRef, useState} from "react";
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.js";
 
-export default function AlertModal({message = "", type = "error", isOpen = false, setIsOpen, setData, closeDelay = 5000}) {
+export default function AlertModal({message = "", type, isOpen = false, setIsOpen, setData, closeDelay = 5000}) {
     const [barWidth, setBarWidth] = useState(100)
     const buttonRef = useRef(null);
     const alertRef = useRef(null);
 
-    const bgHeader = type === "error" ? "text-rose-500" : "text-emerald-500";
-    const btnBg = type === "error" ? "bg-rose-500 hover:bg-rose-600" : "bg-emerald-500 hover:bg-emerald-600";
-    const title = type === "error" ? "خطا" : "موفقیت";
+    const bgHeader = {
+        error: "text-rose-500",
+        success: "text-emerald-500",
+        warning: "text-amber-500",
+        info: "text-sky-500"
+    }[type] || "text-gray-500 dark:text-gray-300";
+
+    const btnBg = {
+        error: "bg-rose-500 hover:bg-rose-600",
+        success: "bg-emerald-500 hover:bg-emerald-600",
+        warning: "bg-amber-500 hover:bg-amber-600",
+        info: "bg-sky-500 hover:bg-sky-600"
+    }[type] || "bg-gray-500 hover:bg-gray-600";
+
+    const title = {
+        error: "خطا",
+        success: "موفقیت",
+        warning: "هشدار",
+        info: "اطلاع"
+    }[type] || "پیام";
+
+    const bgBar = {
+        error: "bg-rose-500",
+        success: "bg-emerald-500",
+        warning: "bg-amber-500",
+        info: "bg-sky-500"
+    }[type] || "bg-gray-500";
 
     // close with Escape
     useEffect(() => {
@@ -109,7 +133,7 @@ export default function AlertModal({message = "", type = "error", isOpen = false
                 <div dir={"ltr"} className={"mt-3"}>
                     <div
                         style={{width: `${barWidth}%`, transformOrigin: "left"}}
-                        className={"h-2 bg-violet-500"}
+                        className={cn("h-2", bgBar)}
                     ></div>
                 </div>
             </div>

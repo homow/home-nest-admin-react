@@ -22,6 +22,9 @@
       ],
       "@context/*": [
         "src/context/*"
+      ],
+      "@utils/*": [
+        "src/lib/utils/*"
       ]
     }
   },
