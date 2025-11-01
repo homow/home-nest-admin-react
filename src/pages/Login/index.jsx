@@ -6,8 +6,8 @@ import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
 import {ErrorMessageInputs} from "@components/ui/Fragments";
 import loginHandler from "@api/handlers/loginHandler.js";
+import {cn} from "@utils/ui-utils.js";
 import logo from "@img/logo.webp"
-import {cn} from "@/lib/utils/ui-utils.js";
 
 export default function Login() {
     // state variables
