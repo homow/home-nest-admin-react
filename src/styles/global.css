@@ -84,11 +84,18 @@
     a {
         @apply hover:opacity-70 active:opacity-70 transition-all;
     }
-
+    #login-logo {
+        @apply hidden;
+    }
     /* <=== media screens ===> */
     @media (min-width: 896px) {
         :root {
             --spacing-custom: 260px;
+        }
+    }
+    @media only screen and (min-height: 500px) {
+        #login-logo {
+            @apply block;
         }
     }
 }

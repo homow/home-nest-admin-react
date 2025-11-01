@@ -111,10 +111,15 @@ export default function Login() {
             <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData}/>
 
             {/* logo */}
-            <img className={"max-w-20 absolute top-5 left-5"} src={`${logo}`} alt="logo"/>
+            <img
+                id={"login-logo"}
+                className={"max-w-10 top-2 left-2 absolute xs:top-5 xs:left-5 xs:max-w-20"}
+                src={`${logo}`}
+                alt="logo"
+            />
 
             <section className="flex items-center justify-center min-h-screen">
-                <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg p-8 space-y-6">
+                <div className="max-w-9/10 w-full xs:max-w-sm sm:max-w-md bg-white/10 rounded-2xl shadow-lg space-y-6 p-3 xs:p-8">
                     <h2 className="text-2xl font-bold text-center">خوش اومدی</h2>
                     <p className="text-sm text-center text-secondary-txt">
                         به پنل مدیریت وارد شو.
@@ -154,7 +159,6 @@ export default function Login() {
                             />
                             <ErrorMessageInputs msg={errors.password}/>
                         </div>
-
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
                             <CheckBox
