@@ -6,24 +6,43 @@ import AlertModal from "@components/ui/modals/AlertModal";
 import ConfirmModal from "@components/ui/modals/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
+import {LockScreen} from "@components/ui/Fragments"
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
 
-function DropDownAccountOptions({data, className}) {
+function DropDownAccountOptions({data, className, setOpenMenu}) {
     const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;
+
+    const onClickHandler = (callback, event) => {
+        event.stopPropagation();
+
+        if (callback) {
+            callback();
+            return;
+        }
+
+        setOpenMenu(false);
+    }
 
     return (
         <ul className={cn("divide-y divide-disable-txt/30 *:last:hover:bg-rose-600 *:last:active:bg-rose-600", className)}>
             {data.map(link => {
                 return (
-                    <li key={link.name} className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-100 hover:text-white hover:bg-violet-500 active:bg-violet-500 active:text-white *:active:text-white *:hover:text-white *:transition-all *:duration-300 *:rounded-md"}>
+                    <li
+                        key={link.name}
+                        className={"w-full px-4 py-0.5 *:py-1.5 *:hover:opacity-100 hover:text-white hover:bg-violet-500 active:bg-violet-500 active:text-white *:active:text-white *:hover:text-white *:transition-all *:duration-300 *:rounded-md"}>
                         {link.url ? (
-                            <Link to={`${link.url}`} className={"w-full flex flex-row items-start gap-2"}>
+                            <Link
+                                onClick={event => onClickHandler(null, event)}
+                                to={`${link.url}`}
+                                className={"w-full flex flex-row items-start gap-2"}>
                                 {iconElem(link.icon)}
                                 {link.name}
                             </Link>
                         ) : (
-                            <p {...link?.dropDownProps} className={"flex flex-row items-center gap-2 cursor-pointer"}>
+                            <p
+                                onClick={event => onClickHandler(link.callback, event)}
+                                className={"flex flex-row items-center gap-2 cursor-pointer"}>
                                 {iconElem(link.icon)}
                                 {link.name}
                             </p>
@@ -52,10 +71,11 @@ function AccountInfo({className}) {
     )
 }
 
-export default function DropDownAccount({open, className}) {
+export default function DropDownAccount({setOpenMenu, open, className}) {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
+    const [lockScreenOpen, setLockScreenOpen] = useState(false);
     const {setAuthInfo} = useAuth();
 
     // drop down options
@@ -74,12 +94,14 @@ export default function DropDownAccount({open, className}) {
                 setIsOpenAlertModal(true);
                 setAlertModalData({type: "success", message: "خروج موفق بود."})
                 setOpenLogoutModal(false);
+                setLockScreenOpen(true);
 
                 setTimeout(() => {
                     setIsOpenAlertModal(false);
                     setAlertModalData({type: "error", message: ""});
                     setAuthInfo({userData: {}, accessToken: null});
-                }, 4000);
+                    setLockScreenOpen(false);
+                }, 5000);
             } else {
                 console.log("res error:", res)
             }
@@ -91,26 +113,57 @@ export default function DropDownAccount({open, className}) {
     /// drop down option
     const dropDownAccountOptionsData = [
         {icon: "user", url: "/account", name: "اکانت"},
-        {icon: "logout", dropDownProps: {onClick: openLogoutModalHandler}, name: "خروج"},
+        {icon: "logout", callback: openLogoutModalHandler, name: "خروج"},
     ];
 
+    if (!open) return null;
+
     return (
-        <div className={cn("w-58 mt-2 absolute top-full left-0 z-20 bg-main-bg py-2  rounded-md shadow-2xl", className, open ? "block" : "hidden")}>
+        <div
+            className={cn("w-58 mt-2 absolute top-full left-0 z-20 bg-main-bg py-2  rounded-md shadow-2xl", className)}
+        >
 
             {/* account info */}
-            <AccountInfo className={"pb-4 border-b border-disable-txt/50"}/>
+            <AccountInfo
+                className={"pb-4 border-b border-disable-txt/50"}
+            />
 
             {/* drop down options */}
-            <DropDownAccountOptions className={"pt-2"} data={dropDownAccountOptionsData}/>
+            <DropDownAccountOptions
+                setOpenMenu={setOpenMenu}
+                className={"pt-2"}
+                data={dropDownAccountOptionsData}
+            />
 
             {/* confirm logout modals */}
-            <ConfirmModal title={"خروج از حساب"} message={"مطمئنی از حسابت میخوای خارج بشی؟"} onConfirm={logoutHandler} onCancel={closeLogoutModalHandler} isOpen={openLogoutModal} cancelText={"نه"} confirmText={"آره"} dangerMode={true}/>
+            <ConfirmModal
+                title={"خروج از حساب"}
+                message={"مطمئنی از حسابت میخوای خارج بشی؟"}
+                onConfirm={logoutHandler}
+                onCancel={closeLogoutModalHandler}
+                isOpen={openLogoutModal}
+                cancelText={"نه"}
+                confirmText={"آره"}
+                dangerMode={true}
+            />
 
             {/* overlay */}
-            <Overlay flag={openLogoutModal} setFlag={setOpenLogoutModal} z={"z-20"}/>
+            <Overlay
+                z={"z-20"}
+                flag={openLogoutModal}
+                setFlag={setOpenLogoutModal}
+            />
 
             {/* alert modals for success message after logout */}
-            <AlertModal isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData} {...alertModalData}/>
+            <AlertModal
+                {...alertModalData}
+                isOpen={isOpenAlertModal}
+                setData={setAlertModalData}
+                setIsOpen={setIsOpenAlertModal}
+            />
+            <LockScreen
+                isOpen={lockScreenOpen}
+            />
         </div>
     )
 };

@@ -42,13 +42,13 @@ const routes = [
                     },
                     {path: "/email", element: <Email/>},
                     {path: "/user", element: <User/>},
-                    {path: "/rules", element: <Rules/>}
+                    {path: "/rules", element: <Rules/>},
+                    // 404 | not found
+                    {path: "*", element: <NotFound/>}
                 ]
             }
         ]
     },
-    // 404 | not found
-    {path: "*", element: <NotFound/>}
 ]
 
 export default function AppRoutes() {

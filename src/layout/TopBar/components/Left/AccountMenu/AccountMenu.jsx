@@ -21,7 +21,10 @@ export default function Account() {
                 <AccountAvatar className={"cursor-pointer"}/>
 
                 {/* drop down account settings and option */}
-                <DropDownAccount open={open}/>
+                <DropDownAccount
+                    setOpenMenu={setOpen}
+                    open={open}
+                />
             </div>
         </>
     )
