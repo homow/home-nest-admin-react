@@ -5,9 +5,7 @@ import {refresh} from "@api/requests/auth.js";
 const AuthContext = createContext(null);
 
 function AuthProvider({children}) {
-    const [user, setUser] = useState({
-
-    });
+    const [user, setUser] = useState({});
     const [accessToken, setAccessToken] = useState(false);
     const [loading, setLoading] = useState(true);
 
