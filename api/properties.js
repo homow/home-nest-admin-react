@@ -15,7 +15,7 @@ function getBearerToken(req) {
 async function isAdmin(req) {
     const token = getBearerToken(req);
     if (!token) return false;
-    // verify session / get user
+    // verify session / get user session get user (use server client)
     const {data: {user}, error} = await supabase.auth.getUser(token);
     if (error || !user) return false;
     // check role in user_profiles table

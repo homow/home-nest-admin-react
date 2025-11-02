@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
-import {createProperty} from "@api/requests/properties.js"
+import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@utils/api-utils.js"
 
 export default function CreateProperty() {
@@ -25,20 +25,22 @@ export default function CreateProperty() {
 
 
             if (propertyRes?.data?.ok) {
-                console.log("ok:", propertyRes?.data);
+                console.log("ok pr:", propertyRes?.data);
 
+                imagesFormData.current.append("property_id", propertyRes?.data?.id);
+
+                try {
+                    const imgRes = await uploadPropertyImages(imagesFormData);
+                    console.log(imgRes);
+                } catch (e) {
+                    console.log("not ok img:", e);
+                }
             } else {
-                console.log("not ok:", propertyRes);
+                console.log("not ok pr:", propertyRes);
             }
         } catch (e) {
-            console.log("e:", e)
+            console.log("e on pr:", e)
         }
-
-        // بعدا اینو وقتی ملک ثبت شد ایدیشو میذارم بچای این
-        imagesFormData.current.append("property_id", "آیدی_معتبر ملک")
-
-        const res = Array.from(imagesFormData.current);
-        console.log("images:", res);
 
         setLoading(false);
     };
