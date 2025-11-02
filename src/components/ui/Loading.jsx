@@ -15,7 +15,7 @@ export default function Loading({msg = "لطفاً صبر کنید..."}) {
                     >
                         <defs>
                             <linearGradient id="g1" x1="0%" x2="100%">
-                                <stop offset="10%" stopColor="var(--color-orange-600)"/>
+                                <stop offset="10%" stopColor="var(--color-violet-600)"/>
                                 <stop offset="50%" stopColor="#06b6d4"/>
                                 <stop offset="100%" stopColor="var(--color-violet-600)"/>
                             </linearGradient>
@@ -104,7 +104,7 @@ export default function Loading({msg = "لطفاً صبر کنید..."}) {
                             marginLeft: -3,
                             marginTop: -50,
                             borderRadius: "50%",
-                            background: "#f97316",
+                            background: "var(--color-violet-600)",
                             boxShadow: "0 3px 8px rgba(249,115,22,0.28)",
                             transformOrigin: "50% 50%",
                             animation: "orbit 2.4s linear infinite",
