@@ -6,6 +6,7 @@ import {fixPropertyData} from "@utils/api-utils.js"
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
+    const [successCreate, setSuccessCreate] = useState(false);
     const imagesFormData = useRef(null);
 
     useEffect(() => {
@@ -31,6 +32,9 @@ export default function CreateProperty() {
 
                 try {
                     const imgRes = await uploadPropertyImages(imagesFormData);
+
+                    if (imgRes?.data?.ok) {
+                    }
                     console.log(imgRes);
                 } catch (e) {
                     console.log("not ok img:", e);
@@ -50,10 +54,15 @@ export default function CreateProperty() {
             <h3>افزودن ملک جدید</h3>
 
             {/* image property form */}
-            <ImagesForm refData={imagesFormData}/>
+            <ImagesForm
+                successCreate={successCreate}
+                setSuccessCreate={setSuccessCreate}
+                refData={imagesFormData}
+            />
 
             {/* data property form */}
             <CreatePropertyForm
+                successCreate={successCreate}
                 onSubmit={createPropertyHandler}
                 isLoading={loading}
             />

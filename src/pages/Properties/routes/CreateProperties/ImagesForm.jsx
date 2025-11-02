@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
 
-export default function ImagesForm({formRef, refData}) {
+export default function ImagesForm({formRef, refData, successCreate, setSuccessCreate}) {
     const [mainFile, setMainFile] = useState(null);
     const [otherFiles, setOtherFiles] = useState([]);
     const [mainPreview, setMainPreview] = useState("");
@@ -10,7 +10,17 @@ export default function ImagesForm({formRef, refData}) {
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
     const maxSizeMB = 3;
-
+    
+    useEffect(() => {
+        if (successCreate) {
+            setMainFile(null);
+            setMainPreview("");
+            setOtherFiles([]);
+            setOthersPreview([]);
+            setSuccessCreate(false);
+        }
+    }, [setSuccessCreate, successCreate])
+    
     // handle main image
     const handleMainChange = event => {
         const file = event.target.files?.[0];
