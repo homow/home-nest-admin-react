@@ -4,17 +4,13 @@ const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
 }
 
-const uploadPropertyImages = async (dataImg) => {
+const uploadPropertyImages = async dataImg => {
     try {
-        const {data} = await axiosInstance.post("/api/properties-image", dataImg, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+        const {data} = await axiosInstance.post("/api/properties-image", dataImg);
         return data;
     } catch (err) {
         console.error("Upload error:", err.response?.data || err.message);
-        return err;
+        throw err;
     }
 }
 

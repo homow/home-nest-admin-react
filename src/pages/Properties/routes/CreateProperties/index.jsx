@@ -34,6 +34,8 @@ export default function CreateProperty() {
                     const imgRes = await uploadPropertyImages(imagesFormData);
 
                     if (imgRes?.data?.ok) {
+                        console.log(imgRes)
+                        setSuccessCreate(true);
                     }
                     console.log(imgRes);
                 } catch (e) {
