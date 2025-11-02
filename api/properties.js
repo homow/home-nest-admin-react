@@ -69,7 +69,7 @@ export default async function handler(req, res) {
         try {
             const payload = req.body || {};
 
-            const required = ['title', 'category', 'price', 'description', 'province_and_city', 'city', 'features'];
+            const required = ['title', 'category', 'description', 'province_and_city', 'features', 'address'];
             for (const f of required) {
                 if (payload[f] === undefined || payload[f] === null || (typeof payload[f] === 'string' && payload[f].trim() === '')) {
                     return res.status(400).json({error: 'MISSING_FIELD', field: f});
@@ -109,7 +109,7 @@ export default async function handler(req, res) {
                 category: String(payload.category),
                 price: price,
                 description: String(payload.description),
-                province_and_city: `${String(payload?.province).trim()}, ${String(payload.city).trim()}`,
+                province_and_city: payload.province_and_city ? String(payload.province_and_city).trim() : null,
                 address: payload.address ? String(payload.address) : null,
                 features: payload.features,
                 main_image: payload.main_image || null,
