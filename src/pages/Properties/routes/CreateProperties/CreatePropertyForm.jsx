@@ -6,22 +6,24 @@ import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
+const initialFormData = {
+    title: "",
+    property_number: "",
+    category: "sale",
+    price: "",
+    price_with_discount: "",
+    description: "",
+    province_and_city: "",
+    address: "",
+    features: [],
+    discount_until: "",
+    tags: "",
+    stock: 1,
+    metadata: "",
+}
+
 export default function CreatePropertyForm({onSubmit, isLoading, successCreate}) {
-    const [formData, setFormData] = useState({
-        title: "",
-        property_number: "",
-        category: "sale",
-        price: "",
-        price_with_discount: "",
-        description: "",
-        province_and_city: "",
-        address: "",
-        features: [],
-        discount_until: "",
-        tags: "",
-        stock: 1,
-        metadata: "",
-    });
+    const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({
         title: "",
         description: "",
@@ -35,21 +37,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
     // reset form data after success create a property
     useEffect(() => {
         if (successCreate) {
-            setFormData({
-                title: "",
-                property_number: "",
-                category: "sale",
-                price: "",
-                price_with_discount: "",
-                description: "",
-                province_and_city: "",
-                address: "",
-                features: [],
-                discount_until: "",
-                tags: "",
-                stock: 1,
-                metadata: "",
-            })
+            setFormData(initialFormData);
         }
     }, [successCreate]);
 

@@ -10,7 +10,8 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
     const maxSizeMB = 3;
-    
+
+    // reset images form data after success create a property
     useEffect(() => {
         if (successCreate) {
             setMainFile(null);
