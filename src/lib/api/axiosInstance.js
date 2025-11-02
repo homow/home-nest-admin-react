@@ -46,6 +46,7 @@ axiosInstance.interceptors.response.use(
                     })
                     .catch(err => {
                         refreshPromise = null;
+                        console.log(err)
                         throw err;
                     });
             }

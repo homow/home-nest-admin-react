@@ -1,7 +1,8 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
-import {parsePriceFromString, buildObjectFromKeyValueArray} from "@/lib/utils/helper.js"
+import {createProperty} from "@api/requests/properties.js"
+import {fixPropertyData} from "@utils/api-utils.js"
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
@@ -11,26 +12,28 @@ export default function CreateProperty() {
         document.title = "افزودن ملک | آشیانه";
     }, []);
 
-    const createPropertyHandler = data => {
+    const createPropertyHandler = async data => {
         setLoading(true);
-        const fixData = {
-            tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
-            price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
-            price: data.price.trim() ? parsePriceFromString(data.price) : "توافقی",
-            metadata: data.metadata.trim() ? buildObjectFromKeyValueArray(data.metadata.split("،")) : undefined,
-            discount_until: data.discount_until.trim() ? new Date(data.discount_until).toISOString() : undefined,
-            title: data.title.trim(),
-            description: data.description.trim(),
-            province_and_city: data.province_and_city.trim(),
-            address: data.address.trim(),
-            property_number: data.property_number.trim() ? data.property_number.trim() : undefined,
-        }
+        const fixData = fixPropertyData(data);
         const dataProperty = {
             ...data,
             ...fixData
         }
 
-        console.log("dataProperty:", dataProperty);
+        try {
+            const propertyRes = await createProperty(dataProperty);
+
+
+            if (propertyRes?.data?.ok) {
+                console.log("ok:", propertyRes?.data);
+
+            } else {
+                console.log("not ok:", propertyRes);
+            }
+        } catch (e) {
+            console.log("e:", e)
+        }
+
         // بعدا اینو وقتی ملک ثبت شد ایدیشو میذارم بچای این
         imagesFormData.current.append("property_id", "آیدی_معتبر ملک")
 
