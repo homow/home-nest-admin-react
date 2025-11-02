@@ -69,30 +69,37 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         setOthersPreview(files.map(f => URL.createObjectURL(f)));
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const imagesFormData = new FormData()
-
     useEffect(() => {
         const formData = new FormData();
 
         if (mainFile) {
             formData.append("main_image", mainFile);
-            imagesFormData.append("main_image", mainFile);
         }
 
         if (otherFiles.length > 0) {
             otherFiles.forEach(f => formData.append("images", f));
-            otherFiles.forEach(f => imagesFormData.append("images", f));
         }
 
         refData.current = formData;
-    }, [imagesFormData, mainFile, otherFiles, refData]);
+    }, [mainFile, otherFiles, refData]);
 
     const submitHandler = async event => {
         event.preventDefault();
-        imagesFormData.append("property_id", "7bb3393a-fd94-472b-aca6-19397271f688")
+
+        const formData = new FormData();
+
+        if (mainFile) {
+            formData.append("main_image", mainFile);
+        }
+
+        if (otherFiles.length > 0) {
+            otherFiles.forEach(f => formData.append("images", f));
+        }
+
+        formData.append("property_id", "7bb3393a-fd94-472b-aca6-19397271f688")
+
         try {
-            const imgRes = await uploadPropertyImages(imagesFormData);
+            const imgRes = await uploadPropertyImages(formData);
             console.log(imgRes);
         } catch (e) {
             console.log(e)
