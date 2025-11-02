@@ -62,6 +62,7 @@ const useAuth = () => {
 export {AuthProvider, useAuth};
 
 {
+    // eslint-disable-next-line
     const exampleUser = {
         id: "1",
         role: "admin",

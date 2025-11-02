@@ -316,7 +316,7 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
                         name="tags"
                         value={formData.tags}
                         onChange={event => handleChange("tags", event.target.value)}
-                        placeholder="مثلاً: نوساز، غرب_تهران"
+                        placeholder="مثلاً: نوساز، صدرا_شیراز"
                     />
 
                     {/* features and stock */}
