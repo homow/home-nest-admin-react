@@ -12,7 +12,7 @@ export default function NotFound() {
         <section className="h-full flex flex-col items-center justify-center gap-6 px-4 text-center">
             <h1 className="text-6xl font-extrabold text-rose-500">404</h1>
             <p className="text-lg text-gray-700 dark:text-gray-300">
-                صفحه‌ای که دنبال آن بودید پیدا نشد
+                صفحه‌ای که دنبالشی وجود نداره.
             </p>
 
             <div className="flex gap-4 mt-4 flex-wrap justify-center">

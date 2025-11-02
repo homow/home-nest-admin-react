@@ -31,6 +31,7 @@ export default function CreateProperty() {
         }
 
         console.log("dataProperty:", dataProperty);
+        // بعدا اینو وقتی ملک ثبت شد ایدیشو میذارم بچای این
         imagesFormData.current.append("property_id", 124124)
 
         const res = Array.from(imagesFormData.current);
