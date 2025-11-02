@@ -6,7 +6,7 @@ import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function CreatePropertyForm({onSubmit, isLoading}) {
+export default function CreatePropertyForm({onSubmit, isLoading, successCreate}) {
     const [formData, setFormData] = useState({
         title: "",
         property_number: "",
@@ -31,6 +31,27 @@ export default function CreatePropertyForm({onSubmit, isLoading}) {
         price: "",
         discount: ""
     });
+
+    // reset form data after success create a property
+    useEffect(() => {
+        if (successCreate) {
+            setFormData({
+                title: "",
+                property_number: "",
+                category: "sale",
+                price: "",
+                price_with_discount: "",
+                description: "",
+                province_and_city: "",
+                address: "",
+                features: [],
+                discount_until: "",
+                tags: "",
+                stock: 1,
+                metadata: "",
+            })
+        }
+    }, [successCreate]);
 
     // handle changes in data form
     const handleChange = (name, value) => {
