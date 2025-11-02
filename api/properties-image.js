@@ -1,4 +1,4 @@
-import formidable from 'formidable';
+import { formidable } from 'formidable';
 import fs from 'fs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     if (!token) return res.status(401).json({error: 'Missing token'});
 
     try {
-        const form = new formidable.IncomingForm({maxFileSize: MAX_BYTES});
+        const form = formidable({ maxFileSize: MAX_BYTES });
 
         const {fields, files} = await new Promise((resolve, reject) =>
             form.parse(req, (err, fields, files) => {
