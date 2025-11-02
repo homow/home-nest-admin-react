@@ -6,6 +6,7 @@ import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
+// initial value in form data
 const initialFormData = {
     title: "",
     property_number: "",

@@ -17,7 +17,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     config => {
-        const token = accessTokenGetter?.();
+        const token = accessTokenGetter;
         if (token) config.headers.Authorization = `Bearer ${token}`;
 
         if (config.body instanceof FormData) {
@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        if (!originalRequest._retry && !originalRequest._retry && error.response?.status === 401) {
+        if (originalRequest && !originalRequest._retry && error.response?.status === 401) {
             originalRequest._retry = true;
 
             if (!refreshPromise) {

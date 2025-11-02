@@ -69,7 +69,7 @@ export default async function handler(req, res) {
         try {
             const payload = req.body || {};
 
-            const required = ['title', 'category', 'price', 'description', 'province', 'city', 'features'];
+            const required = ['title', 'category', 'price', 'description', 'province_and_city', 'city', 'features'];
             for (const f of required) {
                 if (payload[f] === undefined || payload[f] === null || (typeof payload[f] === 'string' && payload[f].trim() === '')) {
                     return res.status(400).json({error: 'MISSING_FIELD', field: f});
