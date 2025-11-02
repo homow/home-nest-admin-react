@@ -1,4 +1,4 @@
-import { formidable } from 'formidable';
+import {formidable} from 'formidable';
 import fs from 'fs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     if (!token) return res.status(401).json({error: 'Missing token'});
 
     try {
-        const form = formidable({ maxFileSize: MAX_BYTES });
+        const form = formidable({maxFileSize: MAX_BYTES});
 
         const {fields, files} = await new Promise((resolve, reject) =>
             form.parse(req, (err, fields, files) => {
@@ -25,6 +25,10 @@ export default async function handler(req, res) {
                 return resolve({fields, files});
             })
         );
+
+        // 🟢 اصلاح: همیشه رشته UUID
+        let propertyId = fields.property_id;
+        if (Array.isArray(propertyId)) propertyId = propertyId[0];
 
         const allFiles = [];
         if (files.main_image) allFiles.push(...(Array.isArray(files.main_image) ? files.main_image : [files.main_image]));
@@ -62,14 +66,13 @@ export default async function handler(req, res) {
             });
             if (!lookup.ok) throw new Error('IMAGE_LOOKUP_FAILED');
             const arr = await lookup.json();
-            if (Array.isArray(arr) && arr.length > 0) {
-                return {path: arr[0].path, url: arr[0].url, hash};
-            }
+            if (Array.isArray(arr) && arr.length > 0) return {path: arr[0].path, url: arr[0].url, hash};
 
             // upload new
             const original = fileObj.originalFilename || fileObj.name || `file-${Date.now()}`;
             const ext = (original.split('.').pop() || 'jpg').toLowerCase();
-            const filename = `properties/${fields.property_id ? fields.property_id : 'shared'}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const filename = `properties/${propertyId ? propertyId : 'shared'}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
             const {error: upErr} = await s.storage.from(BUCKET).upload(filename, buffer, {
                 contentType: fileObj.mimetype || undefined,
                 upsert: false,
@@ -94,10 +97,9 @@ export default async function handler(req, res) {
                     apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
                     'Prefer': 'return=representation'
                 },
-                body: JSON.stringify([{property_id: fields.property_id || null, path: filename, url, is_main: false, owner_id: userId, hash}])
+                body: JSON.stringify([{property_id: propertyId || null, path: filename, url, is_main: false, owner_id: userId, hash}])
             });
             if (!insertRes.ok) {
-                // cleanup uploaded file
                 await s.storage.from(BUCKET).remove([filename]).catch(() => {
                 });
                 const txt = await insertRes.text();
@@ -110,8 +112,8 @@ export default async function handler(req, res) {
         if (files.main_image) {
             const f = Array.isArray(files.main_image) ? files.main_image[0] : files.main_image;
             const resFile = await processFile(f);
-            // update property main_image
-            await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(fields.property_id)}`, {
+
+            await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(propertyId)}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,13 +123,14 @@ export default async function handler(req, res) {
                 },
                 body: JSON.stringify({main_image: resFile.url})
             });
+
             uploaded.push({field: 'main_image', ...resFile});
         }
 
         if (files.images) {
             const images = Array.isArray(files.images) ? files.images : [files.images];
-            // fetch current images
-            const propResp = await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(fields.property_id)}&select=images`, {
+
+            const propResp = await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(propertyId)}&select=images`, {
                 method: 'GET',
                 headers: {apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`}
             });
@@ -140,8 +143,7 @@ export default async function handler(req, res) {
                 uploaded.push({field: 'images', ...resFile});
             }
 
-            // update images array
-            await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(fields.property_id)}`, {
+            await fetch(`${process.env.SUPABASE_URL}/rest/v1/properties?id=eq.${encodeURIComponent(propertyId)}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,7 +155,6 @@ export default async function handler(req, res) {
             });
         }
 
-        // cleanup temp files
         try {
             const all = [];
             if (files.main_image) all.push(...(Array.isArray(files.main_image) ? files.main_image : [files.main_image]));
