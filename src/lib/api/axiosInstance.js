@@ -39,10 +39,18 @@ axiosInstance.interceptors.response.use(
             originalRequest._retry = true;
 
             if (!refreshPromise) {
-                refreshPromise = refresh().finally(() => refreshPromise = null);
+                refreshPromise = refresh()
+                    .then(newToken => {
+                        refreshPromise = null;
+                        return newToken;
+                    })
+                    .catch(err => {
+                        refreshPromise = null;
+                        throw err;
+                    });
             }
 
-            const newToken = await refreshPromise();
+            const newToken = await refreshPromise;
 
             if (newToken) {
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
