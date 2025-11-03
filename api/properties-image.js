@@ -1,43 +1,28 @@
-// api/proxy-upload.js
+export const config = {api: {bodyParser: false}};
+
 export default async function handler(req, res) {
-    try {
-        if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
+    if (req.method !== 'POST') return res.status(405).end();
 
-        const contentType = req.headers['content-type'] || '';
-        if (!contentType.includes('multipart/form-data')) {
-            return res.status(400).json({error: 'Content-Type must be multipart/form-data'});
-        }
+    const EDGE_FUNCTION_URL = process.env.EDGE_FUNCTION_URL;
+    const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!EDGE_FUNCTION_URL || !SERVICE_ROLE) return res.status(500).json({error: 'not configured'});
 
-        const EDGE_URL = process.env.UPLOAD_IMAGE_FUNCTION;
-        const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // copy content-type exactly
+    const contentType = req.headers['content-type'];
+    const headers = {
+        Authorization: `Bearer ${SERVICE_ROLE}`,
+    };
+    if (contentType) headers['Content-Type'] = contentType;
 
-        if (!EDGE_URL) return res.status(500).json({error: 'Missing UPLOAD_IMAGE_FUNCTION on server'});
-        if (!SERVICE_ROLE) return res.status(500).json({error: 'Missing SUPABASE_SERVICE_ROLE_KEY on server'});
+    // forward the raw request body stream using fetch (node 18+ global fetch)
+    const response = await fetch(EDGE_FUNCTION_URL, {
+        method: 'POST',
+        headers,
+        body: req, // forward the incoming stream directly
+    });
 
-        // read raw body buffer (works in Vercel Node runtime)
-        const chunks = [];
-        for await (const chunk of req) chunks.push(chunk);
-        const body = Buffer.concat(chunks);
-
-        const headers = {
-            'Content-Type': contentType,
-            'Authorization': `Bearer ${SERVICE_ROLE}`
-        };
-
-        const forwardRes = await fetch(EDGE_URL, {
-            method: 'POST',
-            headers,
-            body,
-        });
-
-        const respText = await forwardRes.text();
-        const respContentType = forwardRes.headers.get('content-type') || 'text/plain';
-
-        res.status(forwardRes.status);
-        res.setHeader('content-type', respContentType);
-        return res.send(respText);
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({error: err.message || String(err)});
-    }
+    const respBuffer = await response.arrayBuffer();
+    res.status(response.status);
+    for (const [k, v] of response.headers) res.setHeader(k, v);
+    res.send(Buffer.from(respBuffer));
 }

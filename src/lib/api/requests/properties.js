@@ -6,11 +6,15 @@ const createProperty = async data => {
 
 const uploadPropertyImages = async dataImg => {
     try {
-        const {data} = await axiosInstance.post("/api/properties-image", dataImg);
+        const {data} = await axiosInstance.post("/api/properties-image", dataImg, {
+            headers: {"Content-Type": undefined}
+        });
         return data;
     } catch (err) {
-        console.error("Upload error:", err.response?.data || err.message);
-        throw err;
+        console.log(err)
+        const rawError = err.response?.data || err.message;
+        console.error("Upload error:", rawError);
+        return err;
     }
 }
 
