@@ -1,37 +1,15 @@
 import {useEffect, useRef, useState} from "react";
 import {cn} from "@utils/ui-utils.js";
+import {getBgHeader, getBtnBg, getTitle, getBgBar} from "@utils/alertHelpers";
 
 export default function AlertModal({message = "", type, isOpen = false, setIsOpen, setData, closeDelay = 5000}) {
     const [barWidth, setBarWidth] = useState(100)
     const buttonRef = useRef(null);
 
-    const bgHeader = {
-        error: "text-rose-500",
-        success: "text-emerald-500",
-        warning: "text-amber-500",
-        info: "text-sky-500"
-    }[type] || "text-gray-500 dark:text-gray-300";
-
-    const btnBg = {
-        error: "bg-rose-500 hover:bg-rose-600",
-        success: "bg-emerald-500 hover:bg-emerald-600",
-        warning: "bg-amber-500 hover:bg-amber-600",
-        info: "bg-sky-500 hover:bg-sky-600"
-    }[type] || "bg-gray-500 hover:bg-gray-600";
-
-    const title = {
-        error: "خطا",
-        success: "موفقیت",
-        warning: "هشدار",
-        info: "اطلاع"
-    }[type] || "پیام";
-
-    const bgBar = {
-        error: "bg-rose-500",
-        success: "bg-emerald-500",
-        warning: "bg-amber-500",
-        info: "bg-sky-500"
-    }[type] || "bg-gray-500";
+    const bgHeader = getBgHeader(type);
+    const btnBg = getBtnBg(type);
+    const title = getTitle(type);
+    const bgBar = getBgBar(type);
 
     // close with Escape
     useEffect(() => {
@@ -50,7 +28,7 @@ export default function AlertModal({message = "", type, isOpen = false, setIsOpe
         }
     }, [isOpen, setIsOpen]);
 
-    // progress bar
+    // progress bar and auto close
     useEffect(() => {
         if (!isOpen) return;
 
