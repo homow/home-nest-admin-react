@@ -28,9 +28,7 @@ function streamToBuffer(stream) {
 }
 
 export const config = {
-    api: {
-        bodyParser: false, // let formidable handle it
-    },
+    api: {bodyParser: false},
 };
 
 export default async function handler(req, res) {
@@ -43,17 +41,15 @@ export default async function handler(req, res) {
 
         await form.parse(req, async (err, fields, files) => {
             try {
-                if (err) {
-                    return res.status(400).json({error: "invalid_form"});
-                }
+                if (err) return res.status(400).json({error: "invalid_form"});
 
                 const property_id = String(fields?.property_id || "");
+                const main_flag = String(fields?.is_main || "false") === "true";
                 if (!property_id || !isUuid(property_id)) {
                     return res.status(400).json({error: "invalid_property_id"});
                 }
 
                 const fileEntries = [];
-
                 if (files?.main_image) {
                     const f = Array.isArray(files.main_image) ? files.main_image[0] : files.main_image;
                     fileEntries.push({field: "main_image", file: f});
@@ -82,12 +78,16 @@ export default async function handler(req, res) {
                     } else if (f?._readable) {
                         buffer = await streamToBuffer(f._readable);
                     } else {
-                        return res.status(400).json({ error: "invalid_file_source" });
+                        return res.status(400).json({error: "invalid_file_source"});
+                    }
+
+                    if (buffer.byteLength === 0 || buffer.byteLength > MAX_FILE_SIZE) {
+                        return res.status(400).json({error: "file_size_invalid"});
                     }
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // check existing by hash
+                    // check existing image_record by hash
                     const {data: existing, error: fetchErr} = await supabase
                         .from("image_records")
                         .select("id,path,url")
@@ -97,88 +97,131 @@ export default async function handler(req, res) {
 
                     if (fetchErr) return fetchErr;
 
+                    let imageRecordId;
+                    let imagePath;
+                    let imageUrl;
+                    let reused = false;
+
                     if (existing) {
+                        reused = true;
+                        imageRecordId = existing.id;
+                        imagePath = existing.path;
+                        imageUrl = existing.url;
+                    } else {
+                        const originalName = (f.originalFilename || "file").toString();
+                        const ext = (originalName.split(".").pop() || "bin")
+                            .replace(/[^a-z0-9]/gi, "")
+                            .toLowerCase();
+                        const filename = `${Date.now()}-${randomUUID()}.${ext}`;
+                        const path = `properties/${property_id}/${filename}`;
+
+                        const upload = await supabase.storage.from("img").upload(path, buffer, {
+                            cacheControl: "3600",
+                            upsert: false,
+                            contentType: mime,
+                        });
+                        if (upload.error) return upload.error;
+
+                        const {data: signedData, error: signedErr} = await supabase.storage
+                            .from("img")
+                            .createSignedUrl(path, 60 * 30);
+
+                        if (signedErr || !signedData) {
+                            const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                            imageUrl = publicUrl;
+                        } else {
+                            imageUrl = signedData.signedUrl;
+                        }
+
+                        const ins = await supabase
+                            .from("image_records")
+                            .insert({hash, path, url: imageUrl})
+                            .select()
+                            .maybeSingle();
+
+                        if (ins.error) {
+                            await supabase.storage.from("img").remove([path]);
+                            const {data: existing2} = await supabase
+                                .from("image_records")
+                                .select("id,path,url")
+                                .eq("hash", hash)
+                                .limit(1)
+                                .maybeSingle();
+                            if (!existing2) return ins.error;
+                            imageRecordId = existing2.id;
+                            imagePath = existing2.path;
+                            imageUrl = existing2.url;
+                            reused = true;
+                        } else {
+                            imageRecordId = ins.data.id;
+                            imagePath = path;
+                        }
+                    }
+
+                    // insert into property_images if not exists
+                    const {data: existingLink} = await supabase
+                        .from("property_images")
+                        .select("id,is_main")
+                        .match({property_id, image_record_id: imageRecordId})
+                        .limit(1)
+                        .maybeSingle();
+
+                    if (!existingLink) {
+                        const shouldSetMain = entry.field === "main_image" || main_flag;
+                        if (shouldSetMain) {
+                            await supabase
+                                .from("property_images")
+                                .update({is_main: false})
+                                .eq("property_id", property_id)
+                                .eq("is_main", true);
+                        }
+
+                        const linkInsert = await supabase
+                            .from("property_images")
+                            .insert({
+                                property_id,
+                                image_record_id: imageRecordId,
+                                is_main: shouldSetMain,
+                            })
+                            .select()
+                            .maybeSingle();
+
+                        if (linkInsert.error) return linkInsert.error;
+
                         results.push({
-                            id: existing?.id,
-                            path: existing?.path,
-                            url: existing?.url,
-                            is_main: entry.field === "main_image",
+                            id: linkInsert.data.id,
+                            image_record_id: imageRecordId,
+                            path: imagePath,
+                            url: imageUrl,
+                            is_main: linkInsert.data.is_main,
+                            reused,
+                        });
+                    } else {
+                        const shouldSetMain = entry.field === "main_image" || main_flag;
+                        if (shouldSetMain && !existingLink.is_main) {
+                            await supabase
+                                .from("property_images")
+                                .update({is_main: false})
+                                .eq("property_id", property_id)
+                                .eq("is_main", true);
+                            await supabase
+                                .from("property_images")
+                                .update({is_main: true})
+                                .eq("id", existingLink.id);
+                        }
+
+                        results.push({
+                            id: existingLink.id,
+                            image_record_id: imageRecordId,
+                            path: imagePath,
+                            url: imageUrl,
+                            is_main: existingLink.is_main || shouldSetMain,
                             reused: true,
                         });
-                        continue;
-                    }
-
-                    const originalName = (f.originalFilename || "file").toString();
-                    const ext = (originalName.split(".").pop() || "bin")
-                        .replace(/[^a-z0-9]/gi, "")
-                        .toLowerCase();
-                    const filename = `${Date.now()}-${randomUUID()}.${ext}`;
-                    const path = `properties/${property_id}/${filename}`;
-
-                    const upload = await supabase.storage.from("img").upload(path, buffer, {
-                        cacheControl: "3600",
-                        upsert: false,
-                        contentType: mime,
-                    });
-                    if (upload.error) return upload.error;
-
-                    const {data: signedData, error: signedErr} = await supabase.storage
-                        .from("img")
-                        .createSignedUrl(path, 60 * 30);
-
-                    let url;
-                    if (signedErr || !signedData) {
-                        const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
-                        url = publicUrl;
-                    } else {
-                        url = signedData.signedUrl;
-                    }
-
-                    results.push({
-                        id: null,
-                        path,
-                        url,
-                        is_main: entry.field === "main_image",
-                        reused: false,
-                    });
-
-                    // insert record
-                    const insertPayload = {
-                        property_id,
-                        path,
-                        url,
-                        is_main: entry.field === "main_image",
-                        hash,
-                    };
-
-                    const ins = await supabase.from("image_records").insert(insertPayload).select().maybeSingle();
-                    if (ins.error) {
-                        // cleanup uploaded file
-                        await supabase.storage.from("img").remove([path]);
-                        const {data: existing2} = await supabase
-                            .from("image_records")
-                            .select("id,path,url")
-                            .eq("hash", hash)
-                            .limit(1)
-                            .maybeSingle();
-                        if (existing2) {
-                            results[results.length - 1] = {
-                                id: existing2?.id,
-                                path: existing2?.path,
-                                url: existing2?.url,
-                                is_main: entry.field === "main_image",
-                                reused: true,
-                            };
-                        } else {
-                            return ins.error;
-                        }
-                    } else {
-                        results[results.length - 1].id = ins.data.id;
                     }
                 }
 
-                // update property images and main_image
-                const main = results.find((r) => r.is_main);
+                // Update properties.images and main_image
                 const urls = results.map((r) => r.url);
                 if (urls.length > 0) {
                     const {data: prop} = await supabase
@@ -186,12 +229,20 @@ export default async function handler(req, res) {
                         .select("images")
                         .eq("id", property_id)
                         .maybeSingle();
+
                     if (!prop) return res.status(404).json({error: "property_not_found"});
-                    const existingImages = Array.isArray(prop?.images) ? prop?.images : [];
+
+                    const existingImages = Array.isArray(prop.images) ? prop.images : [];
                     const newImages = existingImages.concat(urls);
+                    const main = results.find((r) => r.is_main);
                     const updatePayload = {images: newImages};
                     if (main) updatePayload.main_image = main.url;
-                    const upd = await supabase.from("properties").update(updatePayload).eq("id", property_id);
+
+                    const upd = await supabase
+                        .from("properties")
+                        .update(updatePayload)
+                        .eq("id", property_id);
+
                     if (upd.error) return upd.error;
                 }
 
