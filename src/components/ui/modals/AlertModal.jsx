@@ -51,31 +51,14 @@ export default function AlertModal({message = "", type, isOpen = false, setIsOpe
         }
     }, [isOpen, setIsOpen]);
 
-    // auto close after many seconds
-    useEffect(() => {
-        if (isOpen) {
-            // cleanUp timeOut (if exist)
-            if (alertRef.current) clearTimeout(alertRef.current);
-
-            // add new timer
-            alertRef.current = setTimeout(() => {
-                setIsOpen(false);
-                setData && setData({type: null, message: ""});
-            }, closeDelay);
-        }
-
-        // cleanUp timeOut
-        return () => {
-            if (alertRef.current) clearTimeout(alertRef.current);
-        }
-    }, [closeDelay, isOpen, setData, setIsOpen]);
-
     // progress bar
     useEffect(() => {
+        if (!isOpen) return;
+
         let startTime;
         let animationFrame;
 
-        const animate = (timestamp) => {
+        const animate = timestamp => {
             if (!startTime) startTime = timestamp;
             const elapsed = timestamp - startTime;
             const progress = Math.min(elapsed / closeDelay, 1);
@@ -83,18 +66,23 @@ export default function AlertModal({message = "", type, isOpen = false, setIsOpe
 
             if (progress < 1) {
                 animationFrame = requestAnimationFrame(animate);
+            } else {
+                setIsOpen(false);
+                setData && setData({type: null, message: ""});
             }
         };
 
         if (isOpen) {
             setBarWidth(100);
             animationFrame = requestAnimationFrame(animate);
+        } else {
+            return;
         }
 
         return () => {
             cancelAnimationFrame(animationFrame);
         };
-    }, [isOpen, closeDelay]);
+    }, [isOpen, closeDelay, setIsOpen, setData]);
 
     if (!isOpen) return null;
 
