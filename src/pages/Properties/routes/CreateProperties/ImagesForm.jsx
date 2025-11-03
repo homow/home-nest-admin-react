@@ -139,8 +139,6 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
                     )}
                 </div>
             </div>
-
-            <button type={"submit"} className={"bg-violet-500 p-2"}>ثبت</button>
         </form>
     )
 };

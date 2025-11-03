@@ -1,6 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
+import AlertModal from "@components/ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@utils/api-utils.js"
 
@@ -8,10 +9,17 @@ export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
     const [successCreate, setSuccessCreate] = useState(false);
     const imagesFormData = useRef(null);
+    const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
+    const [alertModalData, setAlertModalData] = useState({});
 
     useEffect(() => {
         document.title = "افزودن ملک | آشیانه";
     }, []);
+
+    const openAlertModal = data => {
+        setIsOpenAlertModal(true);
+        setAlertModalData({...data});
+    }
 
     const createPropertyHandler = async data => {
         setLoading(true);
@@ -33,18 +41,24 @@ export default function CreateProperty() {
                 try {
                     const imgRes = await uploadPropertyImages(imagesFormData);
 
-                    if (imgRes?.data?.ok) {
-                        console.log(imgRes)
+                    if (imgRes?.status === "ok") {
                         setSuccessCreate(true);
+                        openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."})
+                    } else {
+                        openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."})
                     }
+
                     console.log(imgRes);
                 } catch (e) {
+                    openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."})
                     console.log("not ok img:", e);
                 }
             } else {
+                openAlertModal({type: "error", message: "محصول اضافه نشد."});
                 console.log("not ok pr:", propertyRes);
             }
         } catch (e) {
+            openAlertModal({type: "error", message: "محصول اضافه نشد."});
             console.log("e on pr:", e)
         }
 
@@ -53,6 +67,9 @@ export default function CreateProperty() {
 
     return (
         <div className={"space-y-12"}>
+            <AlertModal
+
+            />
             <h3>افزودن ملک جدید</h3>
 
             {/* image property form */}
