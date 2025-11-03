@@ -59,8 +59,8 @@ export default async function handler(req, res) {
                     fileEntries.push({field: "main_image", file: f});
                 }
                 if (files?.images) {
-                    const imgs = Array.isArray(files.images) ? files.images : [files.images];
-                    for (const f of imgs) fileEntries.push({field: "images", file: f});
+                    const img = Array.isArray(files.images) ? files.images : [files.images];
+                    for (const f of img) fileEntries.push({field: "images", file: f});
                 }
 
                 if (fileEntries.length === 0) {
@@ -79,12 +79,11 @@ export default async function handler(req, res) {
                     let buffer;
                     if (f.filepath) {
                         buffer = await fs.readFile(f.filepath);
-                    } else if (f._readable) {
+                    } else if (f?._readable) {
                         buffer = await streamToBuffer(f._readable);
                     } else {
                         return res.status(400).json({ error: "invalid_file_source" });
                     }
-                    console.log(buffer);
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
@@ -100,9 +99,9 @@ export default async function handler(req, res) {
 
                     if (existing) {
                         results.push({
-                            id: existing.id,
-                            path: existing.path,
-                            url: existing.url,
+                            id: existing?.id,
+                            path: existing?.path,
+                            url: existing?.url,
                             is_main: entry.field === "main_image",
                             reused: true,
                         });
@@ -164,9 +163,9 @@ export default async function handler(req, res) {
                             .maybeSingle();
                         if (existing2) {
                             results[results.length - 1] = {
-                                id: existing2.id,
-                                path: existing2.path,
-                                url: existing2.url,
+                                id: existing2?.id,
+                                path: existing2?.path,
+                                url: existing2?.url,
                                 is_main: entry.field === "main_image",
                                 reused: true,
                             };
@@ -188,7 +187,7 @@ export default async function handler(req, res) {
                         .eq("id", property_id)
                         .maybeSingle();
                     if (!prop) return res.status(404).json({error: "property_not_found"});
-                    const existingImages = Array.isArray(prop.images) ? prop.images : [];
+                    const existingImages = Array.isArray(prop?.images) ? prop?.images : [];
                     const newImages = existingImages.concat(urls);
                     const updatePayload = {images: newImages};
                     if (main) updatePayload.main_image = main.url;
