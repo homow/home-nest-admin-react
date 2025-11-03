@@ -4,7 +4,6 @@ import {cn} from "@utils/ui-utils.js";
 export default function AlertModal({message = "", type, isOpen = false, setIsOpen, setData, closeDelay = 5000}) {
     const [barWidth, setBarWidth] = useState(100)
     const buttonRef = useRef(null);
-    const alertRef = useRef(null);
 
     const bgHeader = {
         error: "text-rose-500",
