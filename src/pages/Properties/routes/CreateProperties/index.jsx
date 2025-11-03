@@ -68,7 +68,10 @@ export default function CreateProperty() {
     return (
         <div className={"space-y-12"}>
             <AlertModal
-
+                {...alertModalData}
+                isOpen={isOpenAlertModal}
+                setData={setAlertModalData}
+                setIsOpen={setIsOpenAlertModal}
             />
             <h3>افزودن ملک جدید</h3>
 
