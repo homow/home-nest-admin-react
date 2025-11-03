@@ -1,7 +1,9 @@
 import {randomUUID} from "node:crypto";
 import {IncomingForm} from "formidable";
-import {Readable} from "stream";
-import supabase from "./config/supabaseServer.js";
+import fs from "fs/promises";
+import supabaseServer from "./config/supabaseServer.js";
+
+const supabase = supabaseServer();
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp"];
@@ -74,10 +76,15 @@ export default async function handler(req, res) {
                         return res.status(400).json({error: "file_type_not_allowed"});
                     }
 
-                    const buffer = await streamToBuffer(f._readable || Readable.from([]));
-                    if (buffer.byteLength === 0 || buffer.byteLength > MAX_FILE_SIZE) {
-                        return res.status(400).json({error: "file_size_invalid"});
+                    let buffer;
+                    if (f.filepath) {
+                        buffer = await fs.readFile(f.filepath);
+                    } else if (f._readable) {
+                        buffer = await streamToBuffer(f._readable);
+                    } else {
+                        return res.status(400).json({ error: "invalid_file_source" });
                     }
+                    console.log(buffer);
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
