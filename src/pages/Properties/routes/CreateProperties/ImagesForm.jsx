@@ -86,9 +86,10 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>
-            <h4 className={"mb-4 text-amber-500"}>
-                توجه: سایز هر تصویر باید زیر 3 مگابایت باشه
-            </h4>
+            <p className={"mb-4"}>
+                <span className={"font-bold text-amber-500"}>توجه: </span>
+                سایز هر تصویر باید زیر 3 مگابایت باشه
+            </p>
             {/* alert modal */}
             <AlertModal
                 {...alertModalData}

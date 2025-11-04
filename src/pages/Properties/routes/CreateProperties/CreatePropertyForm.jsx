@@ -111,7 +111,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
-            <h4>فیلدهایی که با <RedStarField/> مشخص شدن اجباری، و بقیه فیلدها اختیاری هستند.</h4>
+            <p><span className={"text-amber-500 font-bold"}>توجه: </span>فیلدهایی که با <RedStarField/> مشخص شدن اجباری، و بقیه فیلدها اختیاری هستند.</p>
             <div className={"space-y-8 @6xl/main:grid grid-cols-2 gap-x-4"}>
                 {/* title and id */}
                 <div className={"multi-inputs-style"}>
