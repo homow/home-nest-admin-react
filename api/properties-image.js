@@ -4,7 +4,7 @@ import supabaseServer from "./config/supabaseServer.js";
 
 const supabase = supabaseServer();
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp"];
 
 function isUuid(v) {
