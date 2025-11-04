@@ -98,25 +98,22 @@ export default async function handler(req, res) {
                         return res.status(500).json({error: "internal_error"});
                     }
 
-                    // reserveData might be array or object depending on client
                     const reserved = Array.isArray(reserveData) ? reserveData[0] : reserveData;
                     let imageRecordId = reserved.id;
                     let imagePath = reserved.path;
                     let imageUrl = reserved.url;
                     let reused = !reserved.created; // if created=false => reuse
 
+                    // Determine deterministic storage path independent of property
+                    const originalName = (f.originalFilename || "file").toString();
+                    const ext = (originalName.split(".").pop() || "bin")
+                        .replace(/[^a-z0-9]/gi, "")
+                        .toLowerCase();
+                    const filename = `${hash}.${ext}`;
+                    const path = `images/${filename}`; // <-- changed: not property-specific
+
                     if (reserved.created) {
                         // we're responsible to upload and finalize
-                        const originalName = (f.originalFilename || "file").toString();
-                        const ext = (originalName.split(".").pop() || "bin")
-                            .replace(/[^a-z0-9]/gi, "")
-                            .toLowerCase();
-
-                        // Use hash-based filename to make upload idempotent
-                        const filename = `${hash}.${ext}`;
-                        const path = `properties/${property_id}/${filename}`;
-
-                        // Attempt upload
                         const upload = await supabase.storage.from("img").upload(path, buffer, {
                             cacheControl: "3600",
                             upsert: false,
@@ -144,8 +141,53 @@ export default async function handler(req, res) {
                                     imagePath = existing2.path;
                                     imageUrl = existing2.url;
                                 } else {
-                                    console.error("Storage upload error with no metadata:", upload.error);
-                                    return res.status(500).json({error: "upload_failed"});
+                                    // No metadata yet but file exists: create/finalize metadata using deterministic path/url
+                                    // Try to build a URL and finalize the reserved record
+                                    let resolvedUrl = null;
+                                    const {data: signedData, error: signedErr} = await supabase.storage
+                                        .from("img")
+                                        .createSignedUrl(path, 60 * 30);
+
+                                    if (!signedErr && signedData?.signedUrl) {
+                                        resolvedUrl = signedData.signedUrl;
+                                    } else {
+                                        const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                                        resolvedUrl = publicUrl;
+                                    }
+
+                                    // try to finalize reserved record
+                                    const {error: finErr2} = await supabase.rpc("finalize_image_record", {
+                                        p_id: imageRecordId,
+                                        p_path: path,
+                                        p_url: resolvedUrl,
+                                    });
+
+                                    if (finErr2) {
+                                        // If finalize fails because another process inserted, SELECT and reuse
+                                        const {data: existing3, error: ex3err} = await supabase
+                                            .from("image_records")
+                                            .select("id,path,url")
+                                            .eq("hash", hash)
+                                            .limit(1)
+                                            .maybeSingle();
+
+                                        if (ex3err) {
+                                            console.error("DB ex3err:", ex3err);
+                                            return res.status(500).json({error: "internal_error"});
+                                        }
+                                        if (existing3) {
+                                            reused = true;
+                                            imageRecordId = existing3.id;
+                                            imagePath = existing3.path;
+                                            imageUrl = existing3.url;
+                                        } else {
+                                            console.error("Storage exists but finalize failed:", finErr2);
+                                            return res.status(500).json({error: "upload_finalize_failed"});
+                                        }
+                                    } else {
+                                        imagePath = path;
+                                        imageUrl = resolvedUrl;
+                                    }
                                 }
                             } else {
                                 console.error("Storage upload error:", upload.error);
@@ -173,8 +215,6 @@ export default async function handler(req, res) {
 
                             if (finErr) {
                                 console.error("finalize error:", finErr);
-                                // optionally remove uploaded file to avoid orphan:
-                                // await supabase.storage.from('img').remove([path]).catch(()=>null);
                                 return res.status(500).json({error: "internal_error"});
                             }
 
@@ -183,6 +223,18 @@ export default async function handler(req, res) {
                     } else {
                         // reserved.created == false: existing record — reuse (no upload)
                         reused = true;
+                        // ensure path/url set from reserved (if missing, build from deterministic path)
+                        if (!imagePath) imagePath = path;
+                        if (!imageUrl) {
+                            const {data: signedData, error: signedErr} = await supabase.storage
+                                .from("img")
+                                .createSignedUrl(path, 60 * 30);
+                            if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
+                            else {
+                                const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                                imageUrl = publicUrl;
+                            }
+                        }
                     }
 
                     // insert into property_images if not exists
@@ -243,8 +295,12 @@ export default async function handler(req, res) {
                 // Update properties.images and main_image
                 const urls = results.map((r) => r.url);
                 if (urls.length > 0) {
-                    const {data: prop} = await supabase.from("properties").select("images").eq("id", property_id).maybeSingle();
+                    const {data: prop, error: propErr} = await supabase.from("properties").select("images").eq("id", property_id).maybeSingle();
 
+                    if (propErr) {
+                        console.error("properties select error:", propErr);
+                        return res.status(500).json({error: "internal_error"});
+                    }
                     if (!prop) return res.status(404).json({error: "property_not_found"});
 
                     const existingImages = Array.isArray(prop.images) ? prop.images : [];
