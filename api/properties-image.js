@@ -13,7 +13,9 @@ function isUuid(v) {
 }
 
 async function sha256Hex(buffer) {
-    const hash = await crypto.subtle.digest("SHA-256", buffer);
+    // use Web Crypto (available in Node 15+). buffer is Uint8Array or Buffer
+    const buf = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+    const hash = await crypto.subtle.digest("SHA-256", buf);
     const arr = Array.from(new Uint8Array(hash));
     return arr.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -85,9 +87,10 @@ export default async function handler(req, res) {
                         return res.status(400).json({error: "file_size_invalid"});
                     }
 
+                    // compute hash
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // check existing image_record by hash
+                    // 1) Check existing image_record by hash BEFORE uploading
                     const {data: existing, error: fetchErr} = await supabase
                         .from("image_records")
                         .select("id,path,url")
@@ -95,7 +98,10 @@ export default async function handler(req, res) {
                         .limit(1)
                         .maybeSingle();
 
-                    if (fetchErr) return fetchErr;
+                    if (fetchErr) {
+                        console.error("DB fetchErr:", fetchErr);
+                        return res.status(500).json({error: "internal_error"});
+                    }
 
                     let imageRecordId;
                     let imagePath;
@@ -103,11 +109,13 @@ export default async function handler(req, res) {
                     let reused = false;
 
                     if (existing) {
+                        // If record exists: reuse it and SKIP upload entirely
                         reused = true;
                         imageRecordId = existing.id;
                         imagePath = existing.path;
                         imageUrl = existing.url;
                     } else {
+                        // Not existing: proceed with upload then insert.
                         const originalName = (f.originalFilename || "file").toString();
                         const ext = (originalName.split(".").pop() || "bin")
                             .replace(/[^a-z0-9]/gi, "")
@@ -115,46 +123,93 @@ export default async function handler(req, res) {
                         const filename = `${Date.now()}-${randomUUID()}.${ext}`;
                         const path = `properties/${property_id}/${filename}`;
 
+                        // UPLOAD
                         const upload = await supabase.storage.from("img").upload(path, buffer, {
                             cacheControl: "3600",
                             upsert: false,
                             contentType: mime,
                         });
-                        if (upload.error) return upload.error;
 
-                        const {data: signedData, error: signedErr} = await supabase.storage
-                            .from("img")
-                            .createSignedUrl(path, 60 * 30);
-
-                        if (signedErr || !signedData) {
-                            const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
-                            imageUrl = publicUrl;
+                        if (upload.error) {
+                            // If upload error indicates object already exists (very rare because we checked DB),
+                            // try to find existing image_record by hash and reuse.
+                            // Otherwise return error.
+                            const msg = String(upload.error.message || upload.error);
+                            if (msg.includes("already exists") || msg.includes("cannot overwrite")) {
+                                // race: object exists, try to get record by hash
+                                const {data: existing2, error: ex2err} = await supabase
+                                    .from("image_records")
+                                    .select("id,path,url")
+                                    .eq("hash", hash)
+                                    .limit(1)
+                                    .maybeSingle();
+                                if (ex2err) {
+                                    console.error("DB ex2err:", ex2err);
+                                    return res.status(500).json({error: "internal_error"});
+                                }
+                                if (existing2) {
+                                    reused = true;
+                                    imageRecordId = existing2.id;
+                                    imagePath = existing2.path;
+                                    imageUrl = existing2.url;
+                                } else {
+                                    // No metadata found — return upload error
+                                    console.error("Storage upload error with no metadata:", upload.error);
+                                    return res.status(500).json({error: "upload_failed"});
+                                }
+                            } else {
+                                console.error("Storage upload error:", upload.error);
+                                return res.status(500).json({error: "upload_failed"});
+                            }
                         } else {
-                            imageUrl = signedData.signedUrl;
-                        }
+                            // upload succeeded — get URL (signed or public)
+                            const {data: signedData, error: signedErr} = await supabase.storage
+                                .from("img")
+                                .createSignedUrl(path, 60 * 30);
 
-                        const ins = await supabase
-                            .from("image_records")
-                            .insert({hash, path, url: imageUrl})
-                            .select()
-                            .maybeSingle();
+                            if (signedErr || !signedData) {
+                                const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                                imageUrl = publicUrl;
+                            } else {
+                                imageUrl = signedData.signedUrl;
+                            }
 
-                        if (ins.error) {
-                            await supabase.storage.from("img").remove([path]);
-                            const {data: existing2} = await supabase
+                            // insert metadata row. handle race using failure path like your original code
+                            const ins = await supabase
                                 .from("image_records")
-                                .select("id,path,url")
-                                .eq("hash", hash)
-                                .limit(1)
+                                .insert({hash, path, url: imageUrl})
+                                .select()
                                 .maybeSingle();
-                            if (!existing2) return ins.error;
-                            imageRecordId = existing2.id;
-                            imagePath = existing2.path;
-                            imageUrl = existing2.url;
-                            reused = true;
-                        } else {
-                            imageRecordId = ins.data.id;
-                            imagePath = path;
+
+                            if (ins.error) {
+                                // insert failed: likely unique_violation by concurrent insert
+                                // remove uploaded file to avoid orphan unless someone else will own it.
+                                await supabase.storage.from("img").remove([path]).catch(() => null);
+
+                                const {data: existing2, error: ex2err} = await supabase
+                                    .from("image_records")
+                                    .select("id,path,url")
+                                    .eq("hash", hash)
+                                    .limit(1)
+                                    .maybeSingle();
+
+                                if (ex2err) {
+                                    console.error("DB ex2err after failed insert:", ex2err);
+                                    return res.status(500).json({error: "internal_error"});
+                                }
+                                if (!existing2) {
+                                    console.error("Insert failed and no existing metadata:", ins.error);
+                                    return res.status(500).json({error: "insert_failed"});
+                                }
+                                // reuse existing record
+                                imageRecordId = existing2.id;
+                                imagePath = existing2.path;
+                                imageUrl = existing2.url;
+                                reused = true;
+                            } else {
+                                imageRecordId = ins.data.id;
+                                imagePath = path;
+                            }
                         }
                     }
 
@@ -186,7 +241,10 @@ export default async function handler(req, res) {
                             .select()
                             .maybeSingle();
 
-                        if (linkInsert.error) return linkInsert.error;
+                        if (linkInsert.error) {
+                            console.error("linkInsert.error:", linkInsert.error);
+                            return res.status(500).json({error: "internal_error"});
+                        }
 
                         results.push({
                             id: linkInsert.data.id,
@@ -243,7 +301,10 @@ export default async function handler(req, res) {
                         .update(updatePayload)
                         .eq("id", property_id);
 
-                    if (upd.error) return upd.error;
+                    if (upd.error) {
+                        console.error("properties update error:", upd.error);
+                        return res.status(500).json({error: "internal_error"});
+                    }
                 }
 
                 return res.status(200).json({status: "ok", results});
