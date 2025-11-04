@@ -16,7 +16,6 @@ const ALLOWED_MIMES = [
     "image/svg+xml"
 ];
 
-
 function isUuid(v) {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
 }
@@ -95,14 +94,10 @@ export default async function handler(req, res) {
                         return res.status(400).json({error: "file_size_invalid"});
                     }
 
-                    // compute hash
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // 1) Reserve or get image_record by hash using RPC (atomic)
-                    const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {
-                        p_hash: hash,
-                    });
-
+                    // Reserve image record
+                    const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {p_hash: hash});
                     if (reserveErr) {
                         console.error("reserveErr:", reserveErr);
                         return res.status(500).json({error: "internal_error"});
@@ -112,133 +107,48 @@ export default async function handler(req, res) {
                     let imageRecordId = reserved.id;
                     let imagePath = reserved.path;
                     let imageUrl = reserved.url;
-                    let reused = !reserved.created; // if created=false => reuse
+                    let reused = !reserved.created;
 
-                    // Determine deterministic storage path independent of property
                     const originalName = (f.originalFilename || "file").toString();
-                    const ext = (originalName.split(".").pop() || "bin")
-                        .replace(/[^a-z0-9]/gi, "")
-                        .toLowerCase();
+                    const ext = (originalName.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "").toLowerCase();
                     const filename = `${hash}.${ext}`;
-                    const path = `images/${filename}`; // <-- changed: not property-specific
+                    const path = `images/${filename}`;
 
                     if (reserved.created) {
-                        // we're responsible to upload and finalize
-                        const upload = await supabase.storage.from("img").upload(path, buffer, {
-                            cacheControl: "3600",
-                            upsert: false,
-                            contentType: mime,
-                        });
-
+                        // Upload
+                        const upload = await supabase.storage.from("img").upload(path, buffer, {cacheControl: "3600", upsert: false, contentType: mime});
                         if (upload.error) {
                             const msg = String(upload.error.message || upload.error);
-                            if (msg.includes("already exists") || msg.includes("cannot overwrite")) {
-                                // race: object exists, try to get record by hash
-                                const {data: existing2, error: ex2err} = await supabase
-                                    .from("image_records")
-                                    .select("id,path,url")
-                                    .eq("hash", hash)
-                                    .limit(1)
-                                    .maybeSingle();
-
-                                if (ex2err) {
-                                    console.error("DB ex2err:", ex2err);
-                                    return res.status(500).json({error: "internal_error"});
-                                }
-                                if (existing2) {
-                                    reused = true;
-                                    imageRecordId = existing2.id;
-                                    imagePath = existing2.path;
-                                    imageUrl = existing2.url;
-                                } else {
-                                    // No metadata yet but file exists: create/finalize metadata using deterministic path/url
-                                    // Try to build a URL and finalize the reserved record
-                                    let resolvedUrl = null;
-                                    const {data: signedData, error: signedErr} = await supabase.storage
-                                        .from("img")
-                                        .createSignedUrl(path, 60 * 30);
-
-                                    if (!signedErr && signedData?.signedUrl) {
-                                        resolvedUrl = signedData.signedUrl;
-                                    } else {
-                                        const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
-                                        resolvedUrl = publicUrl;
-                                    }
-
-                                    // try to finalize reserved record
-                                    const {error: finErr2} = await supabase.rpc("finalize_image_record", {
-                                        p_id: imageRecordId,
-                                        p_path: path,
-                                        p_url: resolvedUrl,
-                                    });
-
-                                    if (finErr2) {
-                                        // If finalize fails because another process inserted, SELECT and reuse
-                                        const {data: existing3, error: ex3err} = await supabase
-                                            .from("image_records")
-                                            .select("id,path,url")
-                                            .eq("hash", hash)
-                                            .limit(1)
-                                            .maybeSingle();
-
-                                        if (ex3err) {
-                                            console.error("DB ex3err:", ex3err);
-                                            return res.status(500).json({error: "internal_error"});
-                                        }
-                                        if (existing3) {
-                                            reused = true;
-                                            imageRecordId = existing3.id;
-                                            imagePath = existing3.path;
-                                            imageUrl = existing3.url;
-                                        } else {
-                                            console.error("Storage exists but finalize failed:", finErr2);
-                                            return res.status(500).json({error: "upload_finalize_failed"});
-                                        }
-                                    } else {
-                                        imagePath = path;
-                                        imageUrl = resolvedUrl;
-                                    }
-                                }
-                            } else {
+                            if (!msg.includes("already exists") && !msg.includes("cannot overwrite")) {
                                 console.error("Storage upload error:", upload.error);
                                 return res.status(500).json({error: "upload_failed"});
                             }
-                        } else {
-                            // upload succeeded — get URL (signed or public)
-                            const {data: signedData, error: signedErr} = await supabase.storage
-                                .from("img")
-                                .createSignedUrl(path, 60 * 30);
-
-                            if (signedErr || !signedData) {
-                                const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
-                                imageUrl = publicUrl;
-                            } else {
-                                imageUrl = signedData.signedUrl;
-                            }
-
-                            // finalize reserved record with path/url
-                            const {error: finErr} = await supabase.rpc("finalize_image_record", {
-                                p_id: imageRecordId,
-                                p_path: path,
-                                p_url: imageUrl,
-                            });
-
-                            if (finErr) {
-                                console.error("finalize error:", finErr);
-                                return res.status(500).json({error: "internal_error"});
-                            }
-
-                            imagePath = path;
                         }
+
+                        // Get URL
+                        const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
+                        if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
+                        else {
+                            const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                            imageUrl = publicUrl;
+                        }
+
+                        // Finalize with boolean check
+                        const {data: finalizeSuccess, error: finErr} = await supabase.rpc("finalize_image_record_v2", {p_id: imageRecordId, p_path: path, p_url: imageUrl});
+                        if (finErr) {
+                            console.error("finalize RPC error:", finErr);
+                            return res.status(500).json({error: "internal_error"});
+                        }
+                        if (!finalizeSuccess) {
+                            console.error("finalize failed: record not updated", imageRecordId);
+                            return res.status(500).json({error: "upload_finalize_failed"});
+                        }
+                        imagePath = path;
                     } else {
-                        // reserved.created == false: existing record — reuse (no upload)
                         reused = true;
-                        // ensure path/url set from reserved (if missing, build from deterministic path)
                         if (!imagePath) imagePath = path;
                         if (!imageUrl) {
-                            const {data: signedData, error: signedErr} = await supabase.storage
-                                .from("img")
-                                .createSignedUrl(path, 60 * 30);
+                            const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
                             if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
                             else {
                                 const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
@@ -247,58 +157,27 @@ export default async function handler(req, res) {
                         }
                     }
 
-                    // insert into property_images if not exists
-                    const {data: existingLink} = await supabase
-                        .from("property_images")
-                        .select("id,is_main")
-                        .match({property_id, image_record_id: imageRecordId})
-                        .limit(1)
-                        .maybeSingle();
+                    // Link to property_images
+                    const {data: existingLink} = await supabase.from("property_images").select("id,is_main").match({property_id, image_record_id: imageRecordId}).limit(1).maybeSingle();
 
                     if (!existingLink) {
                         const shouldSetMain = entry.field === "main_image" || main_flag;
-                        if (shouldSetMain) {
-                            await supabase.from("property_images").update({is_main: false}).eq("property_id", property_id).eq("is_main", true);
-                        }
+                        if (shouldSetMain) await supabase.from("property_images").update({is_main: false}).eq("property_id", property_id).eq("is_main", true);
 
-                        const linkInsert = await supabase
-                            .from("property_images")
-                            .insert({
-                                property_id,
-                                image_record_id: imageRecordId,
-                                is_main: shouldSetMain,
-                            })
-                            .select()
-                            .maybeSingle();
-
+                        const linkInsert = await supabase.from("property_images").insert({property_id, image_record_id: imageRecordId, is_main: shouldSetMain}).select().maybeSingle();
                         if (linkInsert.error) {
                             console.error("linkInsert.error:", linkInsert.error);
                             return res.status(500).json({error: "internal_error"});
                         }
 
-                        results.push({
-                            id: linkInsert.data.id,
-                            image_record_id: imageRecordId,
-                            path: imagePath,
-                            url: imageUrl,
-                            is_main: linkInsert.data.is_main,
-                            reused,
-                        });
+                        results.push({id: linkInsert.data.id, image_record_id: imageRecordId, path: imagePath, url: imageUrl, is_main: linkInsert.data.is_main, reused});
                     } else {
                         const shouldSetMain = entry.field === "main_image" || main_flag;
                         if (shouldSetMain && !existingLink.is_main) {
                             await supabase.from("property_images").update({is_main: false}).eq("property_id", property_id).eq("is_main", true);
                             await supabase.from("property_images").update({is_main: true}).eq("id", existingLink.id);
                         }
-
-                        results.push({
-                            id: existingLink.id,
-                            image_record_id: imageRecordId,
-                            path: imagePath,
-                            url: imageUrl,
-                            is_main: existingLink?.is_main || shouldSetMain,
-                            reused: true,
-                        });
+                        results.push({id: existingLink.id, image_record_id: imageRecordId, path: imagePath, url: imageUrl, is_main: existingLink?.is_main || shouldSetMain, reused: true});
                     }
                 }
 
@@ -306,7 +185,6 @@ export default async function handler(req, res) {
                 const urls = results.map((r) => r.url);
                 if (urls.length > 0) {
                     const {data: prop, error: propErr} = await supabase.from("properties").select("images").eq("id", property_id).maybeSingle();
-
                     if (propErr) {
                         console.error("properties select error:", propErr);
                         return res.status(500).json({error: "internal_error"});
@@ -320,7 +198,6 @@ export default async function handler(req, res) {
                     if (main) updatePayload.main_image = main.url;
 
                     const upd = await supabase.from("properties").update(updatePayload).eq("id", property_id);
-
                     if (upd.error) {
                         console.error("properties update error:", upd.error);
                         return res.status(500).json({error: "internal_error"});
