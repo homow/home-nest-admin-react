@@ -2,7 +2,8 @@ import {useEffect, useState} from "react";
 import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
-import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
+import {RedStarField} from "@components/ui/Fragments";
+import {ErrorMessageInputs} from "@components/ui/Fragments"
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
@@ -114,26 +115,23 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
             <div className={"space-y-8 @6xl/main:grid grid-cols-2 gap-x-4"}>
                 {/* title and id */}
                 <div className={"multi-inputs-style"}>
-                    <div>
-                        {/* title */}
-                        <Input
-                            label="عنوان ملک"
-                            name="title"
-                            autoComplete="title"
-                            value={formData.title}
-                            onChange={event => {
-                                const val = event.target.value;
-                                handleChange("title", val)
-                                if (errors.title && val.trim()) {
-                                    setErrors({...errors, title: ""});
-                                }
-                            }}
-                            placeholder="مثلاً: ویلایی، صدرا"
-                            req={true}
-                            className={errors.title && "border-rose-600 bg-rose-600/10"}
-                        />
-                        <ErrorMessageInputs msg={errors.title}/>
-                    </div>
+                    {/* title */}
+                    <Input
+                        label="عنوان ملک"
+                        name="title"
+                        autoComplete="title"
+                        value={formData.title}
+                        onChange={event => {
+                            const val = event.target.value;
+                            handleChange("title", val)
+                            if (errors.title && val.trim()) {
+                                setErrors({...errors, title: ""});
+                            }
+                        }}
+                        placeholder="مثلاً: ویلایی، صدرا"
+                        req={true}
+                        hasError={errors.title}
+                    />
 
                     {/* id */}
                     <Input
@@ -163,58 +161,53 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
                     </div>
 
                     {/* price */}
-                    <div>
-                        <Input
-                            label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
-                            name="price"
-                            type="text"
-                            autoComplete="price"
-                            value={formData.price}
-                            onChange={event => {
-                                const val = event.target.value;
-                                handleChange("price", val);
-                                formatPriceDebounced(event, handleChange, "price");
+                    <Input
+                        label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
+                        name="price"
+                        type="text"
+                        autoComplete="price"
+                        value={formData.price}
+                        onChange={event => {
+                            const val = event.target.value;
+                            handleChange("price", val);
+                            formatPriceDebounced(event, handleChange, "price");
 
-                                const priceChecked = checkPrice(val);
+                            const priceChecked = checkPrice(val);
 
-                                if (errors.price && priceChecked) {
-                                    setErrors({...errors, price: "", discount: ""});
-                                }
-                            }}
-                            placeholder="مثلاً 1,200,000,000"
-                            className={errors.price && "border-rose-600 bg-rose-600/10"}
-                        />
-                        <ErrorMessageInputs msg={errors.price}/>
-                    </div>
+                            if (errors.price && priceChecked) {
+                                setErrors({...errors, price: "", discount: ""});
+                            }
+                        }}
+                        placeholder="مثلاً 1,200,000,000"
+                        hasError={errors.price}
+                    />
                 </div>
 
                 {/* price with discount and discount date */}
                 <div className={"multi-inputs-style"}>
 
                     {/* price with discount */}
-                    <div>
-                        <Input
-                            autoComplete="price_with_discount"
-                            label="قیمت با تخفیف"
-                            name="price_with_discount"
-                            type="text"
-                            value={formData.price_with_discount}
-                            onChange={event => {
-                                const val = event.target.value;
-                                handleChange("price_with_discount", val);
+                    <Input
+                        autoComplete="price_with_discount"
+                        label="قیمت با تخفیف"
+                        name="price_with_discount"
+                        type="text"
+                        value={formData.price_with_discount}
+                        onChange={event => {
+                            const val = event.target.value;
+                            handleChange("price_with_discount", val);
 
-                                formatPriceDebounced(event, handleChange, "price_with_discount");
-                                const priceChecked = checkPrice(formData.price, val);
+                            formatPriceDebounced(event, handleChange, "price_with_discount");
+                            const priceChecked = checkPrice(formData.price, val);
 
-                                if (errors.price && priceChecked) {
-                                    setErrors({...errors, price: "", discount: ""});
-                                }
-                            }}
-                            placeholder="مثلاً 1,100,000,000"
-                            className={errors.price && "border-rose-600 bg-rose-600/10"}
-                        />
-                        <ErrorMessageInputs msg={errors.discount}/>
-                    </div>
+                            if (errors.price && priceChecked) {
+                                setErrors({...errors, price: "", discount: ""});
+                            }
+                        }}
+                        placeholder="مثلاً 1,100,000,000"
+                        hasError={errors.price}
+                        errorMsg={errors.discount}
+                    />
 
                     {/* discount date */}
                     <Input
@@ -230,46 +223,41 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
                 <div className={'multi-inputs-style'}>
 
                     {/* province_and_city */}
-                    <div>
-                        <Input
-                            autoComplete="province_and_city"
-                            label="استان و شهر"
-                            name="province_and_city"
-                            value={formData.province_and_city}
-                            onChange={event => {
-                                const val = event.target.value;
-                                handleChange("province_and_city", val);
-                                if (errors.province_and_city && val.trim()) {
-                                    setErrors({...errors, province_and_city: ""});
-                                }
-                            }}
-                            placeholder="مثلاً فارس، شیراز"
-                            req={true}
-                            className={errors.province_and_city && "border-rose-600 bg-rose-600/10"}
-                        />
-                        <ErrorMessageInputs msg={errors.province_and_city}/>
-                    </div>
+                    <Input
+                        autoComplete="province_and_city"
+                        label="استان و شهر"
+                        name="province_and_city"
+                        value={formData.province_and_city}
+                        onChange={event => {
+                            const val = event.target.value;
+                            handleChange("province_and_city", val);
+                            if (errors.province_and_city && val.trim()) {
+                                setErrors({...errors, province_and_city: ""});
+                            }
+                        }}
+                        placeholder="مثلاً فارس، شیراز"
+                        req={true}
+                        hasError={errors.province_and_city}
+                    />
 
-                    <div>
-                        {/* address */}
-                        <Input
-                            label="آدرس"
-                            name="address"
-                            autoComplete="address"
-                            value={formData.address}
-                            onChange={event => {
-                                const val = event.target.value;
-                                handleChange("address", val);
-                                if (errors.address && val.trim()) {
-                                    setErrors({...errors, address: ""});
-                                }
-                            }}
-                            placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
-                            req={true}
-                            className={errors.address && "border-rose-600 bg-rose-600/10"}
-                        />
-                        <ErrorMessageInputs msg={errors.address}/>
-                    </div>
+                    {/* address */}
+                    <Input
+                        label="آدرس"
+                        name="address"
+                        autoComplete="address"
+                        value={formData.address}
+                        onChange={event => {
+                            const val = event.target.value;
+                            handleChange("address", val);
+                            if (errors.address && val.trim()) {
+                                setErrors({...errors, address: ""});
+                            }
+                        }}
+                        placeholder="مثلا: خیابان قصردشت، کوچه 53، پلاک 10"
+                        req={true}
+                        className={errors.address && "border-rose-600 bg-rose-600/10"}
+                        hasError={errors.address}
+                    />
                 </div>
             </div>
 
