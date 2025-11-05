@@ -88,9 +88,9 @@ export default function DropDownAccount({setOpenMenu, open, className}) {
 
     const logoutHandler = async () => {
         try {
-            // const res = await logout();
+            const res = await logout();
 
-            if (true) {
+            if (res.ok) {
                 setIsOpenAlertModal(true);
                 setAlertModalData({type: "success", message: "خروج موفق بود."})
                 setOpenLogoutModal(false);
