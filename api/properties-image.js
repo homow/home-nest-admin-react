@@ -59,6 +59,19 @@ export default async function handler(req, res) {
                     return res.status(400).json({error: "invalid_property_id"});
                 }
 
+                // 1) quick existence check for property
+                const {data: propCheck, error: propCheckErr} = await supabase
+                    .from("properties")
+                    .select("id")
+                    .eq("id", property_id)
+                    .limit(1)
+                    .maybeSingle();
+                if (propCheckErr) {
+                    console.error("properties select error (initial):", propCheckErr);
+                    return res.status(500).json({error: "internal_error"});
+                }
+                if (!propCheck) return res.status(404).json({error: "property_not_found"});
+
                 const fileEntries = [];
                 if (files?.main_image) {
                     const f = Array.isArray(files.main_image) ? files.main_image[0] : files.main_image;
@@ -97,6 +110,7 @@ export default async function handler(req, res) {
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
+                    // 2) Reserve image record (RPC). RPC should be responsible for dedup and returning created flag.
                     const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {p_hash: hash});
                     if (reserveErr) {
                         console.error("reserve_image_record rpc error:", reserveErr);
@@ -106,7 +120,6 @@ export default async function handler(req, res) {
                         return res.status(500).json({error: "internal_error"});
                     }
 
-                    // adapt to new RPC shape (out_id/out_path/out_url/created)
                     const reservedRow = Array.isArray(reserveData) ? reserveData[0] : reserveData;
                     if (!reservedRow || !reservedRow?.out_id) {
                         console.error("reserve_image_record returned unexpected:", reserveData);
@@ -117,16 +130,15 @@ export default async function handler(req, res) {
                     let imagePath = reservedRow?.out_path || "";
                     let imageUrl = reservedRow?.out_url || "";
                     let reused = reservedRow?.created === false;
-                    // if created is true then we need to upload; if false, it's reused
 
                     const originalName = (f.originalFilename || "file").toString();
                     const ext = (originalName.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "").toLowerCase();
                     const filename = `${hash}.${ext}`;
                     const path = `properties/${filename}`;
 
-                    if (reservedRow.created === true) {
+                    if (reservedRow?.created === true) {
                         // Upload to storage
-                        const upload = await supabase.storage.from("img").upload(path, buffer, {
+                        const upload = await supabase?.storage.from("img").upload(path, buffer, {
                             cacheControl: "3600",
                             upsert: false,
                             contentType: mime,
@@ -138,11 +150,12 @@ export default async function handler(req, res) {
                                 reused = true;
                             } else {
                                 console.error("Storage upload error:", upload.error);
+                                // attempt to mark reservation cancelled? (depends on RPC) — return error to caller
                                 return res.status(500).json({error: "upload_failed"});
                             }
                         }
 
-                        // get URL
+                        // get URL (prefer signed)
                         try {
                             const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
                             if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
@@ -156,7 +169,7 @@ export default async function handler(req, res) {
                             imageUrl = publicUrl;
                         }
 
-                        // finalize in DB (assumes finalize_image_record_v2 updates path/url)
+                        // finalize in DB
                         const {data: finalizeData, error: finErr} = await supabase.rpc("finalize_image_record_v2", {
                             p_id: imageRecordId,
                             p_path: path,
@@ -193,7 +206,28 @@ export default async function handler(req, res) {
                         }
                     }
 
-                    // Link to property_images (ensure single insert)
+                    // 3) Before linking, ensure property still exists (race protection)
+                    const {data: propNow, error: propNowErr} = await supabase
+                        .from("properties")
+                        .select("id")
+                        .eq("id", property_id)
+                        .limit(1)
+                        .maybeSingle();
+                    if (propNowErr) {
+                        console.error("properties select error (pre-link):", propNowErr);
+                        return res.status(500).json({error: "internal_error"});
+                    }
+                    if (!propNow) {
+                        // property was deleted between initial check and now
+                        console.error("property disappeared during processing:", property_id);
+                        return res.status(404).json({error: "property_not_found"});
+                    }
+
+                    // Link to property_images (idempotent)
+                    const shouldSetMain = entry.field === "main_image" || main_flag;
+
+                    // Try to insert, but avoid duplicates using upsert on conflict (image_record_id + property_id unique assumed)
+                    // Since supabase-js doesn't expose upsert with conflict target easily for RPC-less, we do a safe select+insert with handling
                     const {data: existingLink, error: linkErr} = await supabase
                         .from("property_images")
                         .select("id,is_main")
@@ -205,8 +239,6 @@ export default async function handler(req, res) {
                         console.error("property_images select error:", linkErr);
                         return res.status(500).json({error: "internal_error"});
                     }
-
-                    const shouldSetMain = entry.field === "main_image" || main_flag;
 
                     if (!existingLink) {
                         if (shouldSetMain) {
@@ -268,7 +300,7 @@ export default async function handler(req, res) {
                     }
                 } // end loop
 
-                // Update properties.images and main_image
+                // 4) Update properties.images and main_image atomically-ish
                 const urls = results.map((r) => r.url).filter(Boolean);
                 if (urls.length > 0) {
                     const {data: prop, error: propErr} = await supabase.from("properties").select("images").eq("id", property_id).maybeSingle();
@@ -279,7 +311,6 @@ export default async function handler(req, res) {
                     if (!prop) return res.status(404).json({error: "property_not_found"});
 
                     const existingImages = Array.isArray(prop.images) ? prop.images : [];
-                    // avoid duplicates
                     const newImages = existingImages.concat(urls).filter((v, i, a) => a.indexOf(v) === i);
 
                     const main = results.find((r) => r.is_main);
