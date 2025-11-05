@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
+import {uploadPropertyImages} from "@api/requests/properties.js";
 
 export default function ImagesForm({formRef, refData, successCreate, setSuccessCreate}) {
     const [mainFile, setMainFile] = useState(null);
@@ -21,7 +22,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
             setSuccessCreate(false);
         }
     }, [setSuccessCreate, successCreate])
-    
+
     // handle main image
     const handleMainChange = event => {
         const file = event.target.files?.[0];
@@ -82,7 +83,28 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         refData.current = formData;
     }, [mainFile, otherFiles, refData]);
 
-    const submitHandler = event => event.preventDefault();
+    const submitHandler = async event => {
+        event.preventDefault();
+
+        const formData = new FormData();
+
+        if (mainFile) {
+            formData.append("main_image", mainFile);
+        }
+
+        if (otherFiles.length > 0) {
+            otherFiles.forEach(f => formData.append("images", f));
+        }
+
+        formData.append("property_id", "7bb3393a-fd94-472b-aca6-19397271f688")
+
+        try {
+            const res = await uploadPropertyImages(formData)
+            console.log(res)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>
@@ -140,6 +162,9 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
                     )}
                 </div>
             </div>
+            <button className={"bg-teal-600 p-2"} type={"submit"}>
+                submit
+            </button>
         </form>
     )
 };

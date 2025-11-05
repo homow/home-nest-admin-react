@@ -96,14 +96,18 @@ export default async function handler(req, res) {
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // Reserve image record
+                    // Call reserve RPC
                     const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {p_hash: hash});
                     if (reserveErr) {
-                        console.error("reserveErr:", reserveErr);
+                        console.error("reserve_image_record rpc error:", reserveErr);
                         return res.status(500).json({error: "internal_error"});
                     }
-
                     const reserved = Array.isArray(reserveData) ? reserveData[0] : reserveData;
+                    if (!reserved || !reserved.id) {
+                        console.error("reserve_image_record returned unexpected:", reserveData);
+                        return res.status(500).json({error: "reserve_failed"});
+                    }
+
                     let imageRecordId = reserved.id;
                     let imagePath = reserved.path;
                     let imageUrl = reserved.url;
@@ -115,42 +119,70 @@ export default async function handler(req, res) {
                     const path = `properties/${filename}`;
 
                     if (reserved.created) {
-                        // Upload
-                        const upload = await supabase.storage.from("img").upload(path, buffer, {cacheControl: "3600", upsert: false, contentType: mime});
+                        // Attempt upload; if object already exists, treat as reused
+                        const upload = await supabase.storage.from("img").upload(path, buffer, {
+                            cacheControl: "3600",
+                            upsert: false,
+                            contentType: mime,
+                        });
+
                         if (upload.error) {
                             const msg = String(upload.error.message || upload.error);
-                            if (!msg.includes("already exists") && !msg.includes("cannot overwrite")) {
+                            // If already exists, treat as reused but continue
+                            if (msg.includes("already exists") || msg.includes("cannot overwrite")) {
+                                reused = true;
+                            } else {
                                 console.error("Storage upload error:", upload.error);
                                 return res.status(500).json({error: "upload_failed"});
                             }
                         }
 
-                        // Get URL
-                        const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
-                        if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
-                        else {
+                        // Get URL (signed first, fallback public)
+                        try {
+                            const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
+                            if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
+                            else {
+                                const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                                imageUrl = publicUrl;
+                            }
+                        } catch (e) {
+                            console.error("storage url error:", e);
                             const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
                             imageUrl = publicUrl;
                         }
 
-                        // Finalize with boolean check
-                        const {data: finalizeSuccess, error: finErr} = await supabase.rpc("finalize_image_record_v2", {p_id: imageRecordId, p_path: path, p_url: imageUrl});
+                        // Finalize in DB: call finalize_image_record_v2 (assumed to exist)
+                        const {data: finalizeData, error: finErr} = await supabase.rpc("finalize_image_record_v2", {
+                            p_id: imageRecordId,
+                            p_path: path,
+                            p_url: imageUrl,
+                        });
+
                         if (finErr) {
-                            console.error("finalize RPC error:", finErr);
+                            console.error("finalize_image_record_v2 error:", finErr);
                             return res.status(500).json({error: "internal_error"});
                         }
-                        if (!finalizeSuccess) {
-                            console.error("finalize failed: record not updated", imageRecordId);
+                        // finalizeData might be boolean or a row; accept truthy
+                        if (!finalizeData) {
+                            console.error("finalize failed or returned falsy:", finalizeData);
                             return res.status(500).json({error: "upload_finalize_failed"});
                         }
+
                         imagePath = path;
                     } else {
+                        // existing record: ensure path/url if missing
                         reused = true;
                         if (!imagePath) imagePath = path;
                         if (!imageUrl) {
-                            const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
-                            if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
-                            else {
+                            try {
+                                const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
+                                if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
+                                else {
+                                    const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
+                                    imageUrl = publicUrl;
+                                }
+                            } catch (e) {
+                                console.log(e)
                                 const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
                                 imageUrl = publicUrl;
                             }
@@ -158,31 +190,82 @@ export default async function handler(req, res) {
                     }
 
                     // Link to property_images
-                    const {data: existingLink} = await supabase.from("property_images").select("id,is_main").match({property_id, image_record_id: imageRecordId}).limit(1).maybeSingle();
+                    const {data: existingLink, error: linkErr} = await supabase
+                        .from("property_images")
+                        .select("id,is_main")
+                        .match({property_id, image_record_id: imageRecordId})
+                        .limit(1)
+                        .maybeSingle();
+
+                    if (linkErr) {
+                        console.error("property_images select error:", linkErr);
+                        return res.status(500).json({error: "internal_error"});
+                    }
+
+                    const shouldSetMain = entry.field === "main_image" || main_flag;
 
                     if (!existingLink) {
-                        const shouldSetMain = entry.field === "main_image" || main_flag;
-                        if (shouldSetMain) await supabase.from("property_images").update({is_main: false}).eq("property_id", property_id).eq("is_main", true);
+                        if (shouldSetMain) {
+                            const {error: unsetErr} = await supabase
+                                .from("property_images")
+                                .update({is_main: false})
+                                .eq("property_id", property_id)
+                                .eq("is_main", true);
+                            if (unsetErr) {
+                                console.error("failed to unset previous main:", unsetErr);
+                                return res.status(500).json({error: "internal_error"});
+                            }
+                        }
 
-                        const linkInsert = await supabase.from("property_images").insert({property_id, image_record_id: imageRecordId, is_main: shouldSetMain}).select().maybeSingle();
-                        if (linkInsert.error) {
-                            console.error("linkInsert.error:", linkInsert.error);
+                        const {data: linkInsertData, error: linkInsertErr} = await supabase
+                            .from("property_images")
+                            .insert({property_id, image_record_id: imageRecordId, is_main: shouldSetMain})
+                            .select()
+                            .maybeSingle();
+
+                        if (linkInsertErr) {
+                            console.error("linkInsert.error:", linkInsertErr);
                             return res.status(500).json({error: "internal_error"});
                         }
 
-                        results.push({id: linkInsert.data.id, image_record_id: imageRecordId, path: imagePath, url: imageUrl, is_main: linkInsert.data.is_main, reused});
+                        results.push({
+                            id: linkInsertData.id,
+                            image_record_id: imageRecordId,
+                            path: imagePath,
+                            url: imageUrl,
+                            is_main: linkInsertData.is_main,
+                            reused,
+                        });
                     } else {
-                        const shouldSetMain = entry.field === "main_image" || main_flag;
                         if (shouldSetMain && !existingLink.is_main) {
-                            await supabase.from("property_images").update({is_main: false}).eq("property_id", property_id).eq("is_main", true);
-                            await supabase.from("property_images").update({is_main: true}).eq("id", existingLink.id);
+                            const {error: unsetErr} = await supabase
+                                .from("property_images")
+                                .update({is_main: false})
+                                .eq("property_id", property_id)
+                                .eq("is_main", true);
+                            if (unsetErr) {
+                                console.error("failed to unset previous main:", unsetErr);
+                                return res.status(500).json({error: "internal_error"});
+                            }
+                            const {error: setErr} = await supabase.from("property_images").update({is_main: true}).eq("id", existingLink.id);
+                            if (setErr) {
+                                console.error("failed to set main:", setErr);
+                                return res.status(500).json({error: "internal_error"});
+                            }
                         }
-                        results.push({id: existingLink.id, image_record_id: imageRecordId, path: imagePath, url: imageUrl, is_main: existingLink?.is_main || shouldSetMain, reused: true});
+                        results.push({
+                            id: existingLink.id,
+                            image_record_id: imageRecordId,
+                            path: imagePath,
+                            url: imageUrl,
+                            is_main: existingLink?.is_main || shouldSetMain,
+                            reused: true,
+                        });
                     }
-                }
+                } // end loop files
 
                 // Update properties.images and main_image
-                const urls = results.map((r) => r.url);
+                const urls = results.map((r) => r.url).filter(Boolean);
                 if (urls.length > 0) {
                     const {data: prop, error: propErr} = await supabase.from("properties").select("images").eq("id", property_id).maybeSingle();
                     if (propErr) {
@@ -197,9 +280,9 @@ export default async function handler(req, res) {
                     const updatePayload = {images: newImages};
                     if (main) updatePayload.main_image = main.url;
 
-                    const upd = await supabase.from("properties").update(updatePayload).eq("id", property_id);
-                    if (upd.error) {
-                        console.error("properties update error:", upd.error);
+                    const {error: updErr} = await supabase.from("properties").update(updatePayload).eq("id", property_id);
+                    if (updErr) {
+                        console.error("properties update error:", updErr);
                         return res.status(500).json({error: "internal_error"});
                     }
                 }
