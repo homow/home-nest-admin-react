@@ -2,6 +2,8 @@ import {IncomingForm} from "formidable";
 import fs from "fs/promises";
 import supabaseServer from "./config/supabaseServer.js";
 
+const supabase = supabaseServer();
+
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 const ALLOWED_MIMES = [
     "image/jpeg",
@@ -35,19 +37,10 @@ function streamToBuffer(stream) {
 }
 
 export const config = {
-    api: {bodyParser: false},
+    api: {
+        bodyParser: false
+    }
 };
-
-const supabaseClientWithUserToken = token => {
-    return supabaseServer(
-        {
-            global: {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        })
-}
 
 export default async function handler(req, res) {
     try {
@@ -56,7 +49,6 @@ export default async function handler(req, res) {
         }
 
         const form = new IncomingForm({multiples: true, maxFileSize: MAX_FILE_SIZE});
-
         await form.parse(req, async (err, fields, files) => {
             try {
                 if (err) return res.status(400).json({error: "invalid_form"});
@@ -66,13 +58,6 @@ export default async function handler(req, res) {
                 if (!property_id || !isUuid(property_id)) {
                     return res.status(400).json({error: "invalid_property_id"});
                 }
-
-                // Read auth token from incoming Authorization header if present
-                const authHeader = req.headers?.authorization || req.headers?.Authorization || "";
-                const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
-
-                // Create per-request Supabase client that sends user's token to Supabase.
-                const supabase = supabaseClientWithUserToken(token);
 
                 const fileEntries = [];
                 if (files?.main_image) {
@@ -112,34 +97,35 @@ export default async function handler(req, res) {
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // Call reserve RPC with the client that includes user's token
                     const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {p_hash: hash});
                     if (reserveErr) {
                         console.error("reserve_image_record rpc error:", reserveErr);
-                        // If it's a permission error from DB, return 403 to client
                         if (reserveErr?.code === "P0001" || String(reserveErr?.message || "").toLowerCase().includes("permission")) {
                             return res.status(403).json({error: "forbidden"});
                         }
                         return res.status(500).json({error: "internal_error"});
                     }
-                    const reserved = Array.isArray(reserveData) ? reserveData[0] : reserveData;
-                    if (!reserved || !reserved.id) {
+
+                    // adapt to new RPC shape (out_id/out_path/out_url/created)
+                    const reservedRow = Array.isArray(reserveData) ? reserveData[0] : reserveData;
+                    if (!reservedRow || !reservedRow?.out_id) {
                         console.error("reserve_image_record returned unexpected:", reserveData);
                         return res.status(500).json({error: "reserve_failed"});
                     }
 
-                    let imageRecordId = reserved.id;
-                    let imagePath = reserved.path;
-                    let imageUrl = reserved.url;
-                    let reused = !reserved.created;
+                    let imageRecordId = reservedRow.out_id;
+                    let imagePath = reservedRow?.out_path || "";
+                    let imageUrl = reservedRow?.out_url || "";
+                    let reused = reservedRow?.created === false;
+                    // if created is true then we need to upload; if false, it's reused
 
                     const originalName = (f.originalFilename || "file").toString();
                     const ext = (originalName.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "").toLowerCase();
                     const filename = `${hash}.${ext}`;
                     const path = `properties/${filename}`;
 
-                    if (reserved.created) {
-                        // Attempt upload; if object already exists, treat as reused
+                    if (reservedRow.created === true) {
+                        // Upload to storage
                         const upload = await supabase.storage.from("img").upload(path, buffer, {
                             cacheControl: "3600",
                             upsert: false,
@@ -148,7 +134,6 @@ export default async function handler(req, res) {
 
                         if (upload.error) {
                             const msg = String(upload.error.message || upload.error || "");
-                            // If already exists, treat as reused but continue
                             if (msg.includes("already exists") || msg.includes("cannot overwrite")) {
                                 reused = true;
                             } else {
@@ -157,7 +142,7 @@ export default async function handler(req, res) {
                             }
                         }
 
-                        // Get URL (signed first, fallback public)
+                        // get URL
                         try {
                             const {data: signedData, error: signedErr} = await supabase.storage.from("img").createSignedUrl(path, 60 * 30);
                             if (!signedErr && signedData?.signedUrl) imageUrl = signedData.signedUrl;
@@ -171,7 +156,7 @@ export default async function handler(req, res) {
                             imageUrl = publicUrl;
                         }
 
-                        // Finalize in DB: call finalize_image_record_v2 (assumed to exist)
+                        // finalize in DB (assumes finalize_image_record_v2 updates path/url)
                         const {data: finalizeData, error: finErr} = await supabase.rpc("finalize_image_record_v2", {
                             p_id: imageRecordId,
                             p_path: path,
@@ -182,15 +167,14 @@ export default async function handler(req, res) {
                             console.error("finalize_image_record_v2 error:", finErr);
                             return res.status(500).json({error: "internal_error"});
                         }
-                        // finalizeData might be boolean or a row; accept truthy
                         if (!finalizeData) {
-                            console.error("finalize failed or returned falsy:", finalizeData);
+                            console.error("finalize returned falsy:", finalizeData);
                             return res.status(500).json({error: "upload_finalize_failed"});
                         }
 
                         imagePath = path;
                     } else {
-                        // existing record: ensure path/url if missing
+                        // existing: ensure URL available
                         reused = true;
                         if (!imagePath) imagePath = path;
                         if (!imageUrl) {
@@ -202,14 +186,14 @@ export default async function handler(req, res) {
                                     imageUrl = publicUrl;
                                 }
                             } catch (e) {
-                                console.log(e);
+                                console.error("storage get url error:", e);
                                 const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
                                 imageUrl = publicUrl;
                             }
                         }
                     }
 
-                    // Link to property_images
+                    // Link to property_images (ensure single insert)
                     const {data: existingLink, error: linkErr} = await supabase
                         .from("property_images")
                         .select("id,is_main")
@@ -282,7 +266,7 @@ export default async function handler(req, res) {
                             reused: true,
                         });
                     }
-                } // end loop files
+                } // end loop
 
                 // Update properties.images and main_image
                 const urls = results.map((r) => r.url).filter(Boolean);
@@ -295,7 +279,9 @@ export default async function handler(req, res) {
                     if (!prop) return res.status(404).json({error: "property_not_found"});
 
                     const existingImages = Array.isArray(prop.images) ? prop.images : [];
-                    const newImages = existingImages.concat(urls);
+                    // avoid duplicates
+                    const newImages = existingImages.concat(urls).filter((v, i, a) => a.indexOf(v) === i);
+
                     const main = results.find((r) => r.is_main);
                     const updatePayload = {images: newImages};
                     if (main) updatePayload.main_image = main.url;
