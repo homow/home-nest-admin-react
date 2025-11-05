@@ -154,13 +154,11 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
                     }
                 </div>
 
-                <div>
-                    {othersPreview.length > 0 && (
-                        <div className={"flex flex-wrap gap-8 mt-8"}>
-                            {othersPreview.map((url, index) => <img key={url} src={url} alt={`preview ${index}`} className={"size-30 object-cover"}/>)}
-                        </div>
-                    )}
-                </div>
+                {othersPreview.length > 0 && (
+                    <div className={"flex flex-wrap gap-8 mt-8"}>
+                        {othersPreview.map((url, index) => <img key={url} src={url} alt={`preview ${index}`} className={"size-30 object-cover"}/>)}
+                    </div>
+                )}
             </div>
             <button className={"bg-teal-600 p-2"} type={"submit"}>
                 submit
