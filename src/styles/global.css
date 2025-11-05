@@ -126,8 +126,8 @@
     }
 
     .select-box-scroll::-webkit-scrollbar-thumb {
+        padding-block: 40px;
         border: 1px solid var(--color-primary-bg);
-        background-color: var(--color-teal-100);
-        border-radius: 3px;
+        background-color: var(--color-violet-500);
     }
 }

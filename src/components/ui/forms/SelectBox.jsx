@@ -106,7 +106,7 @@ export default function SelectBox({label, options, value, onChange, className, h
                     role="listbox"
                     tabIndex={-1}
                     dir={"ltr"}
-                    className="min-w-max absolute max-h-96 z-10 w-full mt-2 p-1 bg-primary-bg border border-violet-500 rounded-lg overflow-y-auto select-box-scroll space-y-0.5"
+                    className="select-box-scroll min-w-max absolute max-h-96 z-20 w-full mt-2 p-1 bg-primary-bg border border-violet-500 overflow-y-auto space-y-0.5"
                 >
                     {options.map((opt, index) => (
                         <li

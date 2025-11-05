@@ -155,6 +155,14 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
                         options={[
                             {value: "rent", label: "رهن"},
                             {value: "sale", label: "فروش"},
+                            {value: "mortgage", label: "رهن کامل"},
+                            {value: "pre_sale", label: "پیش‌فروش"},
+                            {value: "exchange", label: "معاوضه"},
+                            {value: "short_term", label: "اجاره کوتاه‌مدت"},
+                            {value: "long_term", label: "اجاره بلندمدت"},
+                            {value: "commercial", label: "تجاری"},
+                            {value: "residential", label: "مسکونی"},
+                            {value: "land", label: "زمین"}
                         ]}
                     />
 
