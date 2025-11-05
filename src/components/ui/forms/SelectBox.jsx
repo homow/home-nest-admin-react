@@ -4,7 +4,42 @@ import Icon from "@components/ui/icons/Icon.jsx";
 
 export default function SelectBox({label, options, value, onChange, className, helperText, hasError, disabled}) {
     const [open, setOpen] = useState(false);
+    const [focusedIndex, setFocusedIndex] = useState(-1);
     const ref = useRef(null);
+
+    const keyHandler = e => {
+        if (!open) {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setOpen(true);
+                setFocusedIndex(options.findIndex(o => o.value === value));
+            }
+            return;
+        }
+
+        if (e.key === "Escape") {
+            setOpen(false);
+            return;
+        }
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setFocusedIndex(prev => (prev + 1) % options.length);
+        }
+
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setFocusedIndex(prev => (prev - 1 + options.length) % options.length);
+        }
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (focusedIndex >= 0) {
+                onChange(options[focusedIndex].value);
+                setOpen(false);
+            }
+        }
+    };
 
     const openHandler = () => {
         if (!open && disabled) {
@@ -13,6 +48,10 @@ export default function SelectBox({label, options, value, onChange, className, h
 
         setOpen(!open);
     }
+
+    useEffect(() => {
+        setFocusedIndex(-1)
+    }, [open])
 
     useEffect(() => {
         const handleClickOutside = e => {
@@ -40,13 +79,17 @@ export default function SelectBox({label, options, value, onChange, className, h
             <button
                 type="button"
                 onClick={openHandler}
+                onKeyDown={keyHandler}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                aria-controls="select-options"
                 className={cn(
-                    "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border-[0.5px] border-gray-300 px-4 py-2 text-right bg-primary-bg/40",
-                    "hover:text-neutral-700 transition-all", open && "border-violet-500", hasError && "border-red-600", disabled && "text-neutral-300 border-neutral-300 hover:text-neutral-300 cursor-not-allowed"
+                    "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border-[0.5px] border-gray-300 outline-none px-4 py-2 text-right bg-primary-bg/40 focus:border-violet-500 focus-visible:ring-1 focus:ring-violet-500",
+                    "hover:text-neutral-700 transition-all", open && "border-violet-500"
                 )}
             >
                 <span className={"text-secondary-txt"}>{selectedLabel}</span>
-                <Icon id={"chevronDown"} className={cn("size-2.5 transition-transform", open && "rotate-180")}/>
+                <Icon icon={"chevronDown"} className={cn("text-secondary-txt size-4 transition-transform", open && "rotate-180")}/>
             </button>
 
             {!open &&
@@ -58,9 +101,20 @@ export default function SelectBox({label, options, value, onChange, className, h
             }
 
             {(open && !disabled) && (
-                <ul dir={"ltr"} className="min-w-max absolute max-h-96 z-10 w-full mt-2 p-3 pr-1 bg-primary-bg border border-violet-500 rounded-lg overflow-y-auto select-box-scroll">
-                    {options.map(opt => (
+                <ul
+                    id="select-options"
+                    role="listbox"
+                    tabIndex={-1}
+                    dir={"ltr"}
+                    className="min-w-max absolute max-h-96 z-10 w-full mt-2 p-1 bg-primary-bg border border-violet-500 rounded-lg overflow-y-auto select-box-scroll space-y-0.5"
+                >
+                    {options.map((opt, index) => (
                         <li
+                            id={`option-${index}`}
+                            role="option"
+                            aria-selected={value === opt.value}
+                            tabIndex={-1}
+                            onKeyDown={keyHandler}
                             dir={"rtl"}
                             key={opt.value}
                             onClick={() => {
@@ -68,12 +122,18 @@ export default function SelectBox({label, options, value, onChange, className, h
                                 setOpen(false);
                             }}
                             className={cn(
-                                "min-w-max text-sm flex items-center gap-4 cursor-pointer px-4 py-2  leading-7 hover:bg-white/10 active:bg-neutral-50",
-                                value === opt.value && "font-bold bg-white/10"
+                                "min-w-max flex flex-row items-center justify-between text-sm gap-4 cursor-pointer rounded-lg px-4 py-1.5 leading-7 hover:bg-white/10",
+                                value === opt.value && "font-bold bg-violet-500/40", focusedIndex === index && "bg-white/10"
                             )}
                         >
-                            {opt.icon && <Icon className={"text-teal-600"} id={opt.icon}/>}
-                            {opt.label}
+                            <span className={"flex items-center gap-2"}>
+                                {opt.icon && <Icon className={"text-violet-600"} icon={opt.icon}/>
+                                }
+                                {opt.label}
+                            </span>
+                            {value === opt.value && <Icon
+                                className={"size-5"} icon={"tick"}/>
+                            }
                         </li>
                     ))}
                 </ul>

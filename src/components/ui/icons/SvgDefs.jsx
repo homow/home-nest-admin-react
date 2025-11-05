@@ -123,6 +123,21 @@ const HomePageIcons = () => {
     )
 }
 
+const Primary = () => {
+    return (
+        <>
+            {/* chevronDown */}
+            <symbol id="chevronDown-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </symbol>
+            {/* tick */}
+            <symbol id="tick-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </symbol>
+        </>
+    )
+}
+
 export default function SvgDefs() {
     return (
         <svg className={"hidden"}>
@@ -134,6 +149,9 @@ export default function SvgDefs() {
 
             {/* <=== Home Page ===> */}
             <HomePageIcons/>
+
+            {/* <=== Primary ===> */}
+            <Primary/>
         </svg>
     )
 };
