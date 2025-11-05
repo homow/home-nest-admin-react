@@ -6,7 +6,6 @@ import AlertModal from "@components/ui/modals/AlertModal";
 import ConfirmModal from "@components/ui/modals/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
-import {LockScreen} from "@components/ui/Fragments"
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
 import BASE_PATH from "@/config.js";
@@ -89,9 +88,9 @@ export default function DropDownAccount({setOpenMenu, open, className}) {
 
     const logoutHandler = async () => {
         try {
-            const res = await logout();
+            // const res = await logout();
 
-            if (res.ok) {
+            if (true) {
                 setIsOpenAlertModal(true);
                 setAlertModalData({type: "success", message: "خروج موفق بود."})
                 setOpenLogoutModal(false);
@@ -151,9 +150,9 @@ export default function DropDownAccount({setOpenMenu, open, className}) {
 
             {/* overlay */}
             <Overlay
-                z={"z-20"}
                 flag={openLogoutModal}
                 setFlag={setOpenLogoutModal}
+                lock={lockScreenOpen}
             />
 
             {/* alert modals for success message after logout */}
@@ -163,8 +162,9 @@ export default function DropDownAccount({setOpenMenu, open, className}) {
                 setData={setAlertModalData}
                 setIsOpen={setIsOpenAlertModal}
             />
-            <LockScreen
-                isOpen={lockScreenOpen}
+            <Overlay
+                flag={lockScreenOpen}
+                lock={true}
             />
         </div>
     )
