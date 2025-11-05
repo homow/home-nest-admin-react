@@ -112,7 +112,7 @@ export default async function handler(req, res) {
                     const originalName = (f.originalFilename || "file").toString();
                     const ext = (originalName.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "").toLowerCase();
                     const filename = `${hash}.${ext}`;
-                    const path = `images/${filename}`;
+                    const path = `properties/${filename}`;
 
                     if (reserved.created) {
                         // Upload
