@@ -148,8 +148,8 @@ export default function SelectBox({label, options, value, onChange, className, h
                                 setOpen(false);
                             }}
                             className={cn(
-                                "min-w-max flex flex-row items-center justify-between text-sm gap-4 cursor-pointer px-4 py-1.5 leading-7 hover:bg-white/10",
-                                value === opt.value && "font-bold bg-violet-500/40", focusedIndex === index && "bg-white/10"
+                                "min-w-max flex flex-row items-center justify-between text-sm gap-4 cursor-pointer px-4 py-1.5 leading-7 hover:bg-black/30 dark:hover:bg-white/10",
+                                value === opt.value && "font-bold bg-violet-500/40", focusedIndex === index && "bg-black/30 dark:bg-white/10"
                             )}
                         >
                             <span className={"flex items-center gap-2"}>
