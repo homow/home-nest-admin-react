@@ -147,30 +147,16 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
                 {/* category and price */}
                 <div className={"multi-inputs-style"}>
-                    <div>
-                        <SelectBox
-                            label={"دسته بندی"}
-                            value={formData.category}
-                            onChange={e => handleChange("category", e)}
-                            options={[
-                                {value: "rent", label: "رهن"},
-                                {value: "sale", label: "فروش"}
-                            ]}
-                        />
-                    </div>
                     {/* category */}
-                    {/*<div>*/}
-                    {/*    <label htmlFor={"category"} className="flex flex-row gap-1 text-sm font-medium mb-1">دسته بندی</label>*/}
-                    {/*    <select*/}
-                    {/*        id="category"*/}
-                    {/*        value={formData.category}*/}
-                    {/*        onChange={e => handleChange("category", e.target.value)}*/}
-                    {/*        className="block w-full rounded-lg border border-gray-300 text-secondary-txt bg-primary-bg/40 px-4 py-2 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition"*/}
-                    {/*    >*/}
-                    {/*        <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="sale">فروش</option>*/}
-                    {/*        <option className={"text-secondary-txt bg-main-bg aria-selected:bg-violet-500"} value="rent">رهن</option>*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
+                    <SelectBox
+                        label={"دسته بندی"}
+                        value={formData.category}
+                        onChange={e => handleChange("category", e)}
+                        options={[
+                            {value: "rent", label: "رهن"},
+                            {value: "sale", label: "فروش"}
+                        ]}
+                    />
 
                     {/* price */}
                     <Input

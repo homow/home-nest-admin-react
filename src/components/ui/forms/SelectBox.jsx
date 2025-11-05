@@ -32,7 +32,7 @@ export default function SelectBox({label, options, value, onChange, className, h
     return (
         <div ref={ref} className={cn("relative w-full", className)}>
             <p
-                className={cn("absolute font-medium bg-primary-bg p-1 pb-0 -top-3.5 right-3.5 text-sm", open && "text-teal-600", hasError && "text-red-600", disabled && "text-neutral-400")}
+                className={cn("font-medium mb-1 -top-3.5 right-3.5 text-sm", disabled && "text-neutral-400")}
             >
                 {label}
             </p>
@@ -41,11 +41,11 @@ export default function SelectBox({label, options, value, onChange, className, h
                 type="button"
                 onClick={openHandler}
                 className={cn(
-                    "h-11 flex justify-between text-neutral-500 font-medium items-center w-full rounded-xl border-[0.5px] border-neutral-500 px-4 text-right bg-primary-bg md:h-12",
-                    "hover:text-neutral-700 transition-all", open && "text-teal-600 border-teal-600", hasError && "border-red-600", disabled && "text-neutral-300 border-neutral-300 hover:text-neutral-300 cursor-not-allowed"
+                    "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border-[0.5px] border-gray-300 px-4 py-2 text-right bg-primary-bg/40",
+                    "hover:text-neutral-700 transition-all", open && "border-violet-500", hasError && "border-red-600", disabled && "text-neutral-300 border-neutral-300 hover:text-neutral-300 cursor-not-allowed"
                 )}
             >
-                <span>{selectedLabel}</span>
+                <span className={"text-secondary-txt"}>{selectedLabel}</span>
                 <Icon id={"chevronDown"} className={cn("size-2.5 transition-transform", open && "rotate-180")}/>
             </button>
 
@@ -58,7 +58,7 @@ export default function SelectBox({label, options, value, onChange, className, h
             }
 
             {(open && !disabled) && (
-                <ul dir={"ltr"} className="min-w-max absolute max-h-96 z-10 w-full mt-2 p-3 pr-1 bg-primary-bg border border-neutral-100 rounded-lg overflow-y-auto select-box-scroll">
+                <ul dir={"ltr"} className="min-w-max absolute max-h-96 z-10 w-full mt-2 p-3 pr-1 bg-primary-bg border border-violet-500 rounded-lg overflow-y-auto select-box-scroll">
                     {options.map(opt => (
                         <li
                             dir={"rtl"}
@@ -68,8 +68,8 @@ export default function SelectBox({label, options, value, onChange, className, h
                                 setOpen(false);
                             }}
                             className={cn(
-                                "min-w-max flex items-center gap-4 cursor-pointer px-4 py-3  leading-7 hover:bg-neutral-50 active:bg-neutral-50",
-                                value === opt.value && "font-bold bg-neutral-50"
+                                "min-w-max text-sm flex items-center gap-4 cursor-pointer px-4 py-2  leading-7 hover:bg-white/10 active:bg-neutral-50",
+                                value === opt.value && "font-bold bg-white/10"
                             )}
                         >
                             {opt.icon && <Icon className={"text-teal-600"} id={opt.icon}/>}
