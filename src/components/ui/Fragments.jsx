@@ -12,12 +12,4 @@ const ErrorMessageInputs = ({cls, msg = ""}) => {
     )
 }
 
-const LockScreen = ({isOpen, z = 30}) => {
-    if (!isOpen) return null;
-
-    return (
-        <div className={cn("bg-black/70 size-full inset-0 fixed", z)}/>
-    )
-}
-
-export {RedStarField, ErrorMessageInputs, LockScreen}
+export {RedStarField, ErrorMessageInputs}
