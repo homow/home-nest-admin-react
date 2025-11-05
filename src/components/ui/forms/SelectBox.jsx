@@ -107,8 +107,8 @@ export default function SelectBox({label, options, value, onChange, className, h
                 aria-expanded={open}
                 aria-controls="select-options"
                 className={cn(
-                    "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border-[0.5px] border-gray-300 outline-none px-4 py-2 text-right bg-primary-bg/40 focus:border-violet-500 focus-visible:ring-1 focus:ring-violet-500",
-                    "hover:text-neutral-700 transition-all", open && "border-violet-500 rounded-b-none"
+                    "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border border-gray-300 outline-none px-4 py-2 text-right bg-primary-bg/40 focus:border-violet-500 focus-visible:ring-1 focus:ring-violet-500",
+                    "hover:text-neutral-700 transition-all", open && "ring-1 ring-violet-500 border-violet-500 rounded-b-none"
                 )}
             >
                 <span className={"text-secondary-txt"}>{selectedLabel}</span>

@@ -2,8 +2,6 @@ import {IncomingForm} from "formidable";
 import fs from "fs/promises";
 import supabaseServer from "./config/supabaseServer.js";
 
-const supabase = supabaseServer();
-
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 const ALLOWED_MIMES = [
     "image/jpeg",
@@ -13,7 +11,7 @@ const ALLOWED_MIMES = [
     "image/heic",
     "image/heif",
     "image/gif",
-    "image/svg+xml"
+    "image/svg+xml",
 ];
 
 function isUuid(v) {
@@ -40,6 +38,17 @@ export const config = {
     api: {bodyParser: false},
 };
 
+const supabaseClientWithUserToken = token => {
+    return supabaseServer(
+        {
+            global: {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        })
+}
+
 export default async function handler(req, res) {
     try {
         if (req.method !== "POST") {
@@ -57,6 +66,13 @@ export default async function handler(req, res) {
                 if (!property_id || !isUuid(property_id)) {
                     return res.status(400).json({error: "invalid_property_id"});
                 }
+
+                // Read auth token from incoming Authorization header if present
+                const authHeader = req.headers?.authorization || req.headers?.Authorization || "";
+                const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+
+                // Create per-request Supabase client that sends user's token to Supabase.
+                const supabase = supabaseClientWithUserToken(token);
 
                 const fileEntries = [];
                 if (files?.main_image) {
@@ -96,10 +112,14 @@ export default async function handler(req, res) {
 
                     const hash = await sha256Hex(new Uint8Array(buffer));
 
-                    // Call reserve RPC
+                    // Call reserve RPC with the client that includes user's token
                     const {data: reserveData, error: reserveErr} = await supabase.rpc("reserve_image_record", {p_hash: hash});
                     if (reserveErr) {
                         console.error("reserve_image_record rpc error:", reserveErr);
+                        // If it's a permission error from DB, return 403 to client
+                        if (reserveErr?.code === "P0001" || String(reserveErr?.message || "").toLowerCase().includes("permission")) {
+                            return res.status(403).json({error: "forbidden"});
+                        }
                         return res.status(500).json({error: "internal_error"});
                     }
                     const reserved = Array.isArray(reserveData) ? reserveData[0] : reserveData;
@@ -127,7 +147,7 @@ export default async function handler(req, res) {
                         });
 
                         if (upload.error) {
-                            const msg = String(upload.error.message || upload.error);
+                            const msg = String(upload.error.message || upload.error || "");
                             // If already exists, treat as reused but continue
                             if (msg.includes("already exists") || msg.includes("cannot overwrite")) {
                                 reused = true;
@@ -182,7 +202,7 @@ export default async function handler(req, res) {
                                     imageUrl = publicUrl;
                                 }
                             } catch (e) {
-                                console.log(e)
+                                console.log(e);
                                 const {publicUrl} = supabase.storage.from("img").getPublicUrl(path);
                                 imageUrl = publicUrl;
                             }

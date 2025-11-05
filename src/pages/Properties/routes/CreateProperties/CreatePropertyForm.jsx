@@ -153,8 +153,8 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
                         value={formData.category}
                         onChange={e => handleChange("category", e)}
                         options={[
-                            {value: "rent", label: "رهن"},
                             {value: "sale", label: "فروش"},
+                            {value: "rent", label: "رهن"},
                         ]}
                     />
 
