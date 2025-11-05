@@ -5,8 +5,10 @@ import Icon from "@components/ui/icons/Icon.jsx";
 export default function SelectBox({label, options, value, onChange, className, helperText, hasError, disabled}) {
     const [open, setOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
-    const ref = useRef(null);
+    const wrapperRef = useRef(null);
+    const optionRefs = useRef([]);
 
+    // choose option with arrow keys
     const keyHandler = e => {
         if (!open) {
             if (e.key === "Enter" || e.key === " ") {
@@ -41,6 +43,7 @@ export default function SelectBox({label, options, value, onChange, className, h
         }
     };
 
+    // open handler
     const openHandler = () => {
         if (!open && disabled) {
             return;
@@ -49,13 +52,30 @@ export default function SelectBox({label, options, value, onChange, className, h
         setOpen(!open);
     }
 
+    //
+    useEffect(() => {
+        optionRefs.current = optionRefs.current.slice(0, options.length);
+    }, [options]);
+
+    // scroll box by arrow key
+    useEffect(() => {
+        if (focusedIndex >= 0 && optionRefs.current[focusedIndex]) {
+            optionRefs.current[focusedIndex].scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+    }, [focusedIndex]);
+
+    // clear focus when closes box
     useEffect(() => {
         setFocusedIndex(-1)
     }, [open])
 
+    // close box when click the outside
     useEffect(() => {
         const handleClickOutside = e => {
-            if (ref.current && !ref.current.contains(e.target)) {
+            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
                 setOpen(false);
             }
         };
@@ -69,7 +89,10 @@ export default function SelectBox({label, options, value, onChange, className, h
     const selectedLabel = options.find(o => o.value === value)?.label || "انتخاب کنید";
 
     return (
-        <div ref={ref} className={cn("relative w-full", className)}>
+        <div
+            ref={wrapperRef}
+            className={cn("relative w-full", className)}
+        >
             <p
                 className={cn("font-medium mb-1 -top-3.5 right-3.5 text-sm", disabled && "text-neutral-400")}
             >
@@ -85,7 +108,7 @@ export default function SelectBox({label, options, value, onChange, className, h
                 aria-controls="select-options"
                 className={cn(
                     "flex justify-between text-neutral-500 font-medium items-center w-full rounded-lg border-[0.5px] border-gray-300 outline-none px-4 py-2 text-right bg-primary-bg/40 focus:border-violet-500 focus-visible:ring-1 focus:ring-violet-500",
-                    "hover:text-neutral-700 transition-all", open && "border-violet-500"
+                    "hover:text-neutral-700 transition-all", open && "border-violet-500 rounded-b-none"
                 )}
             >
                 <span className={"text-secondary-txt"}>{selectedLabel}</span>
@@ -113,6 +136,9 @@ export default function SelectBox({label, options, value, onChange, className, h
                             id={`option-${index}`}
                             role="option"
                             aria-selected={value === opt.value}
+                            ref={el => {
+                                optionRefs.current[index] = el
+                            }}
                             tabIndex={-1}
                             onKeyDown={keyHandler}
                             dir={"rtl"}
@@ -122,7 +148,7 @@ export default function SelectBox({label, options, value, onChange, className, h
                                 setOpen(false);
                             }}
                             className={cn(
-                                "min-w-max flex flex-row items-center justify-between text-sm gap-4 cursor-pointer rounded-lg px-4 py-1.5 leading-7 hover:bg-white/10",
+                                "min-w-max flex flex-row items-center justify-between text-sm gap-4 cursor-pointer px-4 py-1.5 leading-7 hover:bg-white/10",
                                 value === opt.value && "font-bold bg-violet-500/40", focusedIndex === index && "bg-white/10"
                             )}
                         >
