@@ -114,4 +114,20 @@
             @apply flex-row *:w-full;
         }
     }
+
+    /* scrollBar for custom select box */
+    .select-box-scroll::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .select-box-scroll::-webkit-scrollbar-track {
+        background-color: var(--color-primary-bg);
+    }
+
+    .select-box-scroll::-webkit-scrollbar-thumb {
+        border: 1px solid var(--color-primary-bg);
+        background-color: var(--color-teal-100);
+        border-radius: 3px;
+    }
 }
