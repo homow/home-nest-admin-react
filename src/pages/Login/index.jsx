@@ -4,7 +4,6 @@ import {useAuth} from "@/context/AuthContext";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
-import {ErrorMessageInputs} from "@components/ui/Fragments";
 import loginHandler from "@api/handlers/loginHandler.js";
 import {cn} from "@utils/ui-utils.js";
 import logo from "@img/logo.webp"
@@ -137,10 +136,9 @@ export default function Login() {
                                 autoComplete={"email"}
                                 onChange={setEmailHandler}
                                 placeholder={"you@example.com"}
-                                className={cn("text-sm xs:text-base", errors.email && "border-rose-600 bg-rose-600/10")}
                                 dir={"ltr"}
+                                hasError={errors.email}
                             />
-                            <ErrorMessageInputs msg={errors.email}/>
                         </div>
 
                         <div>
@@ -154,10 +152,9 @@ export default function Login() {
                                 onChange={setPasswordHandler}
                                 children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
-                                className={cn("text-sm xs:text-base", errors.password && "border-rose-600 bg-rose-600/10")}
                                 dir={"ltr"}
+                                hasError={errors.password}
                             />
-                            <ErrorMessageInputs msg={errors.password}/>
                         </div>
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
