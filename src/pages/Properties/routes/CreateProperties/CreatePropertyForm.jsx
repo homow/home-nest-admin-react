@@ -3,8 +3,7 @@ import Button from "@components/ui/Button";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import SelectBox from "@components/ui/forms/SelectBox";
-import {RedStarField} from "@components/ui/Fragments";
-import {ErrorMessageInputs} from "@components/ui/Fragments"
+import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
