@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import Button from "@components/ui/Button";
-import Input from "@components/ui/forms/Input";
-import CheckBox from "@components/ui/forms/CheckBox";
-import SelectBox from "@components/ui/forms/SelectBox";
-import {RedStarField, ErrorMessageInputs} from "@components/ui/Fragments";
+import Button from "@ui/Button";
+import Input from "@ui/forms/Input";
+import CheckBox from "@ui/forms/CheckBox";
+import SelectBox from "@ui/forms/SelectBox";
+import {RedStarField, ErrorMessageInputs} from "@ui/Fragments";
 import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
 import {cn} from "@/lib/utils/ui-utils.js";
 
