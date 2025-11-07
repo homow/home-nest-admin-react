@@ -5,7 +5,6 @@ import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
 import loginHandler from "@api/handlers/loginHandler.js";
-import {cn} from "@utils/ui-utils.js";
 import logo from "@img/logo.webp"
 
 export default function Login() {
