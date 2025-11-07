@@ -21,7 +21,7 @@ export default function SideBarHeader() {
             );
             setTitleStyle(collapsed ? "hidden" : "");
         }
-    }, []);
+    }, [collapsed]);
 
     // run in component mounted
     useEffect(() => {
