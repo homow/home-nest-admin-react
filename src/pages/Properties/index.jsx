@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import PropertiesLayout from "./PropertiesLayout.jsx";
+import PropertiesLayout from "./PropertiesLayout";
 
 export default function Properties() {
     useEffect(() => {

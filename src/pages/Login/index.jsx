@@ -63,7 +63,7 @@ export default function Login() {
             remember
         };
 
-        await loginHandler(userInfo, setAlertModalData, setIsOpenAlertModal, setAuthInfo, setLoading);
+        await loginHandler(userInfo, setAlertModalData, setIsOpenAlertModal, setAuthInfo);
         setLoading(false);
     }
 
