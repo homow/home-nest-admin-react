@@ -1,5 +1,5 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {getAccessToken} from "@api/axiosInstance.js";
+import {getAccessToken} from "@api/axios-instance.js";
 import {refresh} from "@api/requests/auth.js";
 
 const AuthContext = createContext(null);

@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance.js";
+import axiosInstance from "../axios-instance.js";
 
 const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);

@@ -31,7 +31,6 @@ axiosInstance.interceptors.request.use(
         }
 
         const token = accessToken;
-        console.log("🟢 Using token:", token ? token.slice(0, 10) + "..." : "NO TOKEN");
 
         if (token) config.headers.Authorization = `Bearer ${token}`;
 
