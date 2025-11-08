@@ -28,7 +28,7 @@ function AuthProvider({children}) {
     }, []);
 
     useEffect(() => {
-        setAccessTokenGetter(accessToken);
+        if (accessToken) setAccessTokenGetter(accessToken);
     }, [accessToken]);
 
     const setAuthInfo = ({userData, token}) => {
