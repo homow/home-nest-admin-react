@@ -28,7 +28,30 @@
     --color-hover: #3A35410A;
     --color-shadow: #3A35411A;
 
+    /* shadow box */
     --shadow-custom: 0px 2px 10px 0px var(--color-shadow);
+
+    /* <=== animations ===> */
+    --animate-shake: shake 0.4s ease-in-out;
+
+    /* key frames */
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-2px);
+        }
+        50% {
+            transform: translateX(2px);
+        }
+        75% {
+            transform: translateX(-2px);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
 }
 
 @utility mobile-nav {
@@ -49,44 +72,57 @@
     html {
         @apply transition-all scroll-smooth;
     }
+
     *,
     *::before,
     *::after {
         letter-spacing: 1px;
     }
+
     *::-webkit-scrollbar {
         @apply size-3;
     }
+
     *::-webkit-scrollbar-track {
         @apply bg-stone-800;
     }
+
     *::-webkit-scrollbar-thumb {
         @apply bg-violet-500 border-x-1 border-stone-800 rounded-none;
     }
+
     body {
         @apply font-dana font-normal leading-[150%] text-base bg-primary-bg text-primary-txt tracking-wider selection:bg-violet-700 selection:text-white;
     }
+
     h1, h2, h3 {
         @apply font-bold;
     }
+
     h4, h5, h6 {
         @apply font-medium;
     }
+
     h1 {
         @apply text-xl xs:text-2xl md:text-3xl leading-[140%];
     }
+
     h2 {
         @apply text-2xl md:text-4xl lg:text-5xl;
     }
+
     h3 {
         @apply text-xl md:text-2xl lg:text-3xl;
     }
+
     a {
         @apply hover:text-violet-400 active:text-violet-400 transition-all;
     }
+
     #login-logo {
         @apply hidden;
     }
+
     /* <=== media screens ===> */
     @media (min-width: 896px) {
         :root {
@@ -104,9 +140,11 @@
     .grad-links {
         @apply shadow-md bg-gradient-to-r from-violet-500/45 to-violet-500 text-white;
     }
+
     .main-components {
         @apply bg-main-bg rounded-md shadow-custom p-5;
     }
+
     .multi-inputs-style {
         @apply flex flex-col gap-6;
 
