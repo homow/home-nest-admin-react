@@ -86,24 +86,24 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     const submitHandler = async event => {
         event.preventDefault();
 
-        const formData = new FormData();
-
-        if (mainFile) {
-            formData.append("main_image", mainFile);
-        }
-
-        if (otherFiles.length > 0) {
-            otherFiles.forEach(f => formData.append("images", f));
-        }
-
-        formData.append("property_id", "b04e4094-cfac-4119-9d38-58ad67b2db3a")
-
-        try {
-            const res = await uploadPropertyImages(formData)
-            console.log(res)
-        } catch (e) {
-            console.log(e)
-        }
+        // const formData = new FormData();
+        //
+        // if (mainFile) {
+        //     formData.append("main_image", mainFile);
+        // }
+        //
+        // if (otherFiles.length > 0) {
+        //     otherFiles.forEach(f => formData.append("images", f));
+        // }
+        //
+        // formData.append("property_id", "b04e4094-cfac-4119-9d38-58ad67b2db3a")
+        //
+        // try {
+        //     const res = await uploadPropertyImages(formData)
+        //     console.log(res)
+        // } catch (e) {
+        //     console.log(e)
+        // }
     }
 
     return (
