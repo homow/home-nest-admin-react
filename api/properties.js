@@ -104,6 +104,9 @@ export default async function handler(req, res) {
             // property_number optional (admin provided short id)
             const property_number = payload.property_number ? String(payload.property_number) : undefined;
 
+            payload.images = Array.isArray(payload.images) ? payload.images : [];
+            payload.tags = Array.isArray(payload.tags) ? payload.tags : [];
+
             const insertObj = {
                 title: String(payload.title),
                 category: String(payload.category),
@@ -113,8 +116,8 @@ export default async function handler(req, res) {
                 address: payload.address ? String(payload.address) : null,
                 features: payload.features,
                 main_image: payload.main_image || null,
-                images: Array.isArray(payload.images) ? payload.images : undefined,
-                tags: Array.isArray(payload.tags) ? payload.tags : undefined,
+                images: payload.images,
+                tags: payload.tags,
                 metadata: payload.metadata || undefined,
                 discount_until: discount_until,
                 price_with_discount: price_with_discount,
