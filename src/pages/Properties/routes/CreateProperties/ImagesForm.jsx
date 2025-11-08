@@ -86,12 +86,12 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     const submitHandler = async event => {
         event.preventDefault();
 
-        try {
-            const res = await getProperty()
-            console.log(res)
-        } catch (e) {
-            console.log(e)
-        }
+        // try {
+        //     const res = await getProperty()
+        //     console.log(res)
+        // } catch (e) {
+        //     console.log(e)
+        // }
 
         // const formData = new FormData();
         //

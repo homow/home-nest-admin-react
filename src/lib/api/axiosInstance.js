@@ -1,11 +1,11 @@
 import axios from "axios";
-import {refresh} from "@api/requests/auth.js";
+import { refresh } from "@api/requests/auth.js";
 
 let accessTokenGetter = null;
 let refreshPromise = null;
 
-const setAccessTokenGetter = getter => {
-    accessTokenGetter = getter;
+const setAccessTokenGetter = token => {
+    accessTokenGetter = token;
 };
 
 const axiosInstance = axios.create({
@@ -16,8 +16,22 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-    config => {
+    async config => {
+        if (!accessTokenGetter) {
+            console.warn("⚠️ No token, trying refresh...");
+            try {
+                const newToken = await refresh();
+                if (newToken) {
+                    accessTokenGetter = newToken;
+                }
+            } catch (e) {
+                console.error("❌ Refresh failed before request:", e);
+            }
+        }
+
         const token = accessTokenGetter;
+        console.log("🟢 Using token:", token ? token.slice(0, 10) + "..." : "NO TOKEN");
+
         if (token) config.headers.Authorization = `Bearer ${token}`;
 
         if (config.data instanceof FormData) {
@@ -25,28 +39,27 @@ axiosInstance.interceptors.request.use(
         }
         return config;
     },
-    err => {
-        console.log(err)
-        return Promise.reject(err)
-    });
+    err => Promise.reject(err)
+);
 
 axiosInstance.interceptors.response.use(
     res => res,
     async error => {
         const originalRequest = error.config;
 
-        if (originalRequest && !originalRequest._retry && error.response?.status === 401) {
+        if (originalRequest && !originalRequest._retry && [401, 403].includes(error.response?.status)) {
             originalRequest._retry = true;
 
             if (!refreshPromise) {
                 refreshPromise = refresh()
                     .then(newToken => {
                         refreshPromise = null;
+                        if (newToken) accessTokenGetter = newToken;
                         return newToken;
                     })
                     .catch(err => {
                         refreshPromise = null;
-                        console.log(err)
+                        console.error("Refresh failed:", err);
                         throw err;
                     });
             }
@@ -58,9 +71,10 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
             }
         }
+
         return Promise.reject(error);
     }
 );
 
-export {setAccessTokenGetter}
+export { setAccessTokenGetter };
 export default axiosInstance;
