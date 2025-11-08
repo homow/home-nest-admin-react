@@ -22,6 +22,8 @@ export default function CreateProperty() {
     }
 
     const createPropertyHandler = async data => {
+        if (loading) return;
+
         setLoading(true);
         const fixData = fixPropertyData(data);
         const dataProperty = {
@@ -41,13 +43,14 @@ export default function CreateProperty() {
                     const imgRes = await uploadPropertyImages(imagesFormData);
 
                     if (imgRes?.status === "ok") {
+                        console.log("imgRes if:", imgRes);
                         setSuccessCreate(true);
                         openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."})
                     } else {
+                        console.log("imgRes else:", imgRes);
                         openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."})
                     }
 
-                    console.log(imgRes);
                 } catch (e) {
                     openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."});
                     console.log("not ok img:", e);
