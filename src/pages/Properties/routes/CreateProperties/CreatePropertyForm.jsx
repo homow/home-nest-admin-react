@@ -26,6 +26,7 @@ const initialFormData = {
 
 export default function CreatePropertyForm({onSubmit, isLoading, successCreate}) {
     const [formData, setFormData] = useState(initialFormData);
+    const [hasError, setHasError] = useState(false);
     const [errors, setErrors] = useState({
         title: "",
         description: "",
@@ -35,6 +36,11 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
         price: "",
         discount: ""
     });
+
+    useEffect(() => {
+        const rawErrors = Object.values(errors).filter(e => Boolean(e)).length > 0;
+        setHasError(rawErrors);
+    }, [errors])
 
     // reset form data after success create a property
     useEffect(() => {
