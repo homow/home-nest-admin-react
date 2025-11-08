@@ -295,7 +295,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
                                 }
                             }}
                             placeholder="مثلاً طبقه دوم، ۲ خوابه، دارای استخر و چند حمام مجزا و . . ."
-                            className={cn("mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition", errors.description && "border-rose-600 bg-rose-600/10")}
+                            className={cn("select-box-scroll mt-1 block w-full rounded-lg border border-gray-300 bg-primary-bg/40 px-4 py-2 placeholder-secondary-txt focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition", errors.description && "border-rose-600 bg-rose-600/10")}
                         >
                         </textarea>
                     </div>
