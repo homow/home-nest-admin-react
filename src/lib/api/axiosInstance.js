@@ -1,11 +1,11 @@
 import axios from "axios";
-import { refresh } from "@api/requests/auth.js";
+import {refresh} from "@api/requests/auth.js";
 
-let accessTokenGetter = null;
+let accessToken = null;
 let refreshPromise = null;
 
-const setAccessTokenGetter = token => {
-    accessTokenGetter = token;
+const getAccessToken = token => {
+    accessToken = token;
 };
 
 const axiosInstance = axios.create({
@@ -17,19 +17,19 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     async config => {
-        if (!accessTokenGetter) {
+        if (!getAccessToken) {
             console.warn("⚠️ No token, trying refresh...");
             try {
                 const newToken = await refresh();
                 if (newToken) {
-                    accessTokenGetter = newToken;
+                    accessToken = newToken;
                 }
             } catch (e) {
                 console.error("❌ Refresh failed before request:", e);
             }
         }
 
-        const token = accessTokenGetter;
+        const token = accessToken;
         console.log("🟢 Using token:", token ? token.slice(0, 10) + "..." : "NO TOKEN");
 
         if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -54,7 +54,7 @@ axiosInstance.interceptors.response.use(
                 refreshPromise = refresh()
                     .then(newToken => {
                         refreshPromise = null;
-                        if (newToken) accessTokenGetter = newToken;
+                        if (newToken) accessToken = newToken;
                         return newToken;
                     })
                     .catch(err => {
@@ -76,5 +76,5 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-export { setAccessTokenGetter };
+export {getAccessToken};
 export default axiosInstance;

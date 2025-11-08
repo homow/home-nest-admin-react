@@ -1,5 +1,5 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {setAccessTokenGetter} from "@api/axiosInstance.js";
+import {getAccessToken} from "@api/axiosInstance.js";
 import {refresh} from "@api/requests/auth.js";
 
 const AuthContext = createContext(null);
@@ -28,7 +28,7 @@ function AuthProvider({children}) {
     }, []);
 
     useEffect(() => {
-        if (accessToken) setAccessTokenGetter(accessToken);
+        if (accessToken) getAccessToken(accessToken);
     }, [accessToken]);
 
     const setAuthInfo = ({userData, token}) => {
