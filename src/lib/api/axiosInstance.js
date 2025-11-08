@@ -20,9 +20,10 @@ axiosInstance.interceptors.request.use(
         if (!getAccessToken) {
             console.warn("⚠️ No token, trying refresh...");
             try {
-                const newToken = await refresh();
-                if (newToken) {
-                    accessToken = newToken;
+                const res = await refresh();
+
+                if (res?.accessToken && res?.ok) {
+                    accessToken = res.accessToken;
                 }
             } catch (e) {
                 console.error("❌ Refresh failed before request:", e);
