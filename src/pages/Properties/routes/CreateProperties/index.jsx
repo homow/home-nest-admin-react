@@ -32,7 +32,6 @@ export default function CreateProperty() {
         try {
             const propertyRes = await createProperty(dataProperty);
 
-
             if (propertyRes?.data?.ok) {
                 console.log("ok pr:", propertyRes?.data);
 

@@ -96,7 +96,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
             otherFiles.forEach(f => formData.append("images", f));
         }
 
-        formData.append("property_id", "7bb3393a-fd94-472b-aca6-19397271f688")
+        formData.append("property_id", "b04e4094-cfac-4119-9d38-58ad67b2db3a")
 
         try {
             const res = await uploadPropertyImages(formData)

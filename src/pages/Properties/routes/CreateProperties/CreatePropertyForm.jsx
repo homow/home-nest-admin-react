@@ -169,6 +169,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
                     {/* price */}
                     <Input
+                        dir={"ltr"}
                         label="قیمت به تومان (اگر وارد نکنید، توافقی میشه)"
                         name="price"
                         type="text"
@@ -195,6 +196,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
                     {/* price with discount */}
                     <Input
+                        dir={"ltr"}
                         autoComplete="price_with_discount"
                         label="قیمت با تخفیف"
                         name="price_with_discount"
