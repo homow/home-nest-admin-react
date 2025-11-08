@@ -49,7 +49,7 @@ export default function CreateProperty() {
 
                     console.log(imgRes);
                 } catch (e) {
-                    openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."})
+                    openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."});
                     console.log("not ok img:", e);
                 }
             } else {
