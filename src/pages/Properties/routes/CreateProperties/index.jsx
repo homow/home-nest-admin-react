@@ -4,6 +4,7 @@ import CreatePropertyForm from "./CreatePropertyForm";
 import AlertModal from "@components/ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@utils/api-utils.js"
+import {setErrorInCreateProperty} from "@api/error-handler/property.js";
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
@@ -62,6 +63,8 @@ export default function CreateProperty() {
         } catch (e) {
             openAlertModal({type: "error", message: "محصول اضافه نشد."});
             console.log("e on pr:", e)
+            const resError = setErrorInCreateProperty(e);
+            setAlertModalData({type: "error", message: resError});
         }
 
         setLoading(false);
