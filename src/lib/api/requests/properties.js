@@ -4,6 +4,10 @@ const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
 }
 
+const getProperty = async () => {
+    return await axiosInstance.get("/api/properties");
+}
+
 const uploadPropertyImages = async dataImg => {
     try {
         const {data} = await axiosInstance.post("/api/properties-image", dataImg, {
@@ -18,4 +22,4 @@ const uploadPropertyImages = async dataImg => {
     }
 }
 
-export {createProperty, uploadPropertyImages}
+export {createProperty, uploadPropertyImages, getProperty}

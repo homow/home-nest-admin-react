@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
-import {uploadPropertyImages} from "@api/requests/properties.js";
+import {getProperty, uploadPropertyImages} from "@api/requests/properties.js";
 
 export default function ImagesForm({formRef, refData, successCreate, setSuccessCreate}) {
     const [mainFile, setMainFile] = useState(null);
@@ -85,6 +85,13 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
 
     const submitHandler = async event => {
         event.preventDefault();
+
+        try {
+            const res = await getProperty()
+            console.log(res)
+        } catch (e) {
+            console.log(e)
+        }
 
         // const formData = new FormData();
         //
