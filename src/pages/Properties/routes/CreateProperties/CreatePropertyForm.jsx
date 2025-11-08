@@ -374,7 +374,8 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
             {/* submit */}
             <Button
-                disabled={isLoading}
+                hasError={hasError}
+                disabled={isLoading || hasError}
                 text={isLoading ? "در حال ارسال..." : "ثبت ملک"}
                 type={"submit"}
             />
