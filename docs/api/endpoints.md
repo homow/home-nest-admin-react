@@ -77,11 +77,12 @@ Content-Type: application/json
 **Required:**
 ```
 1.title
-2.category
+2.category(sale or rent)
 3.description
 4.province_and_city
 5.address
-6.features(1)
+6.features[1]
+7.stock(1 or 0)
 ```
 
 ### **`PUT`**
