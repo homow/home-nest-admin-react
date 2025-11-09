@@ -1,5 +1,4 @@
 import axiosInstance from "../axios-instance.js";
-import {data} from "react-router-dom";
 
 const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
