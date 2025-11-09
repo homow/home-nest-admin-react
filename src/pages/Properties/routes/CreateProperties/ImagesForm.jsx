@@ -70,17 +70,13 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     };
 
     useEffect(() => {
-        const formData = new FormData();
-
         if (mainFile) {
-            formData.append("main_image", mainFile);
+            refData.current.append("main_image", mainFile);
         }
 
         if (otherFiles.length > 0) {
-            otherFiles.forEach(f => formData.append("images", f));
+            otherFiles.forEach(f => refData.current.append("images", f));
         }
-
-        refData.current = formData;
     }, [mainFile, otherFiles, refData]);
 
     const submitHandler = async event => {
