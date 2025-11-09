@@ -72,13 +72,17 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         setOthersPreview(files.map(f => URL.createObjectURL(f)));
     };
 
+    // update FormData
     useEffect(() => {
+        // clear FormData before set again
         refData.current = new FormData();
 
+        // check file
         if (mainFile instanceof File) {
             refData.current.append("main_image", mainFile);
         }
 
+        // check files
         const isValidFiles = Array.isArray(otherFiles) && otherFiles.length > 0 && otherFiles.every(f => f instanceof File);
 
         if (isValidFiles) {
@@ -86,7 +90,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         }
     }, [mainFile, otherFiles, refData]);
 
-    const submitHandler = async event => event.preventDefault();
+    const submitHandler = event => event.preventDefault();
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>

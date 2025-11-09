@@ -1,11 +1,13 @@
 import axiosInstance from "../axios-instance.js";
+import {data} from "react-router-dom";
 
 const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
 }
 
 const getProperty = async id => {
-    return await axiosInstance.get(`/api/properties?id=${id}`);
+    if (id) return await axiosInstance.get(`/api/properties/${id}`);
+    return await axiosInstance.get("/api/properties");
 }
 
 const uploadPropertyImages = async dataImg => {
