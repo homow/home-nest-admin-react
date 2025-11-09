@@ -103,7 +103,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         //     otherFiles.forEach(f => formData.append("images", f));
         // }
         //
-        // formData.append("property_id", "b04e4094-cfac-4119-9d38-58ad67b2db3a")
+        // formData.append("property_id", "176334d4-b64e-4048-9e33-9871124c290f")
         //
         // try {
         //     const res = await uploadPropertyImages(formData)

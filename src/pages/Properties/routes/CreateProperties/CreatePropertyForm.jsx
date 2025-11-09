@@ -44,9 +44,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
 
     // reset form data after success create a property
     useEffect(() => {
-        if (successCreate) {
-            setFormData(initialFormData);
-        }
+        if (successCreate) setFormData(initialFormData);
     }, [successCreate]);
 
     // handle changes in data form

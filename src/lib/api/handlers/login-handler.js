@@ -1,5 +1,5 @@
 import {login} from "@api/requests/auth.js";
-import {delay} from "@utils/api-utils.js";
+import {delay} from "@api/api-utils.js";
 
 const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAuthInfo) => {
     // show alert modal

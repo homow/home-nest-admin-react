@@ -1,4 +1,4 @@
-import {buildObjectFromKeyValueArray, parsePriceFromString} from "./helper.js";
+import {buildObjectFromKeyValueArray, parsePriceFromString} from "@utils/helper.js";
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -6,7 +6,7 @@ const fixPropertyData = data => {
     return {
         tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
         price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
-        price: data.price.trim() ? parsePriceFromString(data.price) : "توافقی",
+        price: data.price.trim() ? parsePriceFromString(data.price) : undefined,
         metadata: data.metadata.trim() ? buildObjectFromKeyValueArray(data.metadata.split("،")) : undefined,
         discount_until: data.discount_until.trim() ? new Date(data.discount_until).toISOString() : undefined,
         title: data.title.trim(),

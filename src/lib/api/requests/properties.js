@@ -4,8 +4,8 @@ const createProperty = async data => {
     return await axiosInstance.post("/api/properties", data);
 }
 
-const getProperty = async () => {
-    return await axiosInstance.get("/api/properties");
+const getProperty = async id => {
+    return await axiosInstance.get(`/api/properties?id=${id}`);
 }
 
 const uploadPropertyImages = async dataImg => {

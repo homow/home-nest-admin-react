@@ -56,6 +56,10 @@ export default async function handler(req, res) {
                 const property_id = String(fields?.property_id || "");
                 const main_flag = String(fields?.is_main || "false") === "true";
                 if (!property_id || !isUuid(property_id)) {
+                    console.log("INVALID PROPERTY_ID DETECTED");
+                    console.log("fields:", fields);
+                    console.log("files:", files);
+                    console.log("property_id:", property_id);
                     return res.status(400).json({error: "invalid_property_id"});
                 }
 

@@ -84,8 +84,13 @@ export default async function handler(req, res) {
                 return res.status(400).json({error: 'INVALID_CATEGORY'});
             }
 
-            const price = Number(payload.price);
-            if (Number.isNaN(price) || price < 0) return res.status(400).json({error: 'INVALID_PRICE'});
+            let price = undefined;
+            if (payload.price !== undefined && payload.price !== null && payload.price !== "") {
+                price = Number(payload.price);
+                if (Number.isNaN(price) || price < 0) {
+                    return res.status(400).json({error: 'INVALID_PRICE'});
+                }
+            }
 
             let discount_until = null;
             if (payload.discount_until) {

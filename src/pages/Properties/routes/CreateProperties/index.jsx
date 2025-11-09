@@ -2,16 +2,16 @@ import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
 import AlertModal from "@components/ui/modals/AlertModal";
-import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
-import {fixPropertyData} from "@utils/api-utils.js"
+import {createProperty, getProperty, uploadPropertyImages} from "@api/requests/properties.js"
+import {delay, fixPropertyData} from "@api/api-utils.js"
 import {setErrorInCreateProperty} from "@api/error-handler/property.js";
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
     const [successCreate, setSuccessCreate] = useState(false);
-    const imagesFormData = useRef(null);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
+    const imagesFormData = useRef(null);
 
     useEffect(() => {
         document.title = "افزودن ملک | آشیانه";
@@ -38,9 +38,15 @@ export default function CreateProperty() {
             if (propertyRes?.data?.ok) {
                 console.log("ok pr:", propertyRes?.data);
 
-                imagesFormData.current.append("property_id", propertyRes?.data?.id);
+                imagesFormData.current.append("property_id", propertyRes?.data?.property?.id);
 
+                const res = await getProperty(propertyRes?.data?.property?.id);
+                console.log("get property after create:",res)
+                await delay(3000);
                 try {
+                    for (const f of imagesFormData.current.entries()) {
+                        console.log(f);
+                    }
                     const imgRes = await uploadPropertyImages(imagesFormData);
 
                     if (imgRes?.status === "ok") {
