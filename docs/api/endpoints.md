@@ -76,6 +76,15 @@ Content-Type: application/json
   "metadata": {"floors": 2, "area": 150}
 }
 ```
+**Required:**
+```
+1.title
+2.category
+3.description
+4.province_and_city
+5.address
+6.features(1)
+```
 
 ---
 
