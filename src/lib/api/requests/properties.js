@@ -23,4 +23,4 @@ const uploadPropertyImages = async dataImg => {
     }
 }
 
-export {createProperty, uploadPropertyImages, getProperty}
+export {createProperty, uploadPropertyImages, getProperty};
