@@ -4,7 +4,7 @@
 /api/login
 ```
 
-**`POST`**
+### **`POST`**
 
 *Send body as JSON:*
 
@@ -45,8 +45,6 @@ or fetch a list with pagination if no identifier is provided.
 GET /api/properties?id=8e4d42f1-9b1c-4f2e-9a1b-abcdef123456
 ```
 
----
-
 ### **`POST`**
 
 Create a new property *(Admin only)*.
@@ -86,8 +84,6 @@ Content-Type: application/json
 6.features(1)
 ```
 
----
-
 ### **`PUT`**
 
 Update an existing property *(Admin only)*.
@@ -109,8 +105,6 @@ Content-Type: application/json
   "price": 950000000
 }
 ```
-
----
 
 ### **`DELETE`**
 
@@ -134,3 +128,5 @@ Authorization: Bearer <access_token>
 ```
 DELETE /api/properties?num=PROP-1001
 ```
+
+---
