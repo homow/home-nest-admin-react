@@ -73,14 +73,16 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     };
 
     useEffect(() => {
-        if (mainFile) {
-            refData.current.set("main_image", mainFile);
+        refData.current = new FormData();
+
+        if (mainFile instanceof File) {
+            refData.current.append("main_image", mainFile);
         }
 
         const isValidFiles = Array.isArray(otherFiles) && otherFiles.length > 0 && otherFiles.every(f => f instanceof File);
 
         if (isValidFiles) {
-            otherFiles.forEach(f => refData.current.set("images", f));
+            otherFiles.forEach(f => refData.current.append("images", f));
         }
     }, [mainFile, otherFiles, refData]);
 

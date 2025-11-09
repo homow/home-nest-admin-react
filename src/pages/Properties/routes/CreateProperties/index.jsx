@@ -5,6 +5,7 @@ import AlertModal from "@components/ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@api/api-utils.js"
 import {setErrorInCreateProperty} from "@api/error-handler/property.js";
+import {login} from "@api/requests/auth.js";
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
@@ -12,9 +13,6 @@ export default function CreateProperty() {
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
     const imagesFormData = useRef(new FormData());
-
-    const arr = Array.from(imagesFormData.current);
-    console.log(arr)
 
     useEffect(() => {
         document.title = "افزودن ملک | آشیانه";
@@ -39,35 +37,42 @@ export default function CreateProperty() {
             const propertyRes = await createProperty(dataProperty);
 
             if (propertyRes?.data?.ok) {
+                // check if images is exist and valid.
+                const arr = Array.from(imagesFormData.current);
+                const isValidFiles = Array.isArray(arr) && arr.length > 0 && arr.every(f => f[1] instanceof File);
 
-                // if ()
+                if (isValidFiles) {
+                    imagesFormData.current.append("property_id", propertyRes?.data?.property?.id);
 
-                imagesFormData.current.append("property_id", propertyRes?.data?.property?.id);
+                    try {
+                        const imgRes = await uploadPropertyImages(imagesFormData.current);
 
-                try {
-                    const imgRes = await uploadPropertyImages(imagesFormData.current);
-
-                    if (imgRes?.status === "ok") {
-                        setSuccessCreate(true);
-                        openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."});
-                    } else {
+                        if (imgRes?.status === "ok") {
+                            setSuccessCreate(true);
+                            openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."});
+                        }
                         console.log("imgRes else:", imgRes);
+
+                    } catch (e) {
+                        console.log("not ok img:", e);
                         openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."});
+                        setLoading(false);
+                        return;
                     }
 
-                } catch (e) {
-                    openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."});
-                    console.log("not ok img:", e);
+                } else {
+                    openAlertModal({type: "success", message: "محصول با موفقیت اضافه شد."});
                 }
-            } else {
-                openAlertModal({type: "error", message: "محصول اضافه نشد."});
-                console.log("not ok pr:", propertyRes);
+
             }
+
         } catch (e) {
             openAlertModal({type: "error", message: "محصول اضافه نشد."});
-            console.log("e on pr:", e)
+            console.log("e on pr:", e);
             const resError = setErrorInCreateProperty(e);
             setAlertModalData({type: "error", message: resError});
+            setLoading(false);
+            return;
         }
 
         setLoading(false);
