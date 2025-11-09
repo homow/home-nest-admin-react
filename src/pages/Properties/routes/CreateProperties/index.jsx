@@ -13,6 +13,9 @@ export default function CreateProperty() {
     const [alertModalData, setAlertModalData] = useState({});
     const imagesFormData = useRef(new FormData());
 
+    const arr = Array.from(imagesFormData.current);
+    console.log(arr)
+
     useEffect(() => {
         document.title = "افزودن ملک | آشیانه";
     }, []);
@@ -31,24 +34,25 @@ export default function CreateProperty() {
             ...data,
             ...fixData
         }
-        console.log(dataProperty)
 
         try {
             const propertyRes = await createProperty(dataProperty);
 
             if (propertyRes?.data?.ok) {
+
+                // if ()
+
                 imagesFormData.current.append("property_id", propertyRes?.data?.property?.id);
 
                 try {
                     const imgRes = await uploadPropertyImages(imagesFormData.current);
 
                     if (imgRes?.status === "ok") {
-                        console.log("imgRes if:", imgRes);
                         setSuccessCreate(true);
-                        openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."})
+                        openAlertModal({type: "success", message: "محصول و تصاویر با موفقیت اضافه شدن."});
                     } else {
                         console.log("imgRes else:", imgRes);
-                        openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."})
+                        openAlertModal({type: "warning", message: "محصول اضافه اما تصاویر نشدن."});
                     }
 
                 } catch (e) {
