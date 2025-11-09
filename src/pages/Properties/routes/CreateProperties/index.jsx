@@ -5,7 +5,6 @@ import AlertModal from "@components/ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@api/api-utils.js"
 import {setErrorInCreateProperty} from "@api/error-handler/property.js";
-import {login} from "@api/requests/auth.js";
 
 export default function CreateProperty() {
     const [loading, setLoading] = useState(false);
@@ -61,6 +60,7 @@ export default function CreateProperty() {
                     }
 
                 } else {
+                    setSuccessCreate(true);
                     openAlertModal({type: "success", message: "محصول با موفقیت اضافه شد."});
                 }
 
@@ -97,6 +97,7 @@ export default function CreateProperty() {
 
             {/* data property form */}
             <CreatePropertyForm
+                setSuccessCreate={setSuccessCreate}
                 successCreate={successCreate}
                 onSubmit={createPropertyHandler}
                 isLoading={loading}

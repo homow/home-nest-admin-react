@@ -24,7 +24,7 @@ const initialFormData = {
     metadata: "",
 }
 
-export default function CreatePropertyForm({onSubmit, isLoading, successCreate}) {
+export default function CreatePropertyForm({onSubmit, isLoading, successCreate, setSuccessCreate}) {
     const [formData, setFormData] = useState(initialFormData);
     const [hasError, setHasError] = useState(false);
     const [errors, setErrors] = useState({
@@ -37,6 +37,7 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
         discount: ""
     });
 
+    // test for has error now
     useEffect(() => {
         const rawErrors = Object.values(errors).filter(e => Boolean(e)).length > 0;
         setHasError(rawErrors);
@@ -45,7 +46,8 @@ export default function CreatePropertyForm({onSubmit, isLoading, successCreate})
     // reset form data after success create a property
     useEffect(() => {
         if (successCreate) setFormData(initialFormData);
-    }, [successCreate]);
+        setSuccessCreate(false);
+    }, [successCreate, setSuccessCreate]);
 
     // handle changes in data form
     const handleChange = (name, value) => {
