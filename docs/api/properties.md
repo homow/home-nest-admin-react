@@ -112,17 +112,6 @@ Authentication for admin-only actions (POST, PUT, DELETE) is handled via a **Bea
       "type": "number",
       "description": "Price after discount"
     },
-    "main_image": {
-      "type": "string",
-      "description": "URL or path to main image"
-    },
-    "images": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Additional images, default empty array"
-    },
     "description": {
       "type": "string",
       "description": "Full property description"
@@ -177,6 +166,39 @@ Authentication for admin-only actions (POST, PUT, DELETE) is handled via a **Bea
   ]
 }
 ```
+**DATA Json Example**
+
+```json
+{
+  "title": "2 Bedroom Apartment in Tehran",
+  "category": "sale",
+  "price": 1200,
+  "price_with_discount": 1000,
+  "description": "A spacious 2-bedroom apartment in the heart of Tehran, with modern amenities, elevator, and parking space.",
+  "tags": [
+    "apartment",
+    "central",
+    "parking"
+  ],
+  "province_and_city": "Tehran, Tehran",
+  "address": "No. 12, Valiasr St, Tehran",
+  "metadata": {
+    "rooms": 2,
+    "area_m2": 85,
+    "floor": 3,
+    "heating": "central",
+    "year_built": 1398
+  },
+  "features": [
+    "elevator",
+    "parking"
+  ],
+  "discount_until": "2025-12-31T23:59:59Z",
+  "property_number": "APT-2025-001",
+  "stock": 1
+}
+```
+
 
 **Response Example:**
 
