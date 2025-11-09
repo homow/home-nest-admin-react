@@ -1,7 +1,6 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import Input from "@components/ui/forms/Input";
 import AlertModal from "@components/ui/modals/AlertModal";
-import {getProperty, uploadPropertyImages} from "@api/requests/properties.js";
 
 export default function ImagesForm({formRef, refData, successCreate, setSuccessCreate}) {
     const [mainFile, setMainFile] = useState(null);
@@ -10,6 +9,8 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
     const [othersPreview, setOthersPreview] = useState([]);
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [alertModalData, setAlertModalData] = useState({});
+    const mainImageRef = useRef(null);
+    const imagesRef = useRef(null);
     const maxSizeMB = 3;
 
     // reset images form data after success create a property
@@ -20,6 +21,8 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
             setOtherFiles([]);
             setOthersPreview([]);
             setSuccessCreate(false);
+            mainImageRef.current.value = "";
+            imagesRef.current.value = "";
         }
     }, [setSuccessCreate, successCreate])
 
@@ -79,35 +82,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
         }
     }, [mainFile, otherFiles, refData]);
 
-    const submitHandler = async event => {
-        event.preventDefault();
-
-        // try {
-        //     const res = await getProperty()
-        //     console.log(res)
-        // } catch (e) {
-        //     console.log(e)
-        // }
-
-        // const formData = new FormData();
-        //
-        // if (mainFile) {
-        //     formData.append("main_image", mainFile);
-        // }
-        //
-        // if (otherFiles.length > 0) {
-        //     otherFiles.forEach(f => formData.append("images", f));
-        // }
-        //
-        // formData.append("property_id", "176334d4-b64e-4048-9e33-9871124c290f")
-        //
-        // try {
-        //     const res = await uploadPropertyImages(formData)
-        //     console.log(res)
-        // } catch (e) {
-        //     console.log(e)
-        // }
-    }
+    const submitHandler = async event => event.preventDefault();
 
     return (
         <form ref={formRef} onSubmit={submitHandler}>
@@ -128,6 +103,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
 
                 {/* main_images */}
                 <Input
+                    ref={mainImageRef}
                     type={"file"}
                     label="تصویر اصلی"
                     name="main_image"
@@ -138,6 +114,7 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
 
                 {/* images */}
                 <Input
+                    ref={imagesRef}
                     type={"file"}
                     label="تصاویر بیشتر(حداکثر 2)"
                     dir={"ltr"}
@@ -163,9 +140,6 @@ export default function ImagesForm({formRef, refData, successCreate, setSuccessC
                     </div>
                 )}
             </div>
-            <button className={"bg-teal-600 p-2"} type={"submit"}>
-                submit
-            </button>
         </form>
     )
 };
