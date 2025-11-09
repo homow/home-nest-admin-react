@@ -7,8 +7,8 @@ This route handles **main image selection**, **duplicate image detection**, and 
 
 ## 🧩 Endpoint Summary
 
-|  Method  | Endpoint                |                 Auth                |       Body Type       |
-| :------: | :---------------------- | :---------------------------------: | :-------------------: |
+|  Method  | Endpoint                |                Auth                 |       Body Type       |
+|:--------:|:------------------------|:-----------------------------------:|:---------------------:|
 | **POST** | `/api/properties-image` | ✅ Required (via Axios token header) | `multipart/form-data` |
 
 ---
@@ -33,11 +33,11 @@ Automatically handles:
 ### Form Fields
 
 | Field         | Type            | Required | Description                                                  |
-| :------------ | :-------------- | :------: | :----------------------------------------------------------- |
-| `property_id` | `string (UUID)` |     ✅    | The unique property ID from the `properties` table.          |
-| `is_main`     | `boolean`       |     ❌    | If `true`, uploaded image is set as the main property image. |
-| `main_image`  | `File`          |     ❌    | Single image file to set as the main image.                  |
-| `images`      | `File[]`        |     ❌    | One or multiple additional image files.                      |
+|:--------------|:----------------|:--------:|:-------------------------------------------------------------|
+| `property_id` | `string (UUID)` |    ✅     | The unique property ID from the `properties` table.          |
+| `is_main`     | `boolean`       |    ❌     | If `true`, uploaded image is set as the main property image. |
+| `main_image`  | `File`          |    ❌     | Single image file to set as the main image.                  |
+| `images`      | `File[]`        |    ❌     | One or multiple additional image files.                      |
 
 📦 **Allowed MIME types:**
 `image/jpeg`, `image/png`, `image/webp`, `image/avif`, `image/heic`, `image/heif`, `image/gif`, `image/svg+xml`
@@ -57,7 +57,7 @@ formData.append("is_main", "true");
 formData.append("main_image", fileInput.files[0]); // File from <input type="file">
 
 await axios.post("/api/properties-image", formData, {
-  headers: { "Content-Type": "multipart/form-data" },
+    headers: {"Content-Type": "multipart/form-data"},
 });
 ```
 
@@ -86,17 +86,17 @@ await axios.post("/api/properties-image", formData, {
 ## ⚠️ Error Responses
 
 | Status | Error Key                | Description                                                         |
-| :----: | :----------------------- | :------------------------------------------------------------------ |
-|  `400` | `invalid_property_id`    | `property_id` missing or invalid UUID.                              |
-|  `400` | `no_files`               | No files included in form-data.                                     |
-|  `400` | `file_type_not_allowed`  | Uploaded file has a disallowed MIME type.                           |
-|  `400` | `file_size_invalid`      | File exceeds 3 MB or is empty.                                      |
-|  `403` | `forbidden`              | RPC permission denied.                                              |
-|  `404` | `property_not_found`     | Property with the provided ID does not exist.                       |
-|  `405` | `method_not_allowed`     | Only POST requests are supported.                                   |
-|  `500` | `internal_error`         | Unexpected server error, Supabase query failure, or upload failure. |
-|  `500` | `upload_failed`          | Failed to upload file to Supabase storage.                          |
-|  `500` | `upload_finalize_failed` | Failed to finalize image record after upload.                       |
+|:------:|:-------------------------|:--------------------------------------------------------------------|
+| `400`  | `invalid_property_id`    | `property_id` missing or invalid UUID.                              |
+| `400`  | `no_files`               | No files included in form-data.                                     |
+| `400`  | `file_type_not_allowed`  | Uploaded file has a disallowed MIME type.                           |
+| `400`  | `file_size_invalid`      | File exceeds 3 MB or is empty.                                      |
+| `403`  | `forbidden`              | RPC permission denied.                                              |
+| `404`  | `property_not_found`     | Property with the provided ID does not exist.                       |
+| `405`  | `method_not_allowed`     | Only POST requests are supported.                                   |
+| `500`  | `internal_error`         | Unexpected server error, Supabase query failure, or upload failure. |
+| `500`  | `upload_failed`          | Failed to upload file to Supabase storage.                          |
+| `500`  | `upload_finalize_failed` | Failed to finalize image record after upload.                       |
 
 ---
 
@@ -116,17 +116,17 @@ await axios.post("/api/properties-image", formData, {
 ## 🗃️ Supabase Dependencies
 
 | RPC                                             | Description                                                                                           |
-| :---------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+|:------------------------------------------------|:------------------------------------------------------------------------------------------------------|
 | `reserve_image_record(p_hash)`                  | Reserves an image record and returns `{ out_id, out_path, out_url, created }`. Handles deduplication. |
 | `finalize_image_record_v2(p_id, p_path, p_url)` | Finalizes the reserved image record with storage path and URL.                                        |
 
 | Table             | Used For                                                                |
-| :---------------- | :---------------------------------------------------------------------- |
+|:------------------|:------------------------------------------------------------------------|
 | `properties`      | To verify existence and update `images` & `main_image` columns.         |
 | `property_images` | To maintain many-to-many relation between properties and image records. |
 
 | Bucket | Purpose                              |
-| :----- | :----------------------------------- |
+|:-------|:-------------------------------------|
 | `img`  | Stores all uploaded property images. |
 
 ---
@@ -134,7 +134,7 @@ await axios.post("/api/properties-image", formData, {
 ## 🧰 Config Notes
 
 | Setting           | Value                                                    |
-| :---------------- | :------------------------------------------------------- |
+|:------------------|:---------------------------------------------------------|
 | `api.bodyParser`  | `false` (Required for Formidable file streams)           |
 | `MAX_FILE_SIZE`   | `3 MB`                                                   |
 | `Supabase client` | Created via `supabaseServer()` (server-side role access) |
