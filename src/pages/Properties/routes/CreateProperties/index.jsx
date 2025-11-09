@@ -33,6 +33,7 @@ export default function CreateProperty() {
         }
 
         try {
+            // post request to create property api
             const propertyRes = await createProperty(dataProperty);
 
             if (propertyRes?.data?.ok) {
