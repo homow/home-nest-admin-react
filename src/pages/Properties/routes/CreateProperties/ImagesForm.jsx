@@ -1,6 +1,6 @@
 import {useEffect, useState, useRef} from "react";
-import Input from "@components/ui/forms/Input";
-import AlertModal from "@components/ui/modals/AlertModal";
+import Input from "@ui/forms/Input";
+import AlertModal from "@ui/modals/AlertModal";
 
 export default function ImagesForm({formRef, refData, successCreate, setSuccessCreate}) {
     const [mainFile, setMainFile] = useState(null);

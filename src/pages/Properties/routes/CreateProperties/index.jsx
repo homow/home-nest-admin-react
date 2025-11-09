@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
-import AlertModal from "@components/ui/modals/AlertModal";
+import AlertModal from "@ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
 import {fixPropertyData} from "@api/api-utils.js"
 import {setErrorInCreateProperty} from "@api/error-handler/property.js";

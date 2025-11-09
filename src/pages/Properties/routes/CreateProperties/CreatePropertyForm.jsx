@@ -4,8 +4,8 @@ import Input from "@ui/forms/Input";
 import CheckBox from "@ui/forms/CheckBox";
 import SelectBox from "@ui/forms/SelectBox";
 import {RedStarField, ErrorMessageInputs} from "@ui/Fragments";
-import {formatPriceDebounced, parsePriceFromString} from "@/lib/utils/helper.js";
-import {cn} from "@/lib/utils/ui-utils.js";
+import {formatPriceDebounced, parsePriceFromString} from "@utils/helper.js";
+import {cn} from "@utils/ui-utils.js";
 
 // initial value in form data
 const initialFormData = {
