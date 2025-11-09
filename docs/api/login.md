@@ -7,8 +7,8 @@ Also updates the user’s profile metadata in the `user_profiles` table.
 
 ## 🧩 Endpoint Summary
 
-|  Method  | Endpoint          |   Auth   |      Body Type     |
-| :------: | :---------------- | :------: | :----------------: |
+|  Method  | Endpoint          |   Auth   |     Body Type      |
+|:--------:|:------------------|:--------:|:------------------:|
 | **POST** | `/api/auth/login` | ❌ Public | `application/json` |
 
 ---
@@ -26,10 +26,10 @@ This endpoint performs a password-based sign-in using Supabase Auth (`signInWith
 ### Body Fields
 
 | Field      | Type      | Required | Description                                                                              |
-| :--------- | :-------- | :------: | :--------------------------------------------------------------------------------------- |
-| `email`    | `string`  |     ✅    | User’s registered email address.                                                         |
-| `password` | `string`  |     ✅    | User’s Supabase Auth password.                                                           |
-| `remember` | `boolean` |     ❌    | If true, sets a long-lived (30-day) refresh token cookie. Otherwise, expires in 8 hours. |
+|:-----------|:----------|:--------:|:-----------------------------------------------------------------------------------------|
+| `email`    | `string`  |    ✅     | User’s registered email address.                                                         |
+| `password` | `string`  |    ✅     | User’s Supabase Auth password.                                                           |
+| `remember` | `boolean` |    ❌     | If true, sets a long-lived (30-day) refresh token cookie. Otherwise, expires in 8 hours. |
 
 ---
 
@@ -39,9 +39,9 @@ This endpoint performs a password-based sign-in using Supabase Auth (`signInWith
 import axios from "@/config/axios-instance";
 
 const res = await axios.post("/api/auth/login", {
-  email: "user@example.com",
-  password: "secret123",
-  remember: true,
+    email: "user@example.com",
+    password: "secret123",
+    remember: true,
 });
 
 console.log(res.data);
@@ -75,22 +75,22 @@ Set-Cookie: sb_refresh_token=<token>; HttpOnly; Path=/; SameSite=Lax; Max-Age=25
 ## ⚠️ Error Responses
 
 | Status | Error Key              | Description                                      |
-| :----: | :--------------------- | :----------------------------------------------- |
-|  `400` | `MISSING_CREDENTIALS`  | Missing email or password.                       |
-|  `401` | `INVALID_CREDENTIALS`  | Email or password incorrect.                     |
-|  `401` | `INVALID_SESSION`      | Supabase session missing or incomplete.          |
-|  `403` | —                      | Not used in this route.                          |
-|  `405` | —                      | Request method is not POST.                      |
-|  `500` | `PROFILE_FETCH_FAILED` | Failed to fetch user profile data from database. |
-|  `500` | `INTERNAL_ERROR`       | Unexpected server error.                         |
-|  `503` | `NETWORK_ERROR`        | Supabase connection issue or timeout.            |
+|:------:|:-----------------------|:-------------------------------------------------|
+| `400`  | `MISSING_CREDENTIALS`  | Missing email or password.                       |
+| `401`  | `INVALID_CREDENTIALS`  | Email or password incorrect.                     |
+| `401`  | `INVALID_SESSION`      | Supabase session missing or incomplete.          |
+| `403`  | —                      | Not used in this route.                          |
+| `405`  | —                      | Request method is not POST.                      |
+| `500`  | `PROFILE_FETCH_FAILED` | Failed to fetch user profile data from database. |
+| `500`  | `INTERNAL_ERROR`       | Unexpected server error.                         |
+| `503`  | `NETWORK_ERROR`        | Supabase connection issue or timeout.            |
 
 ---
 
 ## 🍪 Cookie Behavior
 
 | Cookie Name        | Description                                     | Lifetime                                     | Flags                                                |
-| :----------------- | :---------------------------------------------- | :------------------------------------------- | :--------------------------------------------------- |
+|:-------------------|:------------------------------------------------|:---------------------------------------------|:-----------------------------------------------------|
 | `sb_refresh_token` | Supabase refresh token for session persistence. | `8h` (default) or `30d` (if `remember=true`) | `HttpOnly`, `SameSite=Lax`, `Secure` (in production) |
 
 ---
@@ -98,7 +98,7 @@ Set-Cookie: sb_refresh_token=<token>; HttpOnly; Path=/; SameSite=Lax; Max-Age=25
 ## 🗃️ Database Dependencies
 
 | Source                  | Description                                                                                                                                                   |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|:------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Supabase Auth**       | Used for password-based authentication and session management.                                                                                                |
 | **user_profiles table** | Queried for user data (`id`, `email`, `display_name`, `role`) and updated for: <br>• `last_strict_login_at` (ISO timestamp)<br>• `session_remember` (boolean) |
 
@@ -126,7 +126,7 @@ Set-Cookie: sb_refresh_token=<token>; HttpOnly; Path=/; SameSite=Lax; Max-Age=25
 ## 🧰 Config Notes
 
 | Setting              | Value                                                                                 |
-| :------------------- | :------------------------------------------------------------------------------------ |
+|:---------------------|:--------------------------------------------------------------------------------------|
 | **Supabase Clients** | `supabaseAnon` (public, no session persistence) + `supabaseServer` (admin privileges) |
 | **Cookie Library**   | [`cookie`](https://www.npmjs.com/package/cookie)                                      |
 | **Security**         | Cookies marked `HttpOnly`, `SameSite=Lax`, `Secure` in production.                    |
