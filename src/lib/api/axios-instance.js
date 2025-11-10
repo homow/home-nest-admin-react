@@ -10,11 +10,11 @@ const getAccessToken = token => {
 };
 
 const axiosInstance = axios.create({
+    baseURL: API_URL,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
-    baseURL: API_URL
 });
 
 axiosInstance.interceptors.request.use(
