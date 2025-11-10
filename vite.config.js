@@ -15,9 +15,6 @@ export default defineConfig(({mode}) => {
         base: env.VITE_BASE_PATH || "/",
         server: {
             host: true,
-            proxy: {
-                "/api": env.VITE_API_URL
-            }
         },
         build: {
             rollupOptions: {
