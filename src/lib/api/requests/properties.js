@@ -1,17 +1,17 @@
 import axiosInstance from "../axios-instance.js";
 
 const createProperty = async data => {
-    return await axiosInstance.post("/properties", data);
+    return await axiosInstance.post("/api/properties", data);
 }
 
 const getProperty = async id => {
     if (id) return await axiosInstance.get(`/properties/${id}`);
-    return await axiosInstance.get("/properties");
+    return await axiosInstance.get("/api/properties");
 }
 
 const uploadPropertyImages = async dataImg => {
     try {
-        const {data} = await axiosInstance.post("/properties-image", dataImg, {
+        const {data} = await axiosInstance.post("/api/properties-image", dataImg, {
             headers: {"Content-Type": undefined}
         });
         return data;
