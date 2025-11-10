@@ -45,7 +45,6 @@ The project follows a modular structure:
 
 ```
 home-nest-admin/
-├── api/                 # Serverless API routes (executed on Vercel server)
 ├── public/              # Static public assets (served directly, no bundling)
 ├── src/
 │   ├── assets/          # Project images, icons, and static media
@@ -88,8 +87,8 @@ cd home-nest-admin
 # Install dependencies
 npm install
 
-# Run development server (requires global Vercel CLI)
-vercel dev
+# Run development
+npm run dev
 
 # Run ESLint to check code quality
 npm run lint
