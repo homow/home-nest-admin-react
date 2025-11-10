@@ -19,7 +19,6 @@ const login = async (userInfo) => {
 };
 
 const refresh = async () => {
-    console.log(`${BASE_API_URL}/api/auth/refresh`)
     try {
         const res = await axios.post(`${BASE_API_URL}/api/auth/refresh`, {}, {withCredentials: true});
 
