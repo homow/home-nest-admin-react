@@ -45,7 +45,6 @@
 
 ```
 home-nest-admin/
-├── api/                 # توابع API سرورلس (در Vercel اجرا می‌شوند)
 ├── public/              # فایل‌های استاتیک عمومی (بدون باندل‌شدن سرو می‌شوند)
 ├── src/
 │   ├── assets/          # تصاویر، آیکون‌ها و فایل‌های رسانه‌ای پروژه
@@ -89,8 +88,8 @@ cd home-nest-admin
 # نصب وابستگی‌ها
 npm install
 
-# اجرای سرور توسعه (نیاز به Vercel CLI نصب‌شده به‌صورت global)
-vercel dev
+# اجرای توسعه
+npm run ./path/file dev
 
 # بررسی کیفیت کد با ESLint
 npm run lint

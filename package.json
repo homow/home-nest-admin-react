@@ -19,13 +19,6 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "^2.75.0",
-    "cookie": "^1.0.2",
-    "formidable": "^3.5.4",
-    "jsonwebtoken": "^9.0.2",
-    "form-data": "^4.0.4",
-    "multer": "^2.0.2",
-    "node-fetch": "^3.3.2",
     "@eslint/js": "^9.36.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/react": "^19.1.16",

@@ -16,6 +16,21 @@
 }
 ```
 
+*Response:*
+
+```json
+{
+    "ok": true,
+    "accessToken": "token",
+    "user": {
+        "id": "111-22-ee-aaa-333",
+        "email": "example@mail.co",
+        "display_name": "name",
+        "role": "admin"
+    }
+}
+
+```
 ---
 
 # PROPERTIES
