@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://home-nest-api.vercel.app/api/:path*"
+    }
+  ]
+}

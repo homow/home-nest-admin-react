@@ -8,7 +8,6 @@ import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
-import {BASE_PATH} from "@/config.js";
 
 function DropDownAccountOptions({data, className, setOpenMenu}) {
     const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;
@@ -101,7 +100,7 @@ export default function DropDownAccount({setOpenMenu, open, className}) {
                     setAlertModalData({type: "error", message: ""});
                     setAuthInfo({userData: {}, accessToken: null});
                     setLockScreenOpen(false);
-                    window.location.replace(`${BASE_PATH}/login`);
+                    window.location.replace("/login");
                 }, 5000);
             } else {
                 console.log("res error:", res)
