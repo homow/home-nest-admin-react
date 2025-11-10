@@ -30,6 +30,7 @@ dist-ssr
 *.sw?
 
 # Vercel Cache
+vercel.json
 .vercel
 
 # Analyze Packages File
