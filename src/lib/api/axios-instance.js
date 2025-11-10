@@ -1,3 +1,4 @@
+import {API_URL} from "@/config.js";
 import axios from "axios";
 import {refresh} from "@api/requests/auth.js";
 
@@ -12,7 +13,8 @@ const axiosInstance = axios.create({
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
-    }
+    },
+    baseURL: API_URL
 });
 
 axiosInstance.interceptors.request.use(

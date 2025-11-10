@@ -1,9 +1,10 @@
 "use strict";
 
+import {API_URL} from "@/config.js";
 import axios from "axios";
 
 const login = async (userInfo) => {
-    const res = await axios.post("/api/auth/login", {...userInfo});
+    const res = await axios.post(`${API_URL}/auth/login`, {...userInfo});
     const {ok, user, accessToken} = res.data;
 
     if (!ok) {
@@ -17,7 +18,7 @@ const login = async (userInfo) => {
 
 const refresh = async () => {
     try {
-        const res = await axios.post('/api/auth/refresh', {}, {withCredentials: true});
+        const res = await axios.post(`${API_URL}/auth/refresh`, {}, {withCredentials: true});
 
         if (res.data.ok) {
             return res.data;
@@ -29,7 +30,7 @@ const refresh = async () => {
 
 const logout = async () => {
     try {
-        const res = await axios.post('/api/auth/logout', {}, {withCredentials: true});
+        const res = await axios.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
 
         return {ok: true, res}
     } catch (e) {
