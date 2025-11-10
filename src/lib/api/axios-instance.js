@@ -1,4 +1,3 @@
-import {API_URL} from "@/config.js";
 import axios from "axios";
 import {refresh} from "@api/requests/auth.js";
 
@@ -10,7 +9,7 @@ const getAccessToken = token => {
 };
 
 const axiosInstance = axios.create({
-    baseURL: API_URL,
+    baseURL: "/api",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
