@@ -17,7 +17,7 @@ const login = async (userInfo) => {
 
 const refresh = async () => {
     try {
-        const res = await axios.post('/api/auth/refresh', {}, {withCredentials: true});
+        const res = await axios.post("/api/auth/refresh", {}, {withCredentials: true});
 
         if (res.data.ok) {
             return res.data;
@@ -29,7 +29,7 @@ const refresh = async () => {
 
 const logout = async () => {
     try {
-        const res = await axios.post('/api/auth/logout', {}, {withCredentials: true});
+        const res = await axios.post("/api/auth/logout", {}, {withCredentials: true});
 
         return {ok: true, res}
     } catch (e) {

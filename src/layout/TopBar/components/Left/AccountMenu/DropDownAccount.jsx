@@ -8,7 +8,7 @@ import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
 import {useAuth} from "@context/AuthContext";
 import {logout} from "@api/requests/auth.js";
-import BASE_PATH from "@/config.js";
+import {BASE_PATH} from "@/config.js";
 
 function DropDownAccountOptions({data, className, setOpenMenu}) {
     const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;
