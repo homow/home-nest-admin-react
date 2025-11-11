@@ -20,17 +20,42 @@
 
 ```json
 {
-    "ok": true,
-    "accessToken": "token",
-    "user": {
-        "id": "111-22-ee-aaa-333",
-        "email": "example@mail.co",
-        "display_name": "name",
-        "role": "admin"
-    }
+  "ok": true,
+  "accessToken": "token",
+  "user": {
+    "id": "111-22-ee-aaa-333",
+    "email": "example@mail.co",
+    "display_name": "name",
+    "role": "admin"
+  }
 }
 
 ```
+
+---
+
+# LOGOUT
+
+```
+/api/logout
+```
+
+### **`POST`**
+
+*Send request with credentials (no body required):*
+
+```
+credentials: 'include'
+```
+
+*Response:*
+
+```json
+{
+  "ok": true
+}
+```
+
 ---
 
 # PROPERTIES
@@ -83,14 +108,26 @@ Content-Type: application/json
   "province_and_city": "Tehran, Tehran",
   "price": 120,
   "price_with_discount": 100,
-  "tags": ["modern", "north-tehran"],
-  "metadata": {"floors": 2, "area": 150},
+  "tags": [
+    "modern",
+    "north-tehran"
+  ],
+  "metadata": {
+    "floors": 2,
+    "area": 150
+  },
   "discount_until": "2025-12-01T00:00:00Z",
-  "features": ["parking", "balcony", "pool"],
+  "features": [
+    "parking",
+    "balcony",
+    "pool"
+  ],
   "description": "3-bedroom apartment with pool"
 }
 ```
+
 **Required:**
+
 ```
 1.title (string)
 2.category ("sale" or "rent")
@@ -137,7 +174,9 @@ Authorization: Bearer <access_token>
 **Body Example:**
 
 ```json
-{ "id": "8e4d42f1-9b1c-4f2e-9a1b-abcdef123456" }
+{
+  "id": "8e4d42f1-9b1c-4f2e-9a1b-abcdef123456"
+}
 ```
 
 **Or via Query Parameters:**
