@@ -1,4 +1,4 @@
-name: Deploy to Vercel on PR Merge
+name: Deploy to Vercel via CLI
 
 on:
   push:
@@ -9,5 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel Deploy Hook
-        run: curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_EIBxFqIbRmfxefVSCYRaXYElzhvg/9fyzuc4nq5
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        env:
+          HOME_NEST_ADMIN_VERCEL_TOKEN: ${{ secrets.HOME_NEST_ADMIN_VERCEL_TOKEN }}
+        run: vercel --prod --token $HOME_NEST_ADMIN_VERCEL_TOKEN --confirm --project home-nest-admin --scope homow
