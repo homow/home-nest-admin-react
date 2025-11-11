@@ -72,21 +72,32 @@ export default function Login() {
 
     // set email handler
     const setEmailHandler = event => {
-        setEmail(event.target.value);
-        if (emailRegex.test(event.target.value) && errors.email) {
+        const val = event.target.value;
+
+        setEmail(val);
+
+        if (errors.email.includes("فرمت") && emailRegex.test(val.trim())) {
             setErrors({
                 ...errors,
                 email: ""
             });
-        } else if (!emailRegex.test(event.target.value)) {
-            setErrors({...errors, email: "فرمت ایمیل اشتباهه"})
+        }
+
+        if (errors.email.includes("وارد") && val.trim()) {
+            setErrors({
+                ...errors,
+                email: ""
+            });
         }
     }
 
     // set password handler
     const setPasswordHandler = event => {
-        setPassword(event.target.value);
-        if (event.target.value && errors.password) setErrors({
+        const val = event.target.value;
+
+        setPassword(val);
+
+        if (val.trim() && errors.password) setErrors({
             ...errors,
             password: ""
         });
@@ -169,8 +180,9 @@ export default function Login() {
                         </div>
 
                         <Button
+                            loading={loading}
                             type={"submit"}
-                            text={loading ? "در حال پردازش" : "ارسال"}
+                            text={"ورود"}
                             disabled={loading}
                         />
                     </form>
