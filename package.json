@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "vercel": "vercel dev"
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.12.2",
