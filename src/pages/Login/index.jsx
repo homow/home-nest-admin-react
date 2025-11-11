@@ -180,8 +180,9 @@ export default function Login() {
                         </div>
 
                         <Button
+                            loading={loading}
                             type={"submit"}
-                            text={loading ? "در حال پردازش" : "ارسال"}
+                            text={"ورود"}
                             disabled={loading}
                         />
                     </form>

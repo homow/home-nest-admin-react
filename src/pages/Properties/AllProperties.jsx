@@ -23,6 +23,7 @@ export default function AllProperties() {
     return (
         <div>
             <Button
+                loading={loading}
                 disabled={loading}
                 onClick={getPropertyHandler}
                 text={"گرفتن ملک ها"}

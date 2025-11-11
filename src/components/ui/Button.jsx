@@ -1,6 +1,7 @@
 import {cn} from "@utils/ui-utils.js";
+import Icon from "@ui/icons/Icon.jsx";
 
-export default function Button({text = "ارسال", onClick, type = "button", className = "", disabled = false, hasError = false, ...props}) {
+export default function Button({text = "ارسال", onClick, type = "button", className = "", disabled = false, hasError = false, loading, ...props}) {
     return (
         <>
             <button
@@ -14,7 +15,13 @@ export default function Button({text = "ارسال", onClick, type = "button", c
                 )}
                 {...props}
             >
-                {text}
+                {loading ?
+                    <Icon
+                        icon={"loading"}
+                        className={"animate-spin h-3.5"}
+                    /> :
+                    text
+                }
             </button>
 
             {hasError && (
