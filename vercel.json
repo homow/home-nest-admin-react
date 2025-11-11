@@ -1,6 +1,5 @@
 {
   "project": "home-nest-admin",
-  "org": "homow",
   "rewrites": [
     {
       "source": "/api/:path*",
