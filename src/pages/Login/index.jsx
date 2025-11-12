@@ -1,6 +1,6 @@
-import {useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import Button from "@components/ui/Button";
-import {useAuth} from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";
 import AlertModal from "@components/ui/modals/AlertModal";
@@ -14,7 +14,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
-    const [alertModalData, setAlertModalData] = useState({type: "error", message: ""});
+    const [alertModalData, setAlertModalData] = useState({ type: "error", message: "" });
     const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
     const [errors, setErrors] = useState({
         email: "",
@@ -23,7 +23,7 @@ export default function Login() {
 
     // ref
     const inputRef = useRef(null);
-    const {setAuthInfo} = useAuth();
+    const { setAuthInfo } = useAuth();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     // focus and set title
@@ -56,7 +56,7 @@ export default function Login() {
 
         if (!emailRegex.test(trimmedEmail)) {
             setLoading(false);
-            setErrors({...newErrors, email: "فرمت ایمیل اشتباهه"});
+            setErrors({ ...newErrors, email: "فرمت ایمیل اشتباهه" });
             return;
         }
 
@@ -103,24 +103,10 @@ export default function Login() {
         });
     }
 
-    // show and hide password button
-    const ShowPasswordButton = () => {
-        return (
-            <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide Password" : "Show Password"}
-                className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
-            >
-                {showPassword ? "مخفی" : "نمایش"}
-            </button>
-        )
-    }
-
     return (
         <>
             {/* alert modal for state */}
-            <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData}/>
+            <AlertModal {...alertModalData} isOpen={isOpenAlertModal} setIsOpen={setIsOpenAlertModal} setData={setAlertModalData} />
 
             {/* logo */}
             <img
@@ -163,11 +149,19 @@ export default function Login() {
                                 placeholder={"******"}
                                 parentClassName={"relative"}
                                 onChange={setPasswordHandler}
-                                children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
                                 dir={"ltr"}
                                 hasError={errors.password}
-                            />
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    aria-label={showPassword ? "Hide Password" : "Show Password"}
+                                    className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
+                                >
+                                    {showPassword ? "مخفی" : "نمایش"}
+                                </button>
+                            </Input>
                         </div>
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
