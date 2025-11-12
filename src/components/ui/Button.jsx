@@ -1,24 +1,24 @@
-import { cn } from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.js";
 
 const LoadingSpinner = () => (
-  <span className="animate-spin h-3.5 inline-block">
+    <span className="animate-spin h-3.5 inline-block">
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-3.5 h-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-3.5 h-3.5"
     >
-      <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-      <path d="M12 2a10 10 0 0 1 10 10" />
+      <circle cx="12" cy="12" r="10" strokeOpacity="0.25"/>
+      <path d="M12 2a10 10 0 0 1 10 10"/>
     </svg>
   </span>
 );
 
-export default function Button({ text = "ارسال", onClick, type = "button", className = "", disabled = false, hasError = false, loading, ...props }) {
+export default function Button({text = "ارسال", onClick, type = "button", className = "", disabled = false, hasError = false, loading, ...props}) {
     return (
         <>
             <button
@@ -33,7 +33,7 @@ export default function Button({ text = "ارسال", onClick, type = "button", 
                 {...props}
             >
                 {loading ?
-                    <LoadingSpinner /> :
+                    <LoadingSpinner/> :
                     text
                 }
             </button>
