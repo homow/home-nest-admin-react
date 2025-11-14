@@ -1,6 +1,6 @@
 import {cn} from "@/lib/utils/ui-utils.js";
 
-export default function Icon({icon, className, parentClassName, }) {
+export default function Icon({icon, className, parentClassName}) {
     return (
         <span className={cn("inline-block", parentClassName)}>
             <svg className={cn("size-6", className)}>

@@ -33,9 +33,6 @@ export default defineConfig(({mode}) => {
                         // React ecosystem
                         if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) return 'react-core';
 
-                        // Supabase SDK
-                        if (id.includes('@supabase/supabase-js')) return 'supabase';
-
                         // Axios (network layer)
                         if (id.includes('axios')) return 'axios';
 

@@ -1,38 +1,3 @@
-# LOGIN
-
-```
-/api/login
-```
-
-### **`POST`**
-
-*Send body as JSON:*
-
-```json
-{
-  "email": "user@example.com",
-  "password": "12345678",
-  "remember": true
-}
-```
-
-*Response:*
-
-```json
-{
-    "ok": true,
-    "accessToken": "token",
-    "user": {
-        "id": "111-22-ee-aaa-333",
-        "email": "example@mail.co",
-        "display_name": "name",
-        "role": "admin"
-    }
-}
-
-```
----
-
 # PROPERTIES
 
 ```
@@ -76,28 +41,41 @@ Content-Type: application/json
 
 ```json
 {
-  "title": "Luxury Apartment",
+  "stock": 1,
   "category": "sale",
-  "description": "3-bedroom apartment with pool",
-  "province_and_city": "Tehran, Tehran",
+  "title": "Luxury Apartment",
   "address": "Niavaran St.",
-  "features": ["parking", "balcony", "pool"],
-  "price": 1200000000,
-  "price_with_discount": 1100000000,
+  "province_and_city": "Tehran, Tehran",
+  "price": 120,
+  "price_with_discount": 100,
+  "tags": [
+    "modern",
+    "north-tehran"
+  ],
+  "metadata": {
+    "floors": 2,
+    "area": 150
+  },
   "discount_until": "2025-12-01T00:00:00Z",
-  "tags": ["modern", "north-tehran"],
-  "metadata": {"floors": 2, "area": 150}
+  "features": [
+    "parking",
+    "balcony",
+    "pool"
+  ],
+  "description": "3-bedroom apartment with pool"
 }
 ```
+
 **Required:**
+
 ```
-1.title
-2.category(sale or rent)
-3.description
-4.province_and_city
-5.address
-6.features[1]
-7.stock(1 or 0)
+1.title (string)
+2.category ("sale" or "rent")
+3.description (string)
+4.province_and_city (string)
+5.address (string)
+6.features[] (min: 1 data in array)
+7.stock (number: 1 or 0)
 ```
 
 ### **`PUT`**
@@ -136,7 +114,9 @@ Authorization: Bearer <access_token>
 **Body Example:**
 
 ```json
-{ "id": "8e4d42f1-9b1c-4f2e-9a1b-abcdef123456" }
+{
+  "id": "8e4d42f1-9b1c-4f2e-9a1b-abcdef123456"
+}
 ```
 
 **Or via Query Parameters:**

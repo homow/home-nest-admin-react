@@ -103,20 +103,6 @@ export default function Login() {
         });
     }
 
-    // show and hide password button
-    const ShowPasswordButton = () => {
-        return (
-            <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide Password" : "Show Password"}
-                className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
-            >
-                {showPassword ? "مخفی" : "نمایش"}
-            </button>
-        )
-    }
-
     return (
         <>
             {/* alert modal for state */}
@@ -163,11 +149,19 @@ export default function Login() {
                                 placeholder={"******"}
                                 parentClassName={"relative"}
                                 onChange={setPasswordHandler}
-                                children={<ShowPasswordButton/>}
                                 type={showPassword ? "text" : "password"}
                                 dir={"ltr"}
                                 hasError={errors.password}
-                            />
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    aria-label={showPassword ? "Hide Password" : "Show Password"}
+                                    className="absolute right-2 top-1/2 text-sm text-gray-500 hover:text-violet-500 cursor-pointer"
+                                >
+                                    {showPassword ? "مخفی" : "نمایش"}
+                                </button>
+                            </Input>
                         </div>
 
                         <div className="flex items-center justify-between text-sm text-gray-400">
