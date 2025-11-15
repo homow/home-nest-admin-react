@@ -5,6 +5,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import {BASE_PATH} from "@/config.js";
 import App from "@/App";
+import MainLayout from "@/layout/MainLayout";
 
 const lazyWithSuspense = importFunc => {
     const Component = lazy(importFunc);
@@ -16,7 +17,7 @@ const lazyWithSuspense = importFunc => {
     );
 };
 
-const Login = lazyWithSuspense(() => import("@pages/Login"))
+const Login = lazy(() => import("@pages/Login"));
 const Home = lazyWithSuspense(() => import("@pages/Home"));
 const Properties = lazyWithSuspense(() => import("@pages/Properties"));
 const CreateProperties = lazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
@@ -43,19 +44,24 @@ const router = createBrowserRouter(
             {
                 element: <PrivateRoutes/>,
                 children: [
-                    {path: "/", element: <Home/>},
                     {
-                        path: "/properties", element: <Properties/>,
+                        element: <MainLayout/>,
                         children: [
-                            {path: "create", element: <CreateProperties/>},
-                            {path: "edit", element: <EditProperties/>},
+                            {path: "/", element: <Home/>},
+                            {
+                                path: "/properties", element: <Properties/>,
+                                children: [
+                                    {path: "create", element: <CreateProperties/>},
+                                    {path: "edit", element: <EditProperties/>},
+                                ]
+                            },
+                            {path: "/email", element: <Email/>},
+                            {path: "/user", element: <User/>},
+                            {path: "/rules", element: <Rules/>},
+                            // 404 | not found
+                            {path: "*", element: <NotFound/>}
                         ]
                     },
-                    {path: "/email", element: <Email/>},
-                    {path: "/user", element: <User/>},
-                    {path: "/rules", element: <Rules/>},
-                    // 404 | not found
-                    {path: "*", element: <NotFound/>}
                 ]
             },
         ]
