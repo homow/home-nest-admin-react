@@ -16,4 +16,4 @@ const applyCustomSpace = ({setCurrentCollapsed, collapsed}) => {
     }
 }
 
-export {cn};
+export {cn, applyCustomSpace};
