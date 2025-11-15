@@ -1,60 +1,74 @@
 import {lazy} from "react";
-import {useRoutes} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import SuspenseBoundary from "@components/ui/SuspenseBoundary";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
+import {BASE_PATH} from "@/config.js";
+import App from "@/App";
+import MainLayout from "@/layout/MainLayout";
 
-const Login = lazy(() => import("@pages/Login"))
-const MainLayout = lazy(() => import("@/layout/MainLayout"));
-const Home = lazy(() => import("@pages/Home"));
-const Properties = lazy(() => import("@pages/Properties"));
-const CreateProperties = lazy(() => import("@pages/Properties/routes/CreateProperties"))
-const EditProperties = lazy(() => import("@pages/Properties/routes/EditProperties"))
-const Email = lazy(() => import("@pages/Email"));
-const User = lazy(() => import("@pages/User"));
-const Rules = lazy(() => import("@pages/Rules"));
-const NotFound = lazy(() => import("@pages/NotFound"));
+const lazyWithSuspense = importFunc => {
+    const Component = lazy(importFunc);
+
+    return props => (
+        <SuspenseBoundary>
+            <Component {...props}/>
+        </SuspenseBoundary>
+    );
+};
+
+const Login = lazy(() => import("@pages/Login"));
+const Home = lazyWithSuspense(() => import("@pages/Home"));
+const Properties = lazyWithSuspense(() => import("@pages/Properties"));
+const CreateProperties = lazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
+const EditProperties = lazyWithSuspense(() => import("@pages/Properties/routes/EditProperties"))
+const Email = lazyWithSuspense(() => import("@pages/Email"));
+const User = lazyWithSuspense(() => import("@pages/User"));
+const Rules = lazyWithSuspense(() => import("@pages/Rules"));
+const NotFound = lazyWithSuspense(() => import("@pages/NotFound"));
 
 // routes
-const routes = [
-    // when admin not login
-    {
-        path: "/login",
-        element: <PublicRoutes/>,
+const router = createBrowserRouter(
+    [{
+        element: <App/>,
         children: [
-            {index: true, element: <Login/>}
-        ]
-    },
-    // when admin login
-    {
-        element: <PrivateRoutes/>,
-        children: [
+            // when admin not login
             {
-                element: <MainLayout/>,
+                path: "/login",
+                element: <PublicRoutes/>,
                 children: [
-                    {path: "/", element: <Home/>},
+                    {index: true, element: <Login/>}
+                ]
+            },
+            // when admin login
+            {
+                element: <PrivateRoutes/>,
+                children: [
                     {
-                        path: "/properties", element: <Properties/>,
+                        element: <MainLayout/>,
                         children: [
-                            {path: "create", element: <CreateProperties/>},
-                            {path: "edit", element: <EditProperties/>},
+                            {path: "/", element: <Home/>},
+                            {
+                                path: "/properties", element: <Properties/>,
+                                children: [
+                                    {path: "create", element: <CreateProperties/>},
+                                    {path: "edit", element: <EditProperties/>},
+                                ]
+                            },
+                            {path: "/email", element: <Email/>},
+                            {path: "/user", element: <User/>},
+                            {path: "/rules", element: <Rules/>},
+                            // 404 | not found
+                            {path: "*", element: <NotFound/>}
                         ]
                     },
-                    {path: "/email", element: <Email/>},
-                    {path: "/user", element: <User/>},
-                    {path: "/rules", element: <Rules/>},
-                    // 404 | not found
-                    {path: "*", element: <NotFound/>}
                 ]
-            }
+            },
         ]
-    },
-]
+    }],
+    {
+        basename: BASE_PATH
+    }
+);
 
-export default function AppRoutes() {
-    return (
-        <SuspenseBoundary>
-            {useRoutes(routes)}
-        </SuspenseBoundary>
-    )
-}
+export default router;

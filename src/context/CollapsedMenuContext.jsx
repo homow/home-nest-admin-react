@@ -25,8 +25,8 @@ const CollapsedMenuProvider = ({children}) => {
 
     // handle change
     useEffect(() => {
-        applyCustomSpace({setCurrentCollapsed, collapsed});
         setCurrentCollapsed(collapsed);
+        applyCustomSpace({setCurrentCollapsed, collapsed});
         localStorage.setItem("collapsedMenu", JSON.stringify(collapsed));
     }, [collapsed]);
 

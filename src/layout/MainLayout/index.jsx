@@ -1,10 +1,10 @@
-import {Outlet} from "react-router-dom";
 import TopBar from "../TopBar";
 import SideBar from "../SideBar";
 import Footer from "../Footer";
-import SvgDefs from "@components/ui/icons/SvgDefs.jsx";
+import SvgDefs from "@components/ui/icons/SvgDefs";
 import Overlay from "@components/ui/Overlay";
 import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext";
+import {Outlet} from "react-router-dom";
 
 function InnerMainLayout() {
     const {openMobileNav, setOpenMobileNav} = useMobileNav();
