@@ -4,7 +4,7 @@ import {twMerge} from "tailwind-merge";
 const cn = (...inputs) => twMerge(clsx(inputs));
 
 const applyCustomSpace = ({setCurrentCollapsed, collapsed}) => {
-    if (window.innerWidth < 900) {
+    if (window.innerWidth < 896) {
         document.documentElement.style.setProperty("--spacing-custom", "0px");
         setCurrentCollapsed(false);
     } else {

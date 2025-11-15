@@ -16,7 +16,7 @@ export default function SideBarHeader() {
             {/* brand and logo */}
             <Link to="/" className={"pr-4 flex flex-row items-center gap-4 hover:text-primary-txt"}>
                 <img className={"size-8"} src={`${logo}`} alt="ashianeh logo"/>
-                <span className={cn("font-medium", currentCollapsed)}>پنل مدیریت</span>
+                <span className={cn("font-medium", currentCollapsed && "hidden")}>پنل مدیریت</span>
             </Link>
 
             <span
