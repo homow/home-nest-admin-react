@@ -23,6 +23,12 @@ const CollapsedMenuProvider = ({children}) => {
         return () => window.removeEventListener("resize", handleResize);
     }, [collapsed]);
 
+    // apply in mounted
+    useEffect(() => {
+        applyCustomSpace({setCurrentCollapsed, collapsed});
+    }, [collapsed]);
+
+    // handle change
     useEffect(() => {
         localStorage.setItem("collapsedMenu", JSON.stringify(collapsed));
     }, [collapsed]);
