@@ -1,4 +1,5 @@
 import {useContext, createContext, useState, useEffect} from "react";
+import {applyCustomSpace} from "@utils/ui-utils.js"
 
 const CollapsedMenuContext = createContext(null);
 
@@ -10,12 +11,26 @@ const CollapsedMenuProvider = ({children}) => {
         }
         return false;
     });
+    const [currentCollapsed, setCurrentCollapsed] = useState(false);
 
+    // apply margin-right custom and collapsed
     useEffect(() => {
+        const handleResize = () => applyCustomSpace({setCurrentCollapsed, collapsed});
+
+        window.addEventListener("resize", handleResize);
+
+        // cleanUp event
+        return () => window.removeEventListener("resize", handleResize);
+    }, [collapsed]);
+
+    // handle change
+    useEffect(() => {
+        applyCustomSpace({setCurrentCollapsed, collapsed});
+        setCurrentCollapsed(collapsed);
         localStorage.setItem("collapsedMenu", JSON.stringify(collapsed));
     }, [collapsed]);
 
-    const value = {collapsed, setCollapsed};
+    const value = {collapsed, setCollapsed, currentCollapsed};
 
     return (
         <CollapsedMenuContext.Provider value={value}>
