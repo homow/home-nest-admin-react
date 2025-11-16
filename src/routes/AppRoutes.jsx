@@ -7,17 +7,17 @@ import {BASE_PATH} from "@/config.js";
 import App from "@/App";
 import MainLayout from "@/layout/MainLayout";
 
-const lazyWithSuspense = importFunc => {
+const lazyWithSuspense = (importFunc, className) => {
     const Component = lazy(importFunc);
 
     return props => (
-        <SuspenseBoundary>
+        <SuspenseBoundary className={className}>
             <Component {...props}/>
         </SuspenseBoundary>
     );
 };
 
-const Login = lazy(() => import("@pages/Login"));
+const Login = lazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
 const Home = lazyWithSuspense(() => import("@pages/Home"));
 const Properties = lazyWithSuspense(() => import("@pages/Properties"));
 const CreateProperties = lazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
