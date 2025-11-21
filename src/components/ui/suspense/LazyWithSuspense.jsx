@@ -1,3 +1,6 @@
+import {lazy} from "react";
+import SuspenseBoundary from './SuspenseBoundary'
+
 const LazyWithSuspense = (importFunc, className) => {
     const Component = lazy(importFunc);
 
