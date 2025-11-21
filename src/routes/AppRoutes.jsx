@@ -1,21 +1,20 @@
-import {lazy} from "react";
 import {createBrowserRouter} from "react-router-dom";
-import SuspenseBoundary from "@ui/suspense/SuspenseBoundary.jsx";
+import LazyWithSuspense from "@ui/suspense/LazyWithSuspense";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import {BASE_PATH} from "@/config.js";
 import App from "@/App";
 import MainLayout from "@/layout/MainLayout";
 
-const Login = lazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
-const Home = lazyWithSuspense(() => import("@pages/Home"));
-const Properties = lazyWithSuspense(() => import("@pages/Properties"));
-const CreateProperties = lazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
-const EditProperties = lazyWithSuspense(() => import("@pages/Properties/routes/EditProperties"))
-const Email = lazyWithSuspense(() => import("@pages/Email"));
-const User = lazyWithSuspense(() => import("@pages/User"));
-const Rules = lazyWithSuspense(() => import("@pages/Rules"));
-const NotFound = lazyWithSuspense(() => import("@pages/NotFound"));
+const Login = LazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
+const Home = LazyWithSuspense(() => import("@pages/Home"));
+const Properties = LazyWithSuspense(() => import("@pages/Properties"));
+const CreateProperties = LazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
+const EditProperties = LazyWithSuspense(() => import("@pages/Properties/routes/EditProperties"))
+const Email = LazyWithSuspense(() => import("@pages/Email"));
+const User = LazyWithSuspense(() => import("@pages/User"));
+const Rules = LazyWithSuspense(() => import("@pages/Rules"));
+const NotFound = LazyWithSuspense(() => import("@pages/NotFound"));
 
 // routes
 const router = createBrowserRouter(
