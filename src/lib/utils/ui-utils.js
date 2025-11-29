@@ -16,4 +16,9 @@ const applyCustomSpace = ({setCurrentCollapsed, collapsed}) => {
     }
 }
 
-export {cn, applyCustomSpace};
+function getCollapsedMeniInStorage() {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("collapsedMenu") === "true";
+}
+
+export {cn, applyCustomSpace, getCollapsedMeniInStorage};
