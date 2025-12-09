@@ -1,7 +1,6 @@
-# 🌍 نسخه فارسی README 
+# 🌍 نسخه فارسی README
 
 [🌍🇮🇷 فارسی](./README.FA.md)
-
 
 # HomeNest Admin Panel
 
@@ -24,6 +23,7 @@ Built with React, TailwindCSS, and Supabase, this panel provides authenticated a
 
 | Technology              | Version | Description                              |
 |-------------------------|---------|------------------------------------------|
+| ⚛️ **TypeScript**       | 5.9     | Type Safe for javaScript.                |
 | ⚛️ **React**            | 19.1.1  | UI library for building components.      |
 | 🧭 **React Router DOM** | 7.9.3   | Client-side routing for React apps.      |
 | 🌐 **Axios**            | 1.12.2  | Promise-based HTTP client.               |
