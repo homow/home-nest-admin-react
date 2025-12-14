@@ -60,6 +60,7 @@ export default defineConfig(({mode}: ConfigEnv) => {
                 '@api': path.resolve(__dirname, 'src/lib/api'),
                 '@context': path.resolve(__dirname, 'src/context'),
                 '@utils': path.resolve(__dirname, 'src/lib/utils'),
+                '@layouts': path.resolve(__dirname, 'src/layouts'),
             }
         },
         plugins: [
