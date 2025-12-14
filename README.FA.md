@@ -59,7 +59,7 @@ home-nest-admin/
 │   ├── App.jsx          # کامپوننت اصلی برنامه
 │   └── main.jsx         # نقطه ورود برنامه
 │
-├── vite.config.js       # تنظیمات ساخت و سرور Vite
+├── vite.config.ts       # تنظیمات ساخت و سرور Vite
 ├── eslint.config.js     # پیکربندی ESLint و قوانین آن
 ├── jsconfig.json        # تنظیم مسیرها و IntelliSense برای JS
 └── package.json         # وابستگی‌ها و اسکریپت‌های پروژه

@@ -59,7 +59,7 @@ home-nest-admin/
 │   ├── App.jsx          # Main app component
 │   └── main.jsx         # Application entry point
 │
-├── vite.config.js       # Vite build and dev server configuration
+├── vite.config.ts       # Vite build and dev server configuration
 ├── eslint.config.js     # ESLint setup and linting rules
 ├── jsconfig.json        # JS path aliases and IntelliSense config
 └── package.json         # Project dependencies and scripts
