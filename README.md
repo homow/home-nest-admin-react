@@ -56,8 +56,8 @@ home-nest-admin/
 │   ├── pages/           # Route-based React pages
 │   ├── routes/          # App route definitions and navigation config
 │   ├── styles/          # Global and component-level style files
-│   ├── App.jsx          # Main app component
-│   └── main.jsx         # Application entry point
+│   ├── App.tsx          # Main app component
+│   └── main.tsx         # Application entry point
 │
 ├── vite.config.ts       # Vite build and dev server configuration
 ├── eslint.config.ts     # ESLint setup and linting rules
