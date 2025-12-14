@@ -1,4 +1,4 @@
-import {Outlet} from "react-router-dom";
+import {Outlet} from "react-router";
 import {AuthProvider, useAuth} from "@context/AuthContext"
 import Loading from "@components/ui/Loading";
 
