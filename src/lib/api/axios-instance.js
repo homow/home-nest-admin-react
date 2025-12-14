@@ -1,5 +1,5 @@
 import axios from "axios";
-import {API_URL} from "@/config.js";
+import {API_URL} from "@/config.ts";
 import {refresh} from "@api/requests/auth.js";
 
 let accessToken = null;

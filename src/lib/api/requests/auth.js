@@ -1,7 +1,7 @@
 "use strict";
 
 import axios from "axios";
-import {API_URL} from "@/config.js";
+import {API_URL} from "@/config.ts";
 
 const BASE_API_URL = `${API_URL}`;
 
