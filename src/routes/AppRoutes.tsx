@@ -1,10 +1,10 @@
-import {createBrowserRouter} from "react-router-dom";
 import LazyWithSuspense from "@ui/suspense/LazyWithSuspense";
+import {createBrowserRouter} from "react-router";
+import MainLayout from "@/layout/MainLayout";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import {BASE_PATH} from "@/config";
 import App from "@/App";
-import MainLayout from "@/layout/MainLayout";
 
 const Login = LazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
 const Home = LazyWithSuspense(() => import("@pages/Home"));
