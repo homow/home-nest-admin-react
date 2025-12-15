@@ -2,8 +2,8 @@ import {createBrowserRouter} from "react-router-dom";
 import LazyWithSuspense from "@ui/suspense/LazyWithSuspense";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
-import {BASE_PATH} from "@/config.ts";
-import App from "@/App.tsx";
+import {BASE_PATH} from "@/config";
+import App from "@/App";
 import MainLayout from "@/layout/MainLayout";
 
 const Login = LazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
