@@ -3,7 +3,7 @@ import SideBar from "../SideBar";
 import Footer from "../Footer";
 import SvgDefs from "@components/ui/icons/SvgDefs";
 import Overlay from "@components/ui/Overlay";
-import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext";
+import {MobileNavProvider, useMobileNav} from "@context/MobileNavContext.tsx";
 import {Outlet} from "react-router-dom";
 
 function InnerMainLayout() {

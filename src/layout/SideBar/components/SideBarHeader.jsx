@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import logo from "@img/logo.webp"
 import {cn} from "@utils/ui-utils.js";
 import Icon from "@components/ui/icons/Icon";
-import {useCollapsedMenu} from "@context/CollapsedMenuContext";
+import {useCollapsedMenu} from "@context/CollapsedMenuContext.tsx";
 
 export default function SideBarHeader() {
     const {collapsed, currentCollapsed, setCollapsed} = useCollapsedMenu();

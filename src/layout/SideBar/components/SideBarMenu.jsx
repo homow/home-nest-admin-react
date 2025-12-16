@@ -1,6 +1,6 @@
 import {NavLink} from "react-router-dom";
-import {useMobileNav} from "@context/MobileNavContext";
-import {useCollapsedMenu} from "@context/CollapsedMenuContext";
+import {useMobileNav} from "@context/MobileNavContext.tsx";
+import {useCollapsedMenu} from "@context/CollapsedMenuContext.tsx";
 import Icon from "@components/ui/icons/Icon";
 import {cn} from "@utils/ui-utils.js";
 

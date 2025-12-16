@@ -6,7 +6,7 @@ import AlertModal from "@components/ui/modals/AlertModal";
 import ConfirmModal from "@components/ui/modals/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
-import {useAuth} from "@context/AuthContext";
+import {useAuth} from "@context/AuthContext.tsx";
 import {logout} from "@api/requests/auth.js";
 
 function DropDownAccountOptions({data, className, setOpenMenu}) {
