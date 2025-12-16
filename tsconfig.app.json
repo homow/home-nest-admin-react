@@ -34,9 +34,6 @@
       ],
       "@layouts/*": [
         "src/layouts/*"
-      ],
-      "@types/*": [
-        "src/types/*"
       ]
     },
     "lib": [

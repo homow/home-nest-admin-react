@@ -61,7 +61,6 @@ export default defineConfig(({mode}: ConfigEnv) => {
                 '@context': path.resolve(__dirname, 'src/context'),
                 '@utils': path.resolve(__dirname, 'src/lib/utils'),
                 '@layouts': path.resolve(__dirname, 'src/layouts'),
-                '@types': path.resolve(__dirname, 'src/types'),
             }
         },
         plugins: [

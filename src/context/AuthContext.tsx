@@ -1,13 +1,43 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import {getAccessToken} from "@api/axios-instance.js";
-import {refresh} from "@api/requests/auth.js";
+import type {Context, ReactNode} from "react";
+import type {User} from "@/types/auth.types";
+import {createContext, use, useEffect, useState} from "react";
+import {getAccessToken} from "@api/axios-instance";
+import {refresh} from "@api/requests/auth";
 
-const AuthContext = createContext(null);
+interface Props {
+    children: ReactNode;
+}
 
-function AuthProvider({children}) {
-    const [user, setUser] = useState({});
-    const [accessToken, setAccessToken] = useState(false);
-    const [loading, setLoading] = useState(true);
+interface SetAuthInfoProps {
+    userData: User;
+    token: string;
+}
+
+interface ValueProps {
+    user: User;
+    accessToken: string;
+    setAuthInfo: ({userData, token}: SetAuthInfoProps) => void;
+    loading: boolean;
+}
+
+const AuthContext: Context<ValueProps | null> = createContext<ValueProps | null>(null);
+
+const initUser: User = {
+    display_name: "",
+    role: "user",
+    email: "",
+    id: ""
+}
+
+function AuthProvider({children}: Props) {
+    const [user, setUser] = useState<User>({
+        display_name: "",
+        role: "user",
+        email: "",
+        id: ""
+    });
+    const [accessToken, setAccessToken] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         (async () => {
@@ -17,7 +47,7 @@ function AuthProvider({children}) {
                 if (res?.ok) {
                     setAuthInfo({userData: res.user, token: res.accessToken});
                 } else {
-                    setAuthInfo({userData: null, token: null});
+                    setAuthInfo({userData: initUser, token: ""});
                 }
                 setLoading(false);
             } catch (e) {
@@ -31,12 +61,12 @@ function AuthProvider({children}) {
         if (accessToken) getAccessToken(accessToken);
     }, [accessToken]);
 
-    const setAuthInfo = ({userData, token}) => {
+    function setAuthInfo({userData, token}: SetAuthInfoProps) {
         setUser(userData);
         setAccessToken(token);
-    };
+    }
 
-    const value = {
+    const value: ValueProps = {
         user,
         accessToken,
         setAuthInfo,
@@ -44,17 +74,17 @@ function AuthProvider({children}) {
     };
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext value={value}>
             {children}
-        </AuthContext.Provider>
+        </AuthContext>
     );
 }
 
-const useAuth = () => {
-    const context = useContext(AuthContext);
+function useAuth () {
+    const context: ValueProps | null = use(AuthContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");
     return context;
-};
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export {AuthProvider, useAuth};
