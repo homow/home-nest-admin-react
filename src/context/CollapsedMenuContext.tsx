@@ -1,13 +1,21 @@
+import type {Context, Dispatch, SetStateAction} from "react";
+import type {ChildrenProps} from "@/types/common.types";
 import {use, createContext, useState, useEffect, useEffectEvent} from "react";
 import {applyCustomSpace, getCollapsedMeniInStorage} from "@utils/ui-utils";
 
-const CollapsedMenuContext = createContext(null);
+interface ValueProps {
+    collapsed: boolean;
+    setCollapsed: Dispatch<SetStateAction<boolean>>;
+    currentCollapsed: boolean;
+}
 
-const CollapsedMenuProvider = ({children}) => {
-    const [collapsed, setCollapsed] = useState(getCollapsedMeniInStorage);
-    const [currentCollapsed, setCurrentCollapsed] = useState(false);
+const CollapsedMenuContext: Context<ValueProps | null> = createContext<ValueProps | null>(null);
 
-    const handleResize = useEffectEvent(() => {
+function CollapsedMenuProvider({children}: ChildrenProps) {
+    const [collapsed, setCollapsed] = useState<boolean>(getCollapsedMeniInStorage);
+    const [currentCollapsed, setCurrentCollapsed] = useState<boolean>(false);
+
+    const handleResize: () => void = useEffectEvent(() => {
         applyCustomSpace({setCurrentCollapsed, collapsed});
     });
 
@@ -26,20 +34,24 @@ const CollapsedMenuProvider = ({children}) => {
         localStorage.setItem("collapsedMenu", JSON.stringify(collapsed));
     }, [collapsed]);
 
-    const value = {collapsed, setCollapsed, currentCollapsed};
+    const value: ValueProps = {
+        collapsed,
+        setCollapsed,
+        currentCollapsed
+    };
 
     return (
         <CollapsedMenuContext value={value}>
             {children}
         </CollapsedMenuContext>
     );
-};
+}
 
-const useCollapsedMenu = () => {
-    const context = use(CollapsedMenuContext);
+function useCollapsedMenu() {
+    const context: ValueProps | null = use(CollapsedMenuContext);
     if (!context) throw new Error("useCollapsedMenu must be used within the context");
     return context;
-};
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export {CollapsedMenuProvider, useCollapsedMenu};

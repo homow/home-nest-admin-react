@@ -1,12 +1,9 @@
-import type {Context, ReactNode} from "react";
+import type {Context} from "react";
 import type {User} from "@/types/auth.types";
+import type {ChildrenProps} from "@/types/common.types";
 import {createContext, use, useEffect, useState} from "react";
 import {getAccessToken} from "@api/axios-instance";
 import {refresh} from "@api/requests/auth";
-
-interface Props {
-    children: ReactNode;
-}
 
 interface SetAuthInfoProps {
     userData: User;
@@ -29,7 +26,7 @@ const initUser: User = {
     id: ""
 }
 
-function AuthProvider({children}: Props) {
+function AuthProvider({children}: ChildrenProps) {
     const [user, setUser] = useState<User>({
         display_name: "",
         role: "user",
