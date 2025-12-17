@@ -1,9 +1,20 @@
-import {clsx} from "clsx";
+import type {Dispatch, SetStateAction} from "react";
+import {type ClassValue, clsx} from "clsx";
 import {twMerge} from "tailwind-merge";
 
-const cn = (...inputs) => twMerge(clsx(inputs));
+const cn: (...inputs: ClassValue[]) => string = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-const applyCustomSpace = ({setCurrentCollapsed, collapsed}) => {
+interface ApplyCustomSpaceProps {
+    setCurrentCollapsed: Dispatch<SetStateAction<boolean>>;
+    collapsed: boolean;
+}
+
+function applyCustomSpace(
+    {
+        setCurrentCollapsed,
+        collapsed
+    }: ApplyCustomSpaceProps
+): void {
     if (window.innerWidth < 896) {
         document.documentElement.style.setProperty("--spacing-custom", "0px");
         setCurrentCollapsed(false);
@@ -16,7 +27,7 @@ const applyCustomSpace = ({setCurrentCollapsed, collapsed}) => {
     }
 }
 
-function getCollapsedMeniInStorage() {
+function getCollapsedMeniInStorage(): boolean {
     if (typeof window === "undefined") return false;
     return localStorage.getItem("collapsedMenu") === "true";
 }

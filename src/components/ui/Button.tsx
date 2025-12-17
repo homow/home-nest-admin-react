@@ -1,4 +1,4 @@
-import {cn} from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils";
 
 const LoadingSpinner = () => (
     <span className="animate-spin h-3.5 inline-block">
