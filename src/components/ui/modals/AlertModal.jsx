@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {cn} from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 import {getBgHeader, getBtnBg, getTitle, getBgBar} from "@utils/alertHelpers";
 
 export default function AlertModal({message = "", type, isOpen = false, setIsOpen, setData, closeDelay = 5000}) {

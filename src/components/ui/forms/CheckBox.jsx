@@ -1,4 +1,4 @@
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 
 export default function CheckBox({id = "checkbox", label = "انتخاب کن", checked, onChange, className}) {
     return (

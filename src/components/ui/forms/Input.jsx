@@ -1,4 +1,4 @@
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 import {ErrorMessageInputs, RedStarField} from "@ui/Fragments.tsx";
 
 export default function Input({onChange, name, type = name, id = name, label, autoComplete, value, placeholder, req, className, parentClassName, children, hasError, errorMsg = hasError, ...props}) {

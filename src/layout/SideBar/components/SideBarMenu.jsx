@@ -2,7 +2,7 @@ import {NavLink} from "react-router-dom";
 import {useMobileNav} from "@context/MobileNavContext.tsx";
 import {useCollapsedMenu} from "@context/CollapsedMenuContext.tsx";
 import Icon from "@components/ui/icons/Icon";
-import {cn} from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 
 function SideBarLinks({...props}) {
     const {title, dataLinks} = props.data;

@@ -2,7 +2,7 @@ import {CollapsedMenuProvider} from "@context/CollapsedMenuContext.tsx";
 import SideBarHeader from "./components/SideBarHeader";
 import SideBarMenu from "./components/SideBarMenu";
 import {useMobileNav} from "@context/MobileNavContext.tsx";
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 
 export default function SideBar() {
     const {openMobileNav} = useMobileNav();

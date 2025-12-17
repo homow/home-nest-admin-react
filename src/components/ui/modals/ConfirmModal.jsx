@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {cn} from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 
 export default function ConfirmModal({isOpen, message, title = "تأیید", onConfirm, onCancel, confirmText = "تأیید", cancelText = "لغو", dangerMode = false, z = "z-30"}) {
     const buttonRef = useRef(null);

@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from "react";
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 import Icon from "@components/ui/icons/Icon.jsx";
 
 export default function SelectBox({label, options, value, onChange, className, helperText, hasError, disabled}) {
