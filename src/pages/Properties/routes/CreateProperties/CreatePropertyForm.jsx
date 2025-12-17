@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import Button from "@ui/Button.tsx";
+import Button from "@components/button/Button.tsx";
 import Input from "@ui/forms/Input";
 import CheckBox from "@ui/forms/CheckBox";
 import SelectBox from "@ui/forms/SelectBox";
