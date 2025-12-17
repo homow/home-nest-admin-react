@@ -1,5 +1,5 @@
 import {useEffect, useState, useRef} from "react";
-import Button from "@components/ui/Button";
+import Button from "@ui/Button.tsx";
 import {useAuth} from "@context/AuthContext.tsx";
 import Input from "@components/ui/forms/Input";
 import CheckBox from "@components/ui/forms/CheckBox";

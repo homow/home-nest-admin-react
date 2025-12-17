@@ -1,5 +1,5 @@
 import {useState} from "react";
-import Overlay from "@components/ui/Overlay";
+import Overlay from "@ui/Overlay.tsx";
 import AccountAvatar from "../../common/AccountAvatar";
 import DropDownAccount from "./DropDownAccount";
 import useScrollLock from "@hooks/useScrollLock";
