@@ -6,7 +6,9 @@ import PublicRoutes from "./PublicRoutes";
 import {BASE_PATH} from "@/config";
 import App from "@/App";
 
-const Login = LazyWithSuspense(() => import("@pages/Login"), "fixed inset-0");
+const Login = LazyWithSuspense(() => import("@pages/Login"),
+    "fixed inset-0"
+);
 const Home = LazyWithSuspense(() => import("@pages/Home"));
 const Properties = LazyWithSuspense(() => import("@pages/Properties"));
 const CreateProperties = LazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
@@ -21,7 +23,6 @@ const router = createBrowserRouter(
     [{
         element: <App/>,
         children: [
-            // when admin not login
             {
                 path: "/login",
                 element: <PublicRoutes/>,
@@ -29,7 +30,7 @@ const router = createBrowserRouter(
                     {index: true, element: <Login/>}
                 ]
             },
-            // when admin login
+            // when admin logged in
             {
                 element: <PrivateRoutes/>,
                 children: [
