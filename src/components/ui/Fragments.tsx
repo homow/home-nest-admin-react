@@ -15,7 +15,12 @@ function RedStarField() {
     </span>;
 }
 
-function ErrorMessageInputs({cls, msg = ""}: Props) {
+function ErrorMessageInputs(
+    {
+        cls,
+        msg = ""
+    }: Props
+) {
     return (
         <p
             className={
