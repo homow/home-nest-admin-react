@@ -1,15 +1,34 @@
-import {cn} from "@utils/ui-utils.js";
+import {cn} from "@utils/ui-utils";
 
-const RedStarField = () => {
-    return <span className={"inline-block max-h-5 text-xl text-rose-600"}>*</span>;
+interface Props {
+    cls?: string;
+    msg?: string;
 }
 
-const ErrorMessageInputs = ({cls, msg = ""}) => {
+function RedStarField() {
+    return <span
+        className={
+            "inline-block max-h-5 text-xl text-rose-600"
+        }
+    >
+        *
+    </span>;
+}
+
+function ErrorMessageInputs({cls, msg = ""}: Props) {
     return (
-        <p className={cn("mt-2 font-medium text-sm text-rose-600 dark:text-rose-500", msg ? "block" : "hidden", cls)}>
+        <p
+            className={
+                cn(
+                    "mt-2 font-medium text-sm text-rose-600 dark:text-rose-500",
+                    msg ? "block" : "hidden",
+                    cls
+                )
+            }
+        >
             {msg}
         </p>
-    )
+    );
 }
 
 export {RedStarField, ErrorMessageInputs}
