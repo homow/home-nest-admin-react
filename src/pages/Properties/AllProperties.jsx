@@ -1,4 +1,4 @@
-import Button from "@ui/Button.tsx";
+import Button from "@components/button/Button.tsx";
 import {getProperty} from "@api/requests/properties.js";
 import {useState} from "react";
 
