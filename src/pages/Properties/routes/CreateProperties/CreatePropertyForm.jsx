@@ -4,7 +4,7 @@ import Input from "@ui/forms/Input";
 import CheckBox from "@ui/forms/CheckBox";
 import SelectBox from "@ui/forms/SelectBox";
 import {RedStarField, ErrorMessageInputs} from "@ui/Fragments.tsx";
-import {formatPriceDebounced, parsePriceFromString} from "@utils/helper.js";
+import {formatPriceDebounced, parsePriceFromString} from "@utils/helper.ts";
 import {cn} from "@utils/ui-utils.ts";
 
 // initial value in form data
