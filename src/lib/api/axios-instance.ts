@@ -3,7 +3,7 @@ import {API_URL} from "@/config";
 import {refresh} from "@api/requests/auth";
 
 let accessToken: string | null = null;
-let refreshPromise = null;
+let refreshPromise: ReturnType<typeof refresh> | null = null;
 
 function getAccessToken(token: string): void {
     accessToken = token;
@@ -19,16 +19,16 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     async config => {
-        if (!getAccessToken) {
-            console.warn("⚠️ No token, trying refresh...");
+        if (!accessToken) {
+            console.warn("No token, trying refresh...");
             try {
                 const res = await refresh();
 
                 if (res?.accessToken && res?.ok) {
-                    accessToken = res.accessToken;
+                    getAccessToken(res?.accessToken);
                 }
             } catch (e) {
-                console.error("❌ Refresh failed before request:", e);
+                console.error("Refresh failed before request:", e);
             }
         }
 
@@ -54,9 +54,12 @@ axiosInstance.interceptors.response.use(
 
             if (!refreshPromise) {
                 refreshPromise = refresh()
-                    .then((newToken: string) => {
+                    .then((res) => {
                         refreshPromise = null;
-                        if (newToken) accessToken = newToken;
+                        const newToken = res?.ok ?
+                            res?.accessToken :
+                            null;
+                        if (newToken) getAccessToken(newToken);
                         return newToken;
                     })
                     .catch((err: Error) => {
