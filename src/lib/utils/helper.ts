@@ -53,17 +53,22 @@ const formatPriceDebounced: (
 ) => void = debounce(formatPriceDebouncedCB);
 
 // convert array of "key = value" strings to object
-const buildObjectFromKeyValueArray = data => {
-    return data.reduce((acc, item) => {
-        const [key, value] = item.split("=");
-        if (!key.trim() || !value.trim()) return acc;
-        acc[key.trim()] = value.trim();
-        return acc;
-    }, {});
-};
+function buildObjectFromKeyValueArray(
+    data: string[]
+): Record<string, string> {
+    return data.reduce<Record<string, string>>(
+        (acc, item) => {
+            const [key, value] = item.split("=");
+            if (!key.trim() || !value.trim()) return acc;
+            acc[key.trim()] = value.trim();
+            return acc;
+        }, {} as Record<string, string>
+    );
+}
 
 export {
     formatPriceDebounced,
     parsePriceFromString,
-    buildObjectFromKeyValueArray
+    buildObjectFromKeyValueArray,
+    formatPriceToString
 };
