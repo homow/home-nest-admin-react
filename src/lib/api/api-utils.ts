@@ -3,7 +3,9 @@ import {
     parsePriceFromString
 } from "@utils/helper";
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+function delay (ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function fixPropertyData(data) {
     return {
@@ -20,4 +22,7 @@ function fixPropertyData(data) {
     }
 }
 
-export {delay, fixPropertyData};
+export {
+    delay,
+    fixPropertyData
+};
