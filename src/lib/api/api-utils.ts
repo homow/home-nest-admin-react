@@ -3,9 +3,9 @@ import {
     parsePriceFromString
 } from "@utils/helper";
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const fixPropertyData = data => {
+function fixPropertyData(data) {
     return {
         tags: data.tags ? data.tags.split("،").map(item => item.trim()) : undefined,
         price_with_discount: data.price_with_discount?.trim() ? parsePriceFromString(data.price_with_discount) : undefined,
