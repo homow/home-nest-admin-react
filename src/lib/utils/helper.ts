@@ -1,39 +1,56 @@
 // debounce function
-function debounce(callback, delay = 300) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
+function debounce<T extends unknown[]>(
+    callback: (...args: T) => void,
+    delay = 300
+) {
+    let timer: ReturnType<typeof setTimeout>;
+
+    return (...args: T) => {
+        if (timer) clearTimeout(timer);
         timer = setTimeout(() => callback(...args), delay);
     };
 }
 
 // convert persian numbers to english
-function normalizeDigits(str) {
+function normalizeDigits(str: string): string {
     return str
-        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+        .replace(/[۰-۹]/g, (d: string) =>
+            String("۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        )
+        .replace(/[٠-٩]/g, (d: string) =>
+            String("٠١٢٣٤٥٦٧٨٩".indexOf(d))
+        );
 }
 
 // format number to string with commas
-const formatPriceToString = value => {
-    const normalized = normalizeDigits(String(value));
-    const number = Number(normalized.replace(/\D/g, ""));
+function formatPriceToString(value: number | string): string {
+    const normalized: string = normalizeDigits(String(value));
+    const number: number = Number(normalized.replace(/\D/g, ""));
     if (!number) return "";
     return new Intl.NumberFormat("en-US").format(number);
-};
+}
 
 // convert formatted string to number
-const parsePriceFromString = value => {
-    if (typeof value !== "string") return value;
-    const raw = value.replace(/,/g, "").trim();
+function parsePriceFromString(value: string): number | null {
+    const raw: string = value.replace(/,/g, "").trim();
     return raw === "" ? null : Number(raw);
-};
+}
 
 // debounce wrapper for price formatting
-const formatPriceDebounced = debounce((input, callback, name) => {
-    const value = formatPriceToString(input.target.value);
+function formatPriceDebouncedCB(
+    input: string,
+    name: string,
+    callback: (name: string, value: string) => void
+) {
+    const value: string = normalizeDigits(input);
     callback(name, value);
-}, 300);
+}
+
+const formatPriceDebounced: (
+    input: string,
+    name: string,
+    callback: (name: string, value: string) => void
+) => void = debounce(formatPriceDebouncedCB);
 
 // convert array of "key = value" strings to object
 const buildObjectFromKeyValueArray = data => {
