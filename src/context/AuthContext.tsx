@@ -1,17 +1,17 @@
 import type {Context} from "react";
-import type {User} from "@/types/auth.types";
+import type {UserResponse} from "@/types/auth.types";
 import type {ChildrenProps} from "@/types/common.types";
 import {createContext, use, useEffect, useState} from "react";
 import {getAccessToken} from "@api/axios-instance";
 import {refresh} from "@api/requests/auth";
 
 interface SetAuthInfoProps {
-    userData: User;
+    userData: UserResponse;
     token: string;
 }
 
 interface ValueProps {
-    user: User;
+    user: UserResponse;
     accessToken: string;
     setAuthInfo: ({userData, token}: SetAuthInfoProps) => void;
     loading: boolean;
@@ -19,7 +19,7 @@ interface ValueProps {
 
 const AuthContext: Context<ValueProps | null> = createContext<ValueProps | null>(null);
 
-const initUser: User = {
+const initUser: UserResponse = {
     display_name: "",
     role: "user",
     email: "",
@@ -27,7 +27,7 @@ const initUser: User = {
 }
 
 function AuthProvider({children}: ChildrenProps) {
-    const [user, setUser] = useState<User>({
+    const [user, setUser] = useState<UserResponse>({
         display_name: "",
         role: "user",
         email: "",
