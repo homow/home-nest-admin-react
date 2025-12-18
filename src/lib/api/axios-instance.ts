@@ -1,13 +1,13 @@
 import axios from "axios";
-import {API_URL} from "@/config.ts";
-import {refresh} from "@api/requests/auth.js";
+import {API_URL} from "@/config";
+import {refresh} from "@api/requests/auth";
 
-let accessToken = null;
+let accessToken: string | null = null;
 let refreshPromise = null;
 
-const getAccessToken = token => {
+function getAccessToken(token: string): void {
     accessToken = token;
-};
+}
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
@@ -32,7 +32,7 @@ axiosInstance.interceptors.request.use(
             }
         }
 
-        const token = accessToken;
+        const token: string | null = accessToken;
 
         if (token) config.headers.Authorization = `Bearer ${token}`;
 
@@ -41,7 +41,7 @@ axiosInstance.interceptors.request.use(
         }
         return config;
     },
-    err => Promise.reject(err)
+    (err: Error) => Promise.reject(err)
 );
 
 axiosInstance.interceptors.response.use(
@@ -54,12 +54,12 @@ axiosInstance.interceptors.response.use(
 
             if (!refreshPromise) {
                 refreshPromise = refresh()
-                    .then(newToken => {
+                    .then((newToken: string) => {
                         refreshPromise = null;
                         if (newToken) accessToken = newToken;
                         return newToken;
                     })
-                    .catch(err => {
+                    .catch((err: Error) => {
                         refreshPromise = null;
                         console.error("Refresh failed:", err);
                         throw err;
