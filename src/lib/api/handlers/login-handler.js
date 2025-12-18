@@ -1,4 +1,4 @@
-import {login} from "@api/requests/auth.js";
+import {login} from "@api/requests/auth.ts";
 import {delay} from "@api/api-utils.ts";
 
 const loginHandler = async (data, setAlertModalData, setIsOpenAlertModal, setAuthInfo) => {
