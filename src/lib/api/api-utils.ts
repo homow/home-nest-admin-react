@@ -1,4 +1,7 @@
-import {buildObjectFromKeyValueArray, parsePriceFromString} from "@utils/helper.ts";
+import {
+    buildObjectFromKeyValueArray,
+    parsePriceFromString
+} from "@utils/helper";
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
