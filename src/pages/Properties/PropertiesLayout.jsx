@@ -1,7 +1,7 @@
 import {NavLink, Outlet} from "react-router-dom";
 import useIsExactRoute from "@hooks/useIsExactRoute";
 import AllProperties from "./AllProperties"
-import {cn} from "@/lib/utils/ui-utils.js";
+import {cn} from "@utils/ui-utils.ts";
 
 const propertyRoutesData = [
     {link: "/properties", name: "ملک ها", props: {end: true}},

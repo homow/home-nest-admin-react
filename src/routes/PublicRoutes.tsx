@@ -1,5 +1,5 @@
-import {Navigate, Outlet} from "react-router-dom";
-import {useAuth} from "@/context/AuthContext.jsx";
+import {Navigate, Outlet} from "react-router";
+import {useAuth} from "@/context/AuthContext";
 
 export default function PublicRoutes() {
     const {accessToken} = useAuth();

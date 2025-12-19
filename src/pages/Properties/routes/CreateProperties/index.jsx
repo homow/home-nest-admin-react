@@ -3,7 +3,7 @@ import ImagesForm from "./ImagesForm";
 import CreatePropertyForm from "./CreatePropertyForm";
 import AlertModal from "@ui/modals/AlertModal";
 import {createProperty, uploadPropertyImages} from "@api/requests/properties.js"
-import {fixPropertyData} from "@api/api-utils.js"
+import {fixPropertyData} from "@api/api-utils.ts"
 import {setErrorInCreateProperty} from "@api/error-handler/property.js";
 
 export default function CreateProperty() {

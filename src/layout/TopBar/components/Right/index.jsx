@@ -1,4 +1,4 @@
-import {useMobileNav} from "@context/MobileNavContext";
+import {useMobileNav} from "@context/MobileNavContext.tsx";
 
 function OpenMobileNavMenuBtn() {
     const {setOpenMobileNav} = useMobileNav();

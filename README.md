@@ -1,7 +1,6 @@
-# 🌍 نسخه فارسی README 
+# 🌍 نسخه فارسی README
 
 [🌍🇮🇷 فارسی](./README.FA.md)
-
 
 # HomeNest Admin Panel
 
@@ -24,6 +23,7 @@ Built with React, TailwindCSS, and Supabase, this panel provides authenticated a
 
 | Technology              | Version | Description                              |
 |-------------------------|---------|------------------------------------------|
+| ⚛️ **TypeScript**       | 5.9     | Type Safe for javaScript.                |
 | ⚛️ **React**            | 19.1.1  | UI library for building components.      |
 | 🧭 **React Router DOM** | 7.9.3   | Client-side routing for React apps.      |
 | 🌐 **Axios**            | 1.12.2  | Promise-based HTTP client.               |
@@ -56,11 +56,11 @@ home-nest-admin/
 │   ├── pages/           # Route-based React pages
 │   ├── routes/          # App route definitions and navigation config
 │   ├── styles/          # Global and component-level style files
-│   ├── App.jsx          # Main app component
-│   └── main.jsx         # Application entry point
+│   ├── App.tsx          # Main app component
+│   └── main.tsx         # Application entry point
 │
-├── vite.config.js       # Vite build and dev server configuration
-├── eslint.config.js     # ESLint setup and linting rules
+├── vite.config.ts       # Vite build and dev server configuration
+├── eslint.config.ts     # ESLint setup and linting rules
 ├── jsconfig.json        # JS path aliases and IntelliSense config
 └── package.json         # Project dependencies and scripts
 ```

@@ -1,13 +1,13 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
-import {cn} from "@utils/ui-utils";
-import Overlay from "@components/ui/Overlay";
+import {cn} from "@utils/ui-utils.ts";
+import Overlay from "@ui/Overlay.tsx";
 import AlertModal from "@components/ui/modals/AlertModal";
 import ConfirmModal from "@components/ui/modals/ConfirmModal";
 import AccountAvatar from "../../common/AccountAvatar";
 import Icon from "@components/ui/icons/Icon";
-import {useAuth} from "@context/AuthContext";
-import {logout} from "@api/requests/auth.js";
+import {useAuth} from "@context/AuthContext.tsx";
+import {logout} from "@api/requests/auth.ts";
 
 function DropDownAccountOptions({data, className, setOpenMenu}) {
     const iconElem = icon => <Icon icon={icon} className={"size-5"}/>;

@@ -1,38 +1,28 @@
-import {lazy} from "react";
-import {createBrowserRouter} from "react-router-dom";
-import SuspenseBoundary from "@components/ui/SuspenseBoundary";
+import LazyWithSuspense from "@ui/suspense/LazyWithSuspense";
+import {createBrowserRouter} from "react-router";
+import MainLayout from "@/layout/MainLayout";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
-import {BASE_PATH} from "@/config.js";
+import {BASE_PATH} from "@/config";
 import App from "@/App";
-import MainLayout from "@/layout/MainLayout";
 
-const lazyWithSuspense = importFunc => {
-    const Component = lazy(importFunc);
-
-    return props => (
-        <SuspenseBoundary>
-            <Component {...props}/>
-        </SuspenseBoundary>
-    );
-};
-
-const Login = lazy(() => import("@pages/Login"));
-const Home = lazyWithSuspense(() => import("@pages/Home"));
-const Properties = lazyWithSuspense(() => import("@pages/Properties"));
-const CreateProperties = lazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
-const EditProperties = lazyWithSuspense(() => import("@pages/Properties/routes/EditProperties"))
-const Email = lazyWithSuspense(() => import("@pages/Email"));
-const User = lazyWithSuspense(() => import("@pages/User"));
-const Rules = lazyWithSuspense(() => import("@pages/Rules"));
-const NotFound = lazyWithSuspense(() => import("@pages/NotFound"));
+const Login = LazyWithSuspense(() => import("@pages/Login"),
+    "fixed inset-0"
+);
+const Home = LazyWithSuspense(() => import("@pages/Home"));
+const Properties = LazyWithSuspense(() => import("@pages/Properties"));
+const CreateProperties = LazyWithSuspense(() => import("@pages/Properties/routes/CreateProperties"))
+const EditProperties = LazyWithSuspense(() => import("@pages/Properties/routes/EditProperties"))
+const Email = LazyWithSuspense(() => import("@pages/Email"));
+const User = LazyWithSuspense(() => import("@pages/User"));
+const Rules = LazyWithSuspense(() => import("@pages/Rules"));
+const NotFound = LazyWithSuspense(() => import("@pages/NotFound"));
 
 // routes
 const router = createBrowserRouter(
     [{
         element: <App/>,
         children: [
-            // when admin not login
             {
                 path: "/login",
                 element: <PublicRoutes/>,
@@ -40,7 +30,7 @@ const router = createBrowserRouter(
                     {index: true, element: <Login/>}
                 ]
             },
-            // when admin login
+            // when admin logged in
             {
                 element: <PrivateRoutes/>,
                 children: [

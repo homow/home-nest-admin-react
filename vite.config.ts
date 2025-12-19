@@ -1,33 +1,35 @@
-import {defineConfig, loadEnv} from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import {defineConfig, loadEnv, type ConfigEnv} from 'vite';
+import react from '@vitejs/plugin-react';
 import tailwindcss from "@tailwindcss/vite";
 import path from 'path';
 import {fileURLToPath} from "url";
 import {visualizer} from "rollup-plugin-visualizer";
+import checker from "vite-plugin-checker";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig(({mode}) => {
-    const env = loadEnv(mode, process.cwd(), '');
-    const apiUrl = env.API_URL;
+export default defineConfig(({mode}: ConfigEnv) => {
+    const env: Record<string, string> = loadEnv(mode, process.cwd(), '');
+    const apiUrl: string = env.API_URL;
 
     return {
         base: env.VITE_BASE_PATH || "/",
         server: {
             host: true,
-            proxy: apiUrl && {
+            proxy: apiUrl ? {
                 "/api": {
                     target: env.API_URL,
                     changeOrigin: true,
                     secure: false,
                 }
             }
+            : undefined
         },
         build: {
             rollupOptions: {
                 output: {
-                    manualChunks(id) {
+                    manualChunks(id: string): string | void {
                         if (!id.includes('node_modules')) return;
 
                         // React ecosystem
@@ -58,11 +60,23 @@ export default defineConfig(({mode}) => {
                 '@api': path.resolve(__dirname, 'src/lib/api'),
                 '@context': path.resolve(__dirname, 'src/context'),
                 '@utils': path.resolve(__dirname, 'src/lib/utils'),
+                '@layouts': path.resolve(__dirname, 'src/layouts'),
             }
         },
         plugins: [
-            react(),
+            react(
+                {
+                    babel: {
+                        plugins: ["babel-plugin-react-compiler"]
+                    }
+                }
+            ),
             tailwindcss(),
+            checker({
+                typescript: {
+                    tsconfigPath: "./tsconfig.app.json"
+                }
+            }),
             env.ANALYZE === "true" &&
             visualizer({
                 filename: "analyze.html",
